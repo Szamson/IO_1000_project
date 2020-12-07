@@ -1,0 +1,3 @@
+[submodule "TysiacUI"]
+	path = TysiacUI
+	url = https://github.com/KrzysztofZywiecki/TysiacUI.git
