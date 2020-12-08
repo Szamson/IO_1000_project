@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6239231-17fb-4111-8f60-1be3a6a60e5d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/.idea/Tausend.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/.idea/workspace.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/backend/api/migrations/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Tausend.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tausend/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Tausend/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tausend/asgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Tausend/asgi.py" afterDir="false" />
@@ -59,8 +50,8 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.django.DjangoModulesConfigurable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -94,7 +85,7 @@
       <method v="2" />
     </configuration>
     <configuration name="Tausend" type="Python.DjangoServer" factoryName="Django server">
-      <module name="IO_1000" />
+      <module name="Tausend" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -102,7 +93,7 @@
         <env name="DJANGO_SETTINGS_MODULE" value="Tausend.settings" />
       </envs>
       <option name="SDK_HOME" value="C:\Users\szymo\PycharmProjects\Virtual\Tausend\Scripts\python.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/backend" />
+      <option name="WORKING_DIRECTORY" value="" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -137,9 +128,7 @@
       <workItem from="1607302108925" duration="915000" />
       <workItem from="1607377473568" duration="987000" />
       <workItem from="1607452135517" duration="1028000" />
-      <workItem from="1607453181540" duration="1363000" />
-      <workItem from="1607454567484" duration="68000" />
-      <workItem from="1607454657653" duration="75000" />
+      <workItem from="1607453181540" duration="56000" />
     </task>
     <servers />
   </component>
@@ -147,46 +136,38 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="650" y="42" key="#Tausend" timestamp="1607454631134">
+    <state x="414" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1607453236660">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="650" y="42" key="#Tausend/0.0.1920.1040@0.0.1920.1040" timestamp="1607454631134" />
-    <state x="414" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1607454731402">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="414" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1607454731402" />
+    <state x="414" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1607453236660" />
     <state x="685" y="305" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1607077979025">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="685" y="305" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1607077979025" />
-    <state x="689" y="217" key="FileChooserDialogImpl" timestamp="1607454702892">
+    <state width="904" height="270" key="GridCell.Tab.0.bottom" timestamp="1607453163825">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="689" y="217" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1607454702892" />
-    <state width="1865" height="278" key="GridCell.Tab.0.bottom" timestamp="1607454545164">
+    <state width="904" height="270" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1607453163825" />
+    <state width="904" height="270" key="GridCell.Tab.0.center" timestamp="1607453163825">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1865" height="278" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1607454545164" />
-    <state width="1865" height="278" key="GridCell.Tab.0.center" timestamp="1607454545164">
+    <state width="904" height="270" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1607453163825" />
+    <state width="904" height="270" key="GridCell.Tab.0.left" timestamp="1607453163825">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1865" height="278" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1607454545164" />
-    <state width="1865" height="278" key="GridCell.Tab.0.left" timestamp="1607454545164">
+    <state width="904" height="270" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1607453163825" />
+    <state width="904" height="270" key="GridCell.Tab.0.right" timestamp="1607453163825">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1865" height="278" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1607454545164" />
-    <state width="1865" height="278" key="GridCell.Tab.0.right" timestamp="1607454545164">
+    <state width="904" height="270" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1607453163825" />
+    <state x="352" y="77" key="SettingsEditor" timestamp="1607078442093">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1865" height="278" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1607454545164" />
-    <state x="352" y="77" key="SettingsEditor" timestamp="1607454724993">
+    <state x="352" y="77" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1607078442093" />
+    <state x="0" y="0" key="com.intellij.ide.util.TipDialog" timestamp="1607453181531">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="352" y="77" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1607454724993" />
-    <state x="0" y="0" key="com.intellij.ide.util.TipDialog" timestamp="1607454657640">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state x="0" y="0" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1607454657640" />
+    <state x="0" y="0" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1607453181531" />
     <state x="738" y="417" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1607452421535">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
