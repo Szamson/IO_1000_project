@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from rest_framework import generics
 from .models import *
 from .serializers import *
@@ -18,3 +18,10 @@ class PlayerView(generics.ListAPIView):
 class GameView(generics.ListAPIView):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
+
+
+def get_player_data(request):
+    data = Player.objects.all()
+    if request.method == 'GET':
+        serializer = PlayerSerializer(data, many=True)
+        return JsonResponse(serializer.data, safe=False)
