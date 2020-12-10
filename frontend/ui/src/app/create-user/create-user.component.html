@@ -1,0 +1,44 @@
+<div class="container">
+
+<form *ngIf="!displayJoin && !displayCreate" (ngSubmit)="onSubmit()" #userForm="ngForm" >
+    <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" class="form-control" id="username" name="username" [(ngModel)]="userdata.username" required #username="ngModel">
+    <div *ngIf="username.touched && username.invalid" class="alert alert-danger">
+        Nie podano nazwy użytkownika!
+    </div>
+    </div>
+
+    <div class="buttons col2">
+        <button type="submit" (click)="onJoin()" class="button" [disabled]="username.invalid">Dołącz</button>
+        <button type="submit" (click)="onCreate()" class="button" [disabled]="username.invalid">Stwórz serwer</button>
+    </div>
+</form>
+
+<form *ngIf="displayCreate" (ngSubmit)="onSubmit()" #createServer="ngForm" >
+    <div class="form-group">
+    <label for="serverName">Server name</label>
+    <input type="text" class="form-control" id="serverName" name="serverName" [(ngModel)]="userdata.serverName" required #serverName="ngModel">
+    <div *ngIf="serverName.touched && serverName.invalid" class="alert alert-danger">
+        Nie podano nazwy serwera!
+    </div>
+    </div>
+    <div class="buttons">
+        <button type="submit" class="button center" [disabled]="serverName.invalid">Stwórz serwer</button>
+    </div>
+</form> 
+
+<form *ngIf="displayJoin" (ngSubmit)="onSubmit()" #joinServer="ngForm" >
+    <div class="form-group">
+    <label for="serverName">Server name</label>
+    <input type="text" class="form-control" id="serverName" name="serverName" [(ngModel)]="userdata.serverName" required #serverName="ngModel">
+    <div *ngIf="serverName.touched && serverName.invalid" class="alert alert-danger">
+        Nie podano nazwy serwera!
+    </div>
+    </div>
+    <div class="buttons">
+        <button type="submit" class="button center" [disabled]="serverName.invalid" > Dołącz</button>
+    </div>
+</form> 
+
+</div>

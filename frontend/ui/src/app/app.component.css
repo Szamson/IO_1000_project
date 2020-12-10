@@ -1,0 +1,40 @@
+.container
+{
+    background-color: lightblue;
+}
+
+.contents
+{
+    background-color: coral;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.logo-container
+{
+    width: 100%;
+    padding: 10px;
+}
+
+.logo
+{
+    background-color: red;
+    color: black;
+    padding: 20px;
+    font-size: 28px;
+    max-width: 180px;
+    text-decoration: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.logo:hover 
+{
+    background-color: blue;
+    color: white;
+    cursor: pointer;
+}

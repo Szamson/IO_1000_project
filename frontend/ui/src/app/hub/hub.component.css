@@ -1,0 +1,43 @@
+.container
+{
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.icon
+{
+    width: 100px;
+    height: 100px;
+    background-color: white;
+    vertical-align: middle;
+    text-align: center;
+    margin-bottom:10px;
+}
+
+.plaques
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+}
+
+.plaque
+{
+    padding: 10px;
+    text-align: center;
+}
+
+.bottom-line
+{
+    font-size: 25px;
+    text-align: center;
+}
+
+button
+{
+    margin-top:10px;
+}

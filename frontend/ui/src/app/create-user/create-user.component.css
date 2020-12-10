@@ -1,0 +1,59 @@
+.container
+{
+    margin-left: auto;
+    margin-right: auto;
+    background-color: thistle;
+    max-width: 560px;
+    padding: 20px;
+}
+
+label
+{
+    font-size: 35px;
+    display: block;
+    text-align: center;
+}
+
+.form-control
+{
+    display: block;
+    box-sizing: border-box;
+    
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 30px;
+    width: 100%;
+}
+
+.buttons
+{
+    margin-top: 20px;
+    padding: 10px;
+}
+
+.col2
+{
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.center
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.alert
+{
+    border: solid 1px black;
+    padding: 10px;
+    border-radius: 5px;;
+}
+
+.alert-danger
+{
+    background-color: indianred;
+}

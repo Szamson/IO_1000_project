@@ -1,0 +1,19 @@
+<div class="container">
+
+<div class="plaques">
+    <div class="plaque" *ngFor="let username of genNames(3)">
+        <div class="icon">
+            A!
+        </div>
+        {{username}}
+        <div *ngIf="isHost && username=='empty'">
+            <button (click)="addBot()" >Add bot</button>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-line">
+    Waiting lol
+</div>
+
+</div>
