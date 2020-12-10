@@ -2,34 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6239231-17fb-4111-8f60-1be3a6a60e5d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/.idea/Tausend.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/api/migrations/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Tausend.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tausend/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Tausend/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tausend/asgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Tausend/asgi.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tausend/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Tausend/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tausend/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Tausend/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tausend/wsgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Tausend/wsgi.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/api/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/api/apps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/api/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/api/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/api/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/api/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/api/tests.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/api/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/api/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/backend/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/manage.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/manage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/Tausend.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Tausend/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Tausend/asgi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Tausend/settings.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Tausend/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Tausend/wsgi.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/apps.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/migrations/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/serializers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/tests.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/urls.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/api/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/db.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/manage.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,8 +57,8 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.django.DjangoModulesConfigurable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/backend/Tausend/settings.py" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -70,21 +68,21 @@
       <recent name="C:\Users\szymo\GIT\IO_1000\frontend" />
     </key>
   </component>
-  <component name="RunManager" selected="Django server.Tausend">
+  <component name="RunManager" selected="Django server.backend">
     <configuration name="manage" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
-      <module name="Tausend" />
+      <module name="IO_1000" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="" />
+      <option name="SDK_HOME" value="C:\Users\szymo\PycharmProjects\Virtual\Tausend\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="C:\Users\szymo\GIT\IO_1000\backend\manage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/backend/manage.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -93,7 +91,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Tausend" type="Python.DjangoServer" factoryName="Django server">
+    <configuration name="backend" type="Python.DjangoServer" factoryName="Django server">
       <module name="IO_1000" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -118,7 +116,7 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Django server.Tausend" />
+      <item itemvalue="Django server.backend" />
       <item itemvalue="Python.manage" />
     </list>
   </component>
@@ -140,6 +138,9 @@
       <workItem from="1607453181540" duration="1363000" />
       <workItem from="1607454567484" duration="68000" />
       <workItem from="1607454657653" duration="75000" />
+      <workItem from="1607468795664" duration="360000" />
+      <workItem from="1607469173706" duration="190000" />
+      <workItem from="1607557106894" duration="1710000" />
     </task>
     <servers />
   </component>
@@ -147,52 +148,57 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="650" y="42" key="#Tausend" timestamp="1607454631134">
+    <state x="650" y="42" key="#Tausend" timestamp="1607468905953">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="650" y="42" key="#Tausend/0.0.1920.1040@0.0.1920.1040" timestamp="1607454631134" />
-    <state x="414" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1607454731402">
+    <state x="650" y="42" key="#Tausend/0.0.1920.1040@0.0.1920.1040" timestamp="1607468905953" />
+    <state x="414" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1607469138320">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="414" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1607454731402" />
+    <state x="414" y="168" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1607469138320" />
     <state x="685" y="305" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1607077979025">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="685" y="305" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1607077979025" />
-    <state x="689" y="217" key="FileChooserDialogImpl" timestamp="1607454702892">
+    <state x="644" y="75" key="#manage" timestamp="1607468988806">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="689" y="217" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1607454702892" />
-    <state width="1865" height="278" key="GridCell.Tab.0.bottom" timestamp="1607454545164">
+    <state x="644" y="75" key="#manage/0.0.1920.1040@0.0.1920.1040" timestamp="1607468988806" />
+    <state x="689" y="217" key="FileChooserDialogImpl" timestamp="1607468869223">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1865" height="278" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1607454545164" />
-    <state width="1865" height="278" key="GridCell.Tab.0.center" timestamp="1607454545164">
+    <state x="689" y="217" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1607468869223" />
+    <state width="1865" height="314" key="GridCell.Tab.0.bottom" timestamp="1607557195811">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1865" height="278" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1607454545164" />
-    <state width="1865" height="278" key="GridCell.Tab.0.left" timestamp="1607454545164">
+    <state width="1865" height="314" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1607557195811" />
+    <state width="1865" height="314" key="GridCell.Tab.0.center" timestamp="1607557195810">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1865" height="278" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1607454545164" />
-    <state width="1865" height="278" key="GridCell.Tab.0.right" timestamp="1607454545164">
+    <state width="1865" height="314" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1607557195810" />
+    <state width="1865" height="314" key="GridCell.Tab.0.left" timestamp="1607557195810">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1865" height="278" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1607454545164" />
-    <state x="352" y="77" key="SettingsEditor" timestamp="1607454724993">
+    <state width="1865" height="314" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1607557195810" />
+    <state width="1865" height="314" key="GridCell.Tab.0.right" timestamp="1607557195810">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="352" y="77" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1607454724993" />
-    <state x="0" y="0" key="com.intellij.ide.util.TipDialog" timestamp="1607454657640">
+    <state width="1865" height="314" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1607557195810" />
+    <state x="352" y="77" key="SettingsEditor" timestamp="1607469108177">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="0" y="0" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1607454657640" />
-    <state x="738" y="417" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1607452421535">
+    <state x="352" y="77" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1607469108177" />
+    <state x="0" y="0" key="com.intellij.ide.util.TipDialog" timestamp="1607557113761">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="738" y="417" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1607452421535" />
+    <state x="0" y="0" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1607557113761" />
+    <state x="738" y="417" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1607557157038">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="738" y="417" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1607557157038" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/IO_1000$manage.coverage" NAME="manage Coverage Results" MODIFIED="1607468988826" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Tausend$manage.coverage" NAME="manage Coverage Results" MODIFIED="1607078256814" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
