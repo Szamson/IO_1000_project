@@ -10,7 +10,7 @@ import { LoggerService } from './logger.service';
 })
 export class GameServerService {
 
-  readonly serverURL = 'api/server'
+  readonly serverURL = 'localhost:8000/api/players'
 
   httpOptions = {
     headers : new HttpHeaders({'Content-type' : 'application/json'})

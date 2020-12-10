@@ -6,4 +6,5 @@ urlpatterns = [
     path('games', GameView.as_view()),
     path('players', PlayerView.as_view()),
     path('rooms', RoomView.as_view()),
+    path('player_data', get_player_data)
 ]

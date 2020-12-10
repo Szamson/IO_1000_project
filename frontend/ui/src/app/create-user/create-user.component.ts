@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LoggerService } from '../logger.service';
 import { UserinfoService } from '../userinfo.service';
+import {User} from '../user'
 
 import {ServerInfo} from '../serverinfo'
 
@@ -9,6 +10,7 @@ import {ServerInfo} from '../serverinfo'
   templateUrl: './create-user.component.html',
   styleUrls: ['./create-user.component.css']
 })
+
 export class CreateUserComponent implements OnInit {
 
   constructor(private logger : LoggerService, 
@@ -19,6 +21,7 @@ export class CreateUserComponent implements OnInit {
   displayJoin : boolean = false;
   displayCreate : boolean = false;
 
+  users : User[];
 
   onSubmit() : void
   {
@@ -38,6 +41,8 @@ export class CreateUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userinfo.getUsers().subscribe( users => this.users = users );
+
   }
 
 }
