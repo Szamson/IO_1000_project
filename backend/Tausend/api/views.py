@@ -10,7 +10,7 @@ class RoomView(generics.ListAPIView):
     serializer_class = RoomSerializer
 
 
-class PlayerView(generics.ListAPIView):
+class PlayerView(generics.CreateAPIView):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
 
