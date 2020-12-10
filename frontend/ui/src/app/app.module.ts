@@ -11,6 +11,7 @@ import { LoggerMessegesComponent } from './logger-messeges/logger-messeges.compo
 import { AppRoutingModule } from './app-routing.module';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { HubComponent } from './hub/hub.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { HubComponent } from './hub/hub.component';
     LoggerMessegesComponent,
     CreateUserComponent,
     HubComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
