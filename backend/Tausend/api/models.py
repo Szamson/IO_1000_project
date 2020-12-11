@@ -15,8 +15,8 @@ class Room(models.Model):
 
 
 class Player(models.Model):
-    code = models.CharField(max_length=12, default="", unique=True, null=True)
-    name = models.CharField(max_length=50, unique=True, null=False)
+    code = models.CharField(max_length=12, default="", null=True)
+    name = models.CharField(max_length=50, null=False)
 
 
 class Game(models.Model):

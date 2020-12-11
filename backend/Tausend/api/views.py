@@ -39,15 +39,34 @@ def get_room_list(request):
 
 class RoomPostView(APIView):
     serializer_post_class = CreateRoomSerializer
+    length = 8
+
+    def generate_unique_code(self):
+
+        while True:
+            code = ''.join(random.choices(string.ascii_uppercase, k=self.length))
+            if Room.objects.filter(code=code).count() == 0:
+                break
+
+        return code
 
     def post(self, request):
         serializer = self.serializer_post_class(data=request.data)
 
         if serializer.is_valid():
             host = serializer.data.get('host')
-            room = Room(host=host)
-            room.save()
-            return Response(RoomSerializer(room).data, status=status.HTTP_201_CREATED)
+            queryset = Room.objects.filter(host=host)
+            if len(queryset) > 0:
+                room = queryset[0]
+                room.player_1 = serializer.data.get('player_1')
+                room.player_2 = serializer.data.get('player_2')
+                room.player_3 = serializer.data.get('player_3')
+                room.save(update_fields=['player_1', 'player_2', 'player_3'])
+                return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+            else:
+                code = self.generate_unique_code()
+                room = Room(host=host, code=code)
+                return Response(RoomSerializer(room).data, status=status.HTTP_201_CREATED)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -93,7 +112,14 @@ class PlayerPostView(APIView):
 
         if serializer.is_valid():
             name = serializer.data.get('name')
-            player = Player(name=name)
-            player.save()
-            return Response(PlayerSerializer(player).data, status=status.HTTP_201_CREATED)
+            queryset = Player.objects.filter(name=name)
+            if len(queryset) > 0:
+                player = queryset[0]
+                player.code = serializer.data.get('code')
+                player.save(update_fields=['code'])
+                return Response(PlayerSerializer(player).data, status=status.HTTP_200_OK)
+            else:
+                player = Player(name=name)
+                player.save()
+                return Response(PlayerSerializer(player).data, status=status.HTTP_201_CREATED)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
