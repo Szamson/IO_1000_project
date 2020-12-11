@@ -1,11 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from rest_framework import generics, status
-from rest_framework.decorators import api_view
-from .models import *
-from .serializers import *
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from .models import Player, Room, Game
+from .serializers import *
 
 
 class RoomView(generics.CreateAPIView):
@@ -24,7 +23,7 @@ class GameView(generics.ListAPIView):
 
 
 class RoomPostView(APIView):
-    serializer_post_class = CreateRoomSerializer
+    serializer_class = CreateRoomSerializer
     length = 8
 
     def generate_unique_code(self):
@@ -37,7 +36,8 @@ class RoomPostView(APIView):
         return code
 
     def post(self, request):
-        serializer = self.serializer_post_class(data=request.data)
+
+        serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
             host = serializer.data.get('host')
@@ -57,7 +57,6 @@ class RoomPostView(APIView):
 
 
 class RoomGetView(APIView):
-    serializer_get_class = RoomSerializer
     lookup_url_kwarg = 'code'
 
     def get(self, request):
@@ -74,7 +73,6 @@ class RoomGetView(APIView):
 
 
 class RoomPopView(APIView):
-    serializer_get_class = RoomSerializer
     lookup_url_kwarg = 'code'
 
     def delete(self, request):
@@ -91,10 +89,10 @@ class RoomPopView(APIView):
 
 
 class PlayerPostView(APIView):
-    serializer_post_class = CreatePlayerSerializer
+    serializer_class = CreatePlayerSerializer
 
     def post(self, request):
-        serializer = self.serializer_post_class(data=request.data)
+        serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
             name = serializer.data.get('name')
@@ -112,8 +110,6 @@ class PlayerPostView(APIView):
 
 
 class PlayerGetView(APIView):
-
-    serializer_get_class = PlayerSerializer
     lookup_url_kwarg = 'name'
 
     def get(self, request):
@@ -130,8 +126,6 @@ class PlayerGetView(APIView):
 
 
 class PlayerPopView(APIView):
-
-    serializer_get_class = PlayerSerializer
     lookup_url_kwarg = 'name'
 
     def get(self, request):
@@ -144,4 +138,62 @@ class PlayerPopView(APIView):
                 player.delete()
                 return Response(status=status.HTTP_200_OK)
             return Response({'Bad Request': 'Invalid Player Name...'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'Bad Request': 'Name parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GamePostView(APIView):
+    serializer_class = CreateGameSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            code = serializer.data.get('code')
+            queryset = Player.objects.filter(code=code)
+            if len(queryset) > 0:
+                game = queryset[0]
+                game.deck = serializer.data.get('deck')
+                game.player_1_hand = serializer.data.get('player_1_hand')
+                game.player_2_hand = serializer.data.get('player_2_hand')
+                game.player_3_hand = serializer.data.get('player_3_hand')
+                game.middle = serializer.data.get('middle')
+                game.inactive_player = serializer.data.get('inactive_player')
+                game.save(update_fields=['deck', 'player_1_hand', 'player_2_hand', 'player_3_hand', 'middle',
+                                         'inactive_player'])
+            else:
+                game = Game(code=code)
+                game.save()
+                return Response(PlayerSerializer(game).data, status=status.HTTP_201_CREATED)
+        return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GameGetView(APIView):
+    lookup_url_kwarg = 'code'
+
+    def get(self, request):
+
+        code = request.GET.get(self.lookup_url_kwarg)
+
+        if code is not None:
+            games = Game.objects.filter(code=code)
+            if len(games) > 0:
+                data = RoomSerializer(games[0]).data
+                return Response(data, status=status.HTTP_200_OK)
+            return Response({'Bad Request': 'Invalid Game Code...'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GamePopView(APIView):
+    lookup_url_kwarg = 'code'
+
+    def get(self, request):
+
+        code = request.GET.get(self.lookup_url_kwarg)
+
+        if code is not None:
+            games = Game.objects.filter(code=code)
+            if len(games) > 0:
+                games[0].delete()
+                return Response(status=status.HTTP_200_OK)
+            return Response({'Bad Request': 'Invalid Game Code...'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)

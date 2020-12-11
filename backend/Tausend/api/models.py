@@ -8,10 +8,10 @@ import string
 
 class Room(models.Model):
     code = models.CharField(max_length=12, default='', unique=True)
-    host = models.CharField(max_length=50, unique=True, null=False)
-    player_1 = models.CharField(max_length=50, unique=True, null=True)
-    player_2 = models.CharField(max_length=50, unique=True, null=True)
-    player_3 = models.CharField(max_length=50, unique=True, null=True)
+    host = models.CharField(max_length=50, null=False)
+    player_1 = models.CharField(max_length=50, null=True)
+    player_2 = models.CharField(max_length=50, null=True)
+    player_3 = models.CharField(max_length=50, null=True)
 
 
 class Player(models.Model):
@@ -26,4 +26,4 @@ class Game(models.Model):
     player_2_hand = []
     player_3_hand = []
     middle = []
-    inactive_player = models.CharField(max_length=50, unique=True, null=True)
+    inactive_player = models.CharField(max_length=50, null=True)
