@@ -23,20 +23,6 @@ class GameView(generics.ListAPIView):
     serializer_class = GameSerializer
 
 
-def get_player_data(request):
-    data = Player.objects.all()
-
-    serializer = PlayerSerializer(data, many=True)
-    return JsonResponse(serializer.data, safe=False)
-
-
-def get_room_list(request):
-    data = Room.objects.all()
-
-    serializer = RoomSerializer(data, many=True)
-    return JsonResponse(serializer.data, safe=False)
-
-
 class RoomPostView(APIView):
     serializer_post_class = CreateRoomSerializer
     length = 8
@@ -123,3 +109,39 @@ class PlayerPostView(APIView):
                 player.save()
                 return Response(PlayerSerializer(player).data, status=status.HTTP_201_CREATED)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PlayerGetView(APIView):
+
+    serializer_get_class = PlayerSerializer
+    lookup_url_kwarg = 'name'
+
+    def get(self, request):
+
+        name = request.GET.get(self.lookup_url_kwarg)
+
+        if name is not None:
+            player = Player.objects.filter(name=name)
+            if len(player) > 0:
+                data = RoomSerializer(player[0]).data
+                return Response(data, status=status.HTTP_200_OK)
+            return Response({'Bad Request': 'Invalid Player Name...'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PlayerPopView(APIView):
+
+    serializer_get_class = PlayerSerializer
+    lookup_url_kwarg = 'name'
+
+    def get(self, request):
+
+        name = request.GET.get(self.lookup_url_kwarg)
+
+        if name is not None:
+            player = Player.objects.filter(name=name)
+            if len(player) > 0:
+                player.delete()
+                return Response(status=status.HTTP_200_OK)
+            return Response({'Bad Request': 'Invalid Player Name...'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
