@@ -25,7 +25,7 @@ export class UserinfoService {
 
   getUser (code : string) : Observable<User>
   {
-    return this.http.get<User>(`${this.userURL}/player/$(code)`, this.httpOptions).pipe(tap( _ => catchError(this.handleError<any>(`get user`)) ));
+    return this.http.get<User>(`${this.userURL}/players?${code}`, this.httpOptions).pipe(tap( _ => catchError(this.handleError<any>(`get user`)) ));
   }
 
   getUsers () : Observable<User[]>
@@ -35,7 +35,7 @@ export class UserinfoService {
 
   createUser( username : string ) : Observable<User>
   {
-    return this.http.post<User>(this.userURL, username, this.httpOptions);
+    return this.http.post<User>(`${this.userURL}/players`, username, this.httpOptions);
   }
 
   constructor(public logger : LoggerService, private http : HttpClient) { }
