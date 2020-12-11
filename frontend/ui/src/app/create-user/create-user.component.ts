@@ -30,7 +30,7 @@ export class CreateUserComponent implements OnInit {
 
   onJoin() : void
   {
-    this.logger.log("Joined!");
+    this.logger.log("Selected join form");
     this.displayJoin = true;
   }
 
@@ -40,9 +40,13 @@ export class CreateUserComponent implements OnInit {
     this.displayCreate = true;
   }
 
+  joinServer() : void
+  {
+    this.logger.log("Joined!");
+  }
+
   ngOnInit(): void {
     this.userinfo.getUsers().subscribe( users => this.users = users );
-
   }
 
 }

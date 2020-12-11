@@ -1,48 +1,41 @@
 <div class="container">
 
-<form *ngIf="!displayJoin && !displayCreate" (ngSubmit)="onSubmit()" #userForm="ngForm" >
+<form *ngIf="!displayJoin" (ngSubmit)="onSubmit()" #userForm="ngForm" >
     <div class="form-group">
-    <label for="username">Username</label>
-    <input type="text" class="form-control" id="username" name="username" [(ngModel)]="userdata.username" required #username="ngModel">
-    <div *ngIf="username.touched && username.invalid" class="alert alert-danger">
+    <label for="username">Nazwa użytkownika</label>
+    <input type="text" class="form-control" id="username" name="username" placeholder="Nazwa użytkownika" [(ngModel)]="userdata.username" required pattern="^(?!empty$).*$" #username="ngModel">
+    <div *ngIf="username.touched && username.errors?.required" class="alert alert-danger">
         Nie podano nazwy użytkownika!
+    </div>
+    <div *ngIf="username.errors?.pattern" class="alert alert-danger">
+        Nazwa użytkownika nie może wynosić "empty"
     </div>
     </div>
 
     <div class="buttons col2">
-        <button type="submit" (click)="onJoin()" class="button" [disabled]="username.invalid">Dołącz</button>
-        <button type="submit" (click)="onCreate()" class="button" [disabled]="username.invalid">Stwórz serwer</button>
+        <button type="submit" (click)="onJoin()" class="button" [disabled]="username.invalid">Dołącz do pokoju</button>
+        <button type="submit" (click)="onCreate()" class="button" [disabled]="username.invalid">Stwórz pokój</button>
     </div>
 </form>
 
-<form *ngIf="displayCreate" (ngSubmit)="onSubmit()" #createServer="ngForm" >
+<form *ngIf="displayJoin" (ngSubmit)="onSubmit()" #createServer="ngForm" >
     <div class="form-group">
-    <label for="serverName">Server name</label>
-    <input type="text" class="form-control" id="serverName" name="serverName" [(ngModel)]="userdata.serverName" required #serverName="ngModel">
+    <label for="serverName">Kod pokoju</label>
+    <input type="text" class="form-control" id="serverName" name="serverName" placeholder="Kod pokoju" [(ngModel)]="userdata.serverName" required #serverName="ngModel">
     <div *ngIf="serverName.touched && serverName.invalid" class="alert alert-danger">
         Nie podano nazwy serwera!
     </div>
     </div>
     <div class="buttons">
-        <button type="submit" class="button center" [disabled]="serverName.invalid">Stwórz serwer</button>
+        <button type="submit" (click)="joinServer()" class="button center" [disabled]="serverName.invalid">Dołącz</button>
     </div>
-</form> 
 
-<form *ngIf="displayJoin" (ngSubmit)="onSubmit()" #joinServer="ngForm" >
-    <div class="form-group">
-    <label for="serverName">Server name</label>
-    <input type="text" class="form-control" id="serverName" name="serverName" [(ngModel)]="userdata.serverName" required #serverName="ngModel">
-    <div *ngIf="serverName.touched && serverName.invalid" class="alert alert-danger">
-        Nie podano nazwy serwera!
-    </div>
-    </div>
-    <div class="buttons">
-        <button type="submit" class="button center" [disabled]="serverName.invalid" > Dołącz</button>
-    </div>
+    {{userdata | json}}
+
 </form> 
 
 <div *ngFor='let user of users'>
-    {{user.code}}
+    {{user | json}}
 </div>
 
 
