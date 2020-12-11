@@ -43,4 +43,13 @@ class CreateRoomSerializer(serializers.ModelSerializer):
         fields = ('host',
                   'player_1',
                   'player_2',
-                  'player_3',)
+                  'player_3'
+                  )
+
+
+class CreatePlayerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Player
+        fields = (
+                  'name'
+                  )

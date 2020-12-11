@@ -9,4 +9,5 @@ urlpatterns = [
     path('room-create', RoomPostView.as_view()),
     path('room-get', RoomGetView.as_view()),
     path('room-delete', RoomPopView.as_view()),
+    path('player-create', PlayerPostView.as_view()),
 ]
