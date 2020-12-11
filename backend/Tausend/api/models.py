@@ -18,12 +18,11 @@ def generate_code():
 
 
 class Room(models.Model):
-    code = models.CharField(max_length=12, default="", unique=True)
+    code = models.CharField(max_length=12, default=generate_code, unique=True)
     host = models.CharField(max_length=50, unique=True, null=False)
     player_1 = models.CharField(max_length=50, unique=True, null=True)
     player_2 = models.CharField(max_length=50, unique=True, null=True)
     player_3 = models.CharField(max_length=50, unique=True, null=True)
-    number_of_players = models.IntegerField()
 
 
 class Player(models.Model):

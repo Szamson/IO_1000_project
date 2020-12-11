@@ -11,7 +11,6 @@ class RoomSerializer(serializers.ModelSerializer):
                   'player_1',
                   'player_2',
                   'player_3',
-                  'number_of_players'
                   )
 
 
@@ -36,3 +35,9 @@ class GameSerializer(serializers.ModelSerializer):
                   'middle',
                   'inactive_player'
                   )
+
+
+class CreateRoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Room
+        fields = ('host')
