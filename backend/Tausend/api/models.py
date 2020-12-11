@@ -5,20 +5,9 @@ import string
 
 # Create your models here.
 
-def generate_code():
-    length = 8
-
-    while True:
-        code = ''.join(random.choices(string.ascii_uppercase, length))
-
-        if Room.objects.filter(code=code).count() == 0:
-            break
-
-    return code
-
 
 class Room(models.Model):
-    code = models.CharField(max_length=12, default=generate_code, unique=True)
+    code = models.CharField(max_length=12, default='', unique=True)
     host = models.CharField(max_length=50, unique=True, null=False)
     player_1 = models.CharField(max_length=50, unique=True, null=True)
     player_2 = models.CharField(max_length=50, unique=True, null=True)

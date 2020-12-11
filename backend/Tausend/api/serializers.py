@@ -40,4 +40,7 @@ class GameSerializer(serializers.ModelSerializer):
 class CreateRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
-        fields = ('host')
+        fields = ('host',
+                  'player_1',
+                  'player_2',
+                  'player_3',)
