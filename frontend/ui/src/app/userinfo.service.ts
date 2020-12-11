@@ -12,7 +12,7 @@ import {User} from './user'
 })
 export class UserinfoService {
 
-  readonly userURL = 'http://localhost:8000/api'; 
+  readonly userURL = 'http://localhost:8000/api/player_data'; 
 
   httpOptions = {
     headers : new HttpHeaders({'Content-type' : 'application/json'})
@@ -30,7 +30,7 @@ export class UserinfoService {
 
   getUsers () : Observable<User[]>
   {
-    return this.http.get<User[]>(`${this.userURL}/players`, this.httpOptions);
+    return this.http.get<User[]>(this.userURL, this.httpOptions);
   }
 
   createUser( username : string ) : Observable<User>

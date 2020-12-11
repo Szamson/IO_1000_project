@@ -43,13 +43,9 @@ export class CreateUserComponent implements OnInit {
     this.displayCreate = true;
   }
 
-  joinServer() : void
-  {
-    this.logger.log("Joined!");
-  }
-
   ngOnInit(): void {
     this.userinfo.getUsers().subscribe( users => this.users = users );
+
   }
 
 }
