@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http'
 import {Observable, of} from 'rxjs';
@@ -12,7 +13,7 @@ import {User} from './user'
 })
 export class UserinfoService {
 
-  readonly userURL = 'http://localhost:8000/api/player_data'; 
+  readonly userURL = 'http://localhost:8000/api'; 
 
   httpOptions = {
     headers : new HttpHeaders({'Content-type' : 'application/json'})
@@ -25,17 +26,17 @@ export class UserinfoService {
 
   getUser (code : string) : Observable<User>
   {
-    return this.http.get<User>(`${this.userURL}/players?${code}`, this.httpOptions).pipe(tap( _ => catchError(this.handleError<any>(`get user`)) ));
+    return this.http.get<User>(`${this.userURL}/player/$(code)`, this.httpOptions).pipe(tap( _ => catchError(this.handleError<any>(`get user`)) ));
   }
 
   getUsers () : Observable<User[]>
   {
-    return this.http.get<User[]>(this.userURL, this.httpOptions);
+    return this.http.get<User[]>(`${this.userURL}/players`, this.httpOptions);
   }
 
   createUser( username : string ) : Observable<User>
   {
-    return this.http.post<User>(`${this.userURL}/players`, username, this.httpOptions);
+    return this.http.post<User>(this.userURL, username, this.httpOptions);
   }
 
   constructor(public logger : LoggerService, private http : HttpClient) { }

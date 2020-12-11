@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { LoggerService } from '../logger.service';
 import { UserinfoService } from '../userinfo.service';
@@ -30,9 +31,6 @@ export class CreateUserComponent implements OnInit {
 
   onJoin() : void
   {
-    let user : User
-    this.userinfo.createUser(this.userdata.username).subscribe( u => user = u );
-
     this.logger.log("Selected join form");
     this.displayJoin = true;
   }
@@ -43,9 +41,13 @@ export class CreateUserComponent implements OnInit {
     this.displayCreate = true;
   }
 
+  joinServer() : void
+  {
+    this.logger.log("Joined!");
+  }
+
   ngOnInit(): void {
     this.userinfo.getUsers().subscribe( users => this.users = users );
-
   }
 
 }
