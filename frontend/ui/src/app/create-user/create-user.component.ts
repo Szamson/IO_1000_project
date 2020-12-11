@@ -31,6 +31,14 @@ export class CreateUserComponent implements OnInit {
 
   onJoin() : void
   {
+    let user : User;
+    let data : User = new User();
+    data.code = null;
+    data.id = null;
+    data.name = this.userdata.username;
+    this.logger.log(data.name);
+    this.userinfo.createUser(data).subscribe( u => user = u);
+
     this.logger.log("Selected join form");
     this.displayJoin = true;
   }

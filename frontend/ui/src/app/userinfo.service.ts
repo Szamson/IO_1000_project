@@ -34,9 +34,9 @@ export class UserinfoService {
     return this.http.get<User[]>(`${this.userURL}/players`, this.httpOptions);
   }
 
-  createUser( username : string ) : Observable<User>
+  createUser( user : User ) : Observable<User>
   {
-    return this.http.post<User>(this.userURL, username, this.httpOptions);
+    return this.http.post<User>(`${this.userURL}/player-create`, user);
   }
 
   constructor(public logger : LoggerService, private http : HttpClient) { }

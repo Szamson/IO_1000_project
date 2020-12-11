@@ -19,7 +19,7 @@ class PlayerSerializer(serializers.ModelSerializer):
         model = Player
         fields = ('id',
                   'code',
-                  'name'
+                  'name',
                   )
 
 
@@ -33,7 +33,7 @@ class GameSerializer(serializers.ModelSerializer):
                   'player_2_hand',
                   'player_3_hand',
                   'middle',
-                  'inactive_player'
+                  'inactive_player',
                   )
 
 
@@ -43,7 +43,7 @@ class CreateRoomSerializer(serializers.ModelSerializer):
         fields = ('host',
                   'player_1',
                   'player_2',
-                  'player_3'
+                  'player_3',
                   )
 
 
@@ -51,5 +51,5 @@ class CreatePlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
         fields = (
-                  'name'
+                  'name',
                   )
