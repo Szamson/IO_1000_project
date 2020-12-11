@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { stringify } from 'querystring';
 import { LoggerService } from '../logger.service';
+import {ActivatedRoute} from '@angular/router'
+import { Server } from '../server';
+import {GameServerService} from '../game-server.service'
 
 @Component({
   selector: 'app-hub',
@@ -9,7 +11,11 @@ import { LoggerService } from '../logger.service';
 })
 export class HubComponent implements OnInit {
 
-  constructor( public logger : LoggerService ) { }
+  constructor( public logger : LoggerService,
+    private route : ActivatedRoute,
+    private servers : GameServerService ) { }
+
+  server = new Server();
 
   usernames : string[] = ["jan", "kowal"];
 
@@ -18,6 +24,17 @@ export class HubComponent implements OnInit {
   addBot() : void
   {
     this.logger.log("added bot");
+  }
+
+  private genUsernameList() : string[]
+  {
+    let data : string[] = [
+      this.server.player1,
+      this.server.player2,
+      this.server.player3
+    ];
+    
+    return data;
   }
 
   genNames(N : number) : string[]
@@ -35,6 +52,9 @@ export class HubComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    const id : string = this.route.snapshot.paramMap.get('id');
+    this.servers.getServer(id).subscribe(serv => this.server = serv);
+    this.usernames = this.genUsernameList();
   }
 
 }

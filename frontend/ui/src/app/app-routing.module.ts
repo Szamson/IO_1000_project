@@ -8,7 +8,7 @@ import { HubComponent } from './hub/hub.component';
 const routes : Routes = [
   {path:"game", component:GameComponent},
   {path:"user", component:CreateUserComponent},
-  {path:"hub", component:HubComponent},
+  {path:"hub/:id", component:HubComponent},
   {path:"pageNotFound", component:NotFoundComponent},
   {path:"**", redirectTo:'user'}
 ];

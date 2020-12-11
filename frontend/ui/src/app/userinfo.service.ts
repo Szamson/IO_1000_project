@@ -21,7 +21,7 @@ export class UserinfoService {
 
   private handleError<T>(operation = 'operation', result ?: T)
   {
-    return (error:any) : Observable<T> => { this.logger.log(`Error with $operation`); return of(result as T); }
+    return (error:any) : Observable<T> => { this.logger.log(`Error with ${operation}`); return of(result as T); }
   }
 
   getUser (code : string) : Observable<User>
