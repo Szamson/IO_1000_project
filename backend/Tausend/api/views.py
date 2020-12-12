@@ -119,7 +119,7 @@ class PlayerGetView(APIView):
         if name is not None:
             player = Player.objects.filter(name=name)
             if len(player) > 0:
-                data = RoomSerializer(player[0]).data
+                data = PlayerSerializer(player[0]).data
                 return Response(data, status=status.HTTP_200_OK)
             return Response({'Bad Request': 'Invalid Player Name...'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
@@ -149,7 +149,7 @@ class GamePostView(APIView):
 
         if serializer.is_valid():
             code = serializer.data.get('code')
-            queryset = Player.objects.filter(code=code)
+            queryset = Game.objects.filter(code=code)
             if len(queryset) > 0:
                 game = queryset[0]
                 game.deck = serializer.data.get('deck')
