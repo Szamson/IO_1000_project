@@ -7,7 +7,7 @@ from .models import Player, Room, Game
 from .serializers import *
 
 
-class RoomView(generics.CreateAPIView):
+class RoomView(generics.ListAPIView):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
 
