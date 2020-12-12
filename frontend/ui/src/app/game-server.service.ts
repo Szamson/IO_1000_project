@@ -13,6 +13,9 @@ export class GameServerService {
 
   readonly serverURL = 'http://localhost:8000/api'
 
+  user : User;
+  server : Server;
+
   httpOptions = {
     headers : new HttpHeaders({'Content-type' : 'application/json'})
   };
@@ -34,6 +37,21 @@ export class GameServerService {
     data.player3 = null;
 
     return this.http.post<Server>(`${this.serverURL}/room-create`, data, this.httpOptions);
+  }
+
+  createUser(user : User) : Observable<User>
+  {
+    return this.http.post<User>(`${this.serverURL}/player-create`, user);
+  }
+
+  getUsers() : Observable<User[]>
+  {
+    return this.http.get<User[]>(`${this.serverURL}/players`);
+  }
+
+  getUser() : Observable<User>
+  {
+    return null;
   }
 
   constructor(private http : HttpClient, public logger : LoggerService) { }

@@ -1,13 +1,11 @@
 
 import { Component, OnInit } from '@angular/core';
 import { LoggerService } from '../logger.service';
-import { UserinfoService } from '../userinfo.service';
 import {User} from '../user'
 import {Router} from '@angular/router'
 
-import {ServerInfo} from '../serverinfo'
 import { GameServerService } from '../game-server.service';
-import {Server} from '../server'
+import {FormData} from '../form-data'
 
 @Component({
   selector: 'app-create-user',
@@ -18,39 +16,51 @@ import {Server} from '../server'
 export class CreateUserComponent implements OnInit {
 
   constructor(private logger : LoggerService, 
-    private userinfo : UserinfoService,
-    private gameServer : GameServerService,
+    private serverService : GameServerService,
     public router : Router) { }
 
-  userdata : ServerInfo = new ServerInfo();
+  formdata : FormData = new FormData();
 
+  enterUsername : boolean = true;
   displayJoin : boolean = false;
-  displayCreate : boolean = false;
+  chooseOption : boolean = false;
 
-  users : User[];
-  user : User;
+  public users : User[];
+  public user : User;
+
+  createUser()
+  {
+    this.enterUsername = false;
+    this.chooseOption = true;
+    this.logger.log("createUser()");
+
+    let parameters : User = { id : null, code : null, name : this.formdata.username };
+    this.serverService.createUser(parameters).subscribe(user => this.user = user);
+  }
 
   onSubmit() : void
   {
-
-  }
-
-  onJoin() : void
-  {
-    let data : User = new User();
+    /*let data : User = new User();
     data.code = null;
     data.id = null;
     data.name = this.userdata.username;
     this.logger.log(data.name);
-    this.userinfo.createUser(data).subscribe( u => this.user = u);
+    this.userinfo.createUser(data).subscribe( u => this.user = u);*/
+  }
 
-    this.logger.log("Selected join form");
+  onJoin() : void
+  {
     this.displayJoin = true;
+    this.chooseOption = false;
+    this.logger.log("onJoin()");
+
+    /*this.logger.log("Selected join form");*/
   }
 
   onCreate() : void
   {
-    let data : User = new User();
+    this.logger.log("onCreate()");
+    /*let data : User = new User();
     data.code = null;
     data.id = null;
     data.name = this.userdata.username;
@@ -59,12 +69,12 @@ export class CreateUserComponent implements OnInit {
       this.user = u
       let serv = new Server();
       console.log(this.user)
-      this.gameServer.createServer(this.user).subscribe(s => {
+      this.serverService.createServer(this.user).subscribe(s => {
         serv = s
         console.log(serv)
         this.router.navigate([`hub/${serv.code}`])
       });
-    });
+    });*/
   }
 
   joinServer() : void
@@ -73,7 +83,7 @@ export class CreateUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userinfo.getUsers().subscribe( users => this.users = users );
+    this.serverService.getUsers().subscribe( user => this.users = user);
   }
 
 }
