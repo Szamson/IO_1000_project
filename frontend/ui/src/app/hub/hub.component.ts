@@ -29,6 +29,7 @@ export class HubComponent implements OnInit {
   private genUsernameList() : string[]
   {
     let data : string[] = [
+      this.server.host,
       this.server.player1,
       this.server.player2,
       this.server.player3
@@ -53,7 +54,7 @@ export class HubComponent implements OnInit {
 
   ngOnInit(): void {
     const id : string = this.route.snapshot.paramMap.get('id');
-    this.servers.getServer(id).subscribe(serv => this.server = serv);
+    this.servers.getServer(id).subscribe(serv => {this.server = serv;});
     this.usernames = this.genUsernameList();
   }
 

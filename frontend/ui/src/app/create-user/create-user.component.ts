@@ -2,10 +2,14 @@
 import { Component, OnInit } from '@angular/core';
 import { LoggerService } from '../logger.service';
 import {User} from '../user'
+import {Server} from '../server'
 import {Router} from '@angular/router'
 
 import { GameServerService } from '../game-server.service';
 import {FormData} from '../form-data'
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { LoggerMessegesComponent } from '../logger-messeges/logger-messeges.component';
 
 @Component({
   selector: 'app-create-user',
@@ -30,22 +34,14 @@ export class CreateUserComponent implements OnInit {
 
   createUser()
   {
-    this.enterUsername = false;
-    this.chooseOption = true;
     this.logger.log("createUser()");
-
-    let parameters : User = { id : null, code : null, name : this.formdata.username };
-    this.serverService.createUser(parameters).subscribe(user => this.user = user);
-  }
-
-  onSubmit() : void
-  {
-    /*let data : User = new User();
-    data.code = null;
-    data.id = null;
-    data.name = this.userdata.username;
-    this.logger.log(data.name);
-    this.userinfo.createUser(data).subscribe( u => this.user = u);*/
+    this.serverService.createUser(this.formdata.username).pipe(catchError( error => 
+    {
+      this.logger.log(error.message);
+      throw new Error("Failed to create user");
+    } )).subscribe(user => {this.user = user
+      this.enterUsername = false;
+      this.chooseOption = true;});
   }
 
   onJoin() : void
@@ -53,37 +49,45 @@ export class CreateUserComponent implements OnInit {
     this.displayJoin = true;
     this.chooseOption = false;
     this.logger.log("onJoin()");
-
-    /*this.logger.log("Selected join form");*/
   }
 
   onCreate() : void
   {
     this.logger.log("onCreate()");
-    /*let data : User = new User();
-    data.code = null;
-    data.id = null;
-    data.name = this.userdata.username;
-    this.logger.log(data.name);
-    this.userinfo.createUser(data).subscribe( u => {
-      this.user = u
-      let serv = new Server();
-      console.log(this.user)
-      this.serverService.createServer(this.user).subscribe(s => {
-        serv = s
-        console.log(serv)
-        this.router.navigate([`hub/${serv.code}`])
-      });
-    });*/
+
+    this.serverService.createServer(this.user)
+      .pipe(catchError(error =>{this.logger.log("Failed to create server");throw new Error("Failed to create server");}))
+      .subscribe(server => {
+        this.serverService.user = this.user;
+        this.router.navigate([`hub/${server.code}`]);
+        });
+
   }
 
   joinServer() : void
   {
-    this.logger.log("Joined!");
+
+    let server : Server;
+    this.serverService.getServer(this.formdata.serverCode)
+      .pipe(catchError(error => {this.logger.log("Failed to join server");throw new Error("Failed to join server")}))
+      .subscribe(serv => {server = serv
+        this.serverService.user = this.user;
+        this.router.navigate([`hub/${server.code}`])
+      });
+
   }
 
   ngOnInit(): void {
-    this.serverService.getUsers().subscribe( user => this.users = user);
+    try
+    {
+      this.serverService.getUsers()
+      .pipe(catchError(error => {throw Error("Failed to fetch user list")}))
+      .subscribe( user => this.users = user);
+    }
+    catch(e)
+    {
+      this.logger.log(e.message);
+    }
   }
 
 }

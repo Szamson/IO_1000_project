@@ -30,14 +30,14 @@
 
     <form *ngIf="displayJoin" #createServer="ngForm" >
         <div class="form-group">
-        <label for="serverName">Kod pokoju</label>
-        <input type="text" class="form-control" id="serverName" name="serverName" placeholder="Kod pokoju" [(ngModel)]="formdata.serverName" required #serverName="ngModel">
-        <div *ngIf="serverName.touched && serverName.invalid" class="alert alert-danger">
+        <label for="serverCode">Kod pokoju</label>
+        <input type="text" class="form-control" id="serverCode" name="serverCode" placeholder="Kod pokoju" [(ngModel)]="formdata.serverCode" required #serverCode="ngModel">
+        <div *ngIf="serverCode.touched && serverCode.invalid" class="alert alert-danger">
             Nie podano nazwy serwera!
         </div>
         </div>
         <div class="buttons">
-            <button type="submit" class="button center" (click)="joinServer()" [disabled]="serverName.invalid">Dołącz</button>
+            <button type="submit" class="button center" (click)="joinServer()" [disabled]="serverCode.invalid">Dołącz</button>
         </div>
     
     </form> 

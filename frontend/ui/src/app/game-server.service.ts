@@ -3,7 +3,10 @@ import {User} from './user'
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import {Observable} from 'rxjs'
+import {Observable, of} from 'rxjs'
+import {map} from 'rxjs/operators'
+import {catchError} from 'rxjs/operators'
+
 import { LoggerService } from './logger.service';
 
 @Injectable({
@@ -14,7 +17,6 @@ export class GameServerService {
   readonly serverURL = 'http://localhost:8000/api'
 
   user : User;
-  server : Server;
 
   httpOptions = {
     headers : new HttpHeaders({'Content-type' : 'application/json'})
@@ -39,9 +41,10 @@ export class GameServerService {
     return this.http.post<Server>(`${this.serverURL}/room-create`, data, this.httpOptions);
   }
 
-  createUser(user : User) : Observable<User>
+  createUser(username : string) : Observable<User>
   {
-    return this.http.post<User>(`${this.serverURL}/player-create`, user);
+    let params : User = {name:username, id:null, code:null};
+    return this.http.post<User>(`${this.serverURL}/player-create`, params);
   }
 
   getUsers() : Observable<User[]>
@@ -51,7 +54,7 @@ export class GameServerService {
 
   getUser() : Observable<User>
   {
-    return null;
+    return this.http.get<User>(`${this.serverURL}`)
   }
 
   constructor(private http : HttpClient, public logger : LoggerService) { }
