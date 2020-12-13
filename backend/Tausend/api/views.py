@@ -40,20 +40,49 @@ class RoomPostView(APIView):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
-            host = serializer.data.get('host')
-            queryset = Room.objects.filter(host=host)
+            code = serializer.data.get('code')
+            queryset = Room.objects.filter(code=code)
             if len(queryset) > 0:
-                room = queryset[0]
-                room.player_1 = serializer.data.get('player_1')
-                room.player_2 = serializer.data.get('player_2')
-                room.player_3 = serializer.data.get('player_3')
-                room.save(update_fields=['player_1', 'player_2', 'player_3'])
-                return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+                return Response({'Bad Request': 'If U r here its bad, very bad...'}, status=status.HTTP_404_NOT_FOUND)
             else:
+                host = serializer.data.get('host')
                 code = self.generate_unique_code()
                 room = Room(host=host, code=code)
                 room.save()
                 return Response(RoomSerializer(room).data, status=status.HTTP_201_CREATED)
+        return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RoomJoinView(APIView):
+    serializer_class = CreatePlayerSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid():
+            code = serializer.data.get('code')
+            name = serializer.data.get('name')
+            queryset = Room.objects.filter(code=code)
+
+            if len(queryset) > 0:
+                room = queryset[0]
+                if room.player_1 is None:
+                    room.player_1 = name
+                    room.save(update_fields=['player_1'])
+                    return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+                elif room.player_2 is None:
+                    room.player_2 = name
+                    room.save(update_fields=['player_2'])
+                    return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+                elif room.player_3 is None:
+                    room.player_3 = name
+                    room.save(update_fields=['player_3'])
+                    return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+                else:
+                    return Response({'Bad Request': 'Room is Full...'}, status=status.HTTP_404_NOT_FOUND)
+
+            else:
+                return Response({'Bad Request': 'Invalid Code...'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 
