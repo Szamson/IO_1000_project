@@ -13,6 +13,9 @@
         <div *ngIf="username.errors?.pattern" class="alert alert-danger">
             Nazwa użytkownika nie może wynosić "empty"
         </div>
+        <div *ngIf="exists" class="alert alert-danger">
+            Podany użytkownik już istnieje
+        </div>
         </div>
     
         <div class="buttons">

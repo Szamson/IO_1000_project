@@ -28,6 +28,7 @@ export class CreateUserComponent implements OnInit {
   enterUsername : boolean = true;
   displayJoin : boolean = false;
   chooseOption : boolean = false;
+  exists : boolean = false;
 
   public users : User[];
   public user : User;
@@ -38,10 +39,15 @@ export class CreateUserComponent implements OnInit {
     this.serverService.createUser(this.formdata.username).pipe(catchError( error => 
     {
       this.logger.log(error.message);
+      if(error.status == 400)
+      {
+        this.exists = true;
+      }
       throw new Error("Failed to create user");
     } )).subscribe(user => {this.user = user
       this.enterUsername = false;
-      this.chooseOption = true;});
+      this.chooseOption = true;
+      this.exists = false;});
   }
 
   onJoin() : void
