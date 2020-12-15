@@ -3,6 +3,9 @@ from .models import *
 
 
 class RoomSerializer(serializers.ModelSerializer):
+    """
+    Class used to serialize Room data
+    """
     class Meta:
         model = Room
         fields = ('id',
@@ -15,6 +18,9 @@ class RoomSerializer(serializers.ModelSerializer):
 
 
 class PlayerSerializer(serializers.ModelSerializer):
+    """
+    Class used to serialize Player data
+    """
     class Meta:
         model = Player
         fields = ('id',
@@ -24,6 +30,9 @@ class PlayerSerializer(serializers.ModelSerializer):
 
 
 class GameSerializer(serializers.ModelSerializer):
+    """
+    Class used to serialize Game data
+    """
     class Meta:
         model = Game
         fields = ('id',
@@ -38,6 +47,9 @@ class GameSerializer(serializers.ModelSerializer):
 
 
 class CreateRoomSerializer(serializers.ModelSerializer):
+    """
+    Class used to decrypt data while creating room a or joining one
+    """
     class Meta:
         model = Room
         fields = ('host',
@@ -48,6 +60,9 @@ class CreateRoomSerializer(serializers.ModelSerializer):
 
 
 class CreatePlayerSerializer(serializers.ModelSerializer):
+    """
+    Class used to decrypt Player data
+    """
     class Meta:
         model = Player
         fields = ('name',
@@ -56,6 +71,9 @@ class CreatePlayerSerializer(serializers.ModelSerializer):
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
+    """
+    Class used to decrypt Game data
+    """
     class Meta:
         model = Game
         fields = ('code',

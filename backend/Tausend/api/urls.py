@@ -1,6 +1,10 @@
 from django.urls import path, include
 from .views import *
 
+"""
+File used to communicate with frontend.
+"""
+
 urlpatterns = [
     path('games', GameView.as_view()),
     path('players', PlayerView.as_view()),

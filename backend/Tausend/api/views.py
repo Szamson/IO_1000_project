@@ -8,25 +8,44 @@ from .serializers import *
 
 
 class RoomView(generics.ListAPIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints.
+    Returns list of Rooms (mainly used in testing, may not survive until end of the project)
+    """
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
 
 
 class PlayerView(generics.ListAPIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints.
+    Returns list of Players (mainly used in testing, may not survive until end of the project)
+    """
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
 
 
 class GameView(generics.ListAPIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints.
+    Returns list of Games (mainly used in testing, may not survive until end of the project)
+    """
     queryset = Game.objects.all()
     serializer_class = GameSerializer
 
 
 class RoomPostView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
     serializer_class = CreateRoomSerializer
     length = 8
 
     def generate_unique_code(self):
+        """
+        Generates unique 8 letter code
+        :return: The code
+        """
 
         while True:
             code = ''.join(random.choices(string.ascii_uppercase, k=self.length))
@@ -36,6 +55,12 @@ class RoomPostView(APIView):
         return code
 
     def post(self, request):
+        """
+        Saves Room model into database
+
+        :param request: data send by a client
+        :return: Error message or filled room data and HTTP status
+        """
 
         serializer = self.serializer_class(data=request.data)
 
@@ -54,9 +79,18 @@ class RoomPostView(APIView):
 
 
 class RoomJoinView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
     serializer_class = CreatePlayerSerializer
 
     def post(self, request):
+        """
+        Adds user to first free room slot of given code
+
+        :param request: data send by a client
+        :return: Error message or filled room data and HTTP status
+        """
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
@@ -87,10 +121,18 @@ class RoomJoinView(APIView):
 
 
 class RoomGetView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
     lookup_url_kwarg = 'code'
 
     def get(self, request):
+        """
+        Searches through database of players
 
+        :param request: data send by a client
+        :return: Error message or player data and HTTP status
+        """
         code = request.GET.get(self.lookup_url_kwarg)
 
         if code is not None:
@@ -103,10 +145,18 @@ class RoomGetView(APIView):
 
 
 class RoomPopView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
     lookup_url_kwarg = 'code'
 
     def delete(self, request):
+        """
+        Deletes Room model from database
 
+        :param request: data send by a client
+        :return: Error message or Success message and HTTP status
+        """
         code = request.GET.get(self.lookup_url_kwarg)
 
         if code is not None:
@@ -119,9 +169,18 @@ class RoomPopView(APIView):
 
 
 class PlayerPostView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
     serializer_class = CreatePlayerSerializer
 
     def post(self, request):
+        """
+        Saves Player model into database
+
+        :param request: data send by a client
+        :return: Error message or player data and HTTP status
+        """
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
@@ -140,10 +199,18 @@ class PlayerPostView(APIView):
 
 
 class PlayerGetView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
     lookup_url_kwarg = 'name'
 
     def get(self, request):
+        """
+        Saves Player model into database
 
+        :param request: data send by a client
+        :return: Error message or player data and HTTP status
+        """
         name = request.GET.get(self.lookup_url_kwarg)
 
         if name is not None:
@@ -156,10 +223,18 @@ class PlayerGetView(APIView):
 
 
 class PlayerPopView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
     lookup_url_kwarg = 'name'
 
     def get(self, request):
+        """
+        Deletes Player model from database
 
+        :param request: data send by a client
+        :return: Error message or Success message and HTTP status
+        """
         name = request.GET.get(self.lookup_url_kwarg)
 
         if name is not None:
@@ -172,9 +247,18 @@ class PlayerPopView(APIView):
 
 
 class GamePostView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
     serializer_class = CreateGameSerializer
 
     def post(self, request):
+        """
+        Saves Game model into database
+
+        :param request: data send by a client
+        :return: Error message or saved Game data and HTTP status
+        """
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
@@ -198,10 +282,18 @@ class GamePostView(APIView):
 
 
 class GameGetView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
     lookup_url_kwarg = 'code'
 
     def get(self, request):
+        """
+        Searches through database of Games
 
+        :param request: data send by a client
+        :return: Error message or Game data and HTTP status
+        """
         code = request.GET.get(self.lookup_url_kwarg)
 
         if code is not None:
@@ -214,10 +306,18 @@ class GameGetView(APIView):
 
 
 class GamePopView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
     lookup_url_kwarg = 'code'
 
     def get(self, request):
+        """
+        Deletes Game model from database
 
+        :param request: data send by a client
+        :return: Error message or success message and HTTP status
+        """
         code = request.GET.get(self.lookup_url_kwarg)
 
         if code is not None:
