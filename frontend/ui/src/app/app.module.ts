@@ -1,7 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {FormsModule} from '@angular/forms'
-import {HttpClientModule} from '@angular/common/http'
+import {FormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
+import {SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
+
+const config : SocketIoConfig = {url:'http://localhost:3000', options: {}}
 
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
@@ -12,6 +15,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { HubComponent } from './hub/hub.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ChatComponent } from './chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -21,13 +25,15 @@ import { NotFoundComponent } from './not-found/not-found.component';
     CreateUserComponent,
     HubComponent,
     NotFoundComponent,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     DragDropModule,
-    HttpClientModule
+    HttpClientModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [],
   bootstrap: [AppComponent]

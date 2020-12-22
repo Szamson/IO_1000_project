@@ -72,7 +72,6 @@ export class CreateUserComponent implements OnInit {
 
   joinServer() : void
   {
-
     let server : Server;
     this.serverService.getServer(this.formdata.serverCode)
       .pipe(catchError(error => {this.logger.log("Failed to join server");throw new Error("Failed to join server")}))

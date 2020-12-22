@@ -29,6 +29,13 @@ export class GameServerService {
     return this.http.get<Server>(`${this.serverURL}/room-get`, {params});
   }
 
+  joinServer(code : string, name : string) : Observable<Server>
+  {
+    this.logger.log(`Joining server of code ${code}`)
+    let params = new HttpParams().set('code', code);
+    return this.http.get<Server>(`${this.serverURL}/room-join`, {params});
+  }
+
   createServer(host : User) : Observable<Server>
   {
     let data = new Server;
