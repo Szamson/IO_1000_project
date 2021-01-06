@@ -4,7 +4,7 @@ import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {SocketIoModule, SocketIoConfig} from 'ngx-socket-io';
 
-const config : SocketIoConfig = {url:'http://localhost:3000', options: {}}
+const config : SocketIoConfig = {url:'ws://localhost:8000', options: {}}
 
 import {DragDropModule} from '@angular/cdk/drag-drop';
 

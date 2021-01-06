@@ -11,6 +11,7 @@ export class ChatComponent implements OnInit {
   constructor(private socket : Socket) { }
   messeges = this.socket.fromEvent<string[]>('messeges');
   ngOnInit(): void {
+    
   }
 
   getMsg(id : number)

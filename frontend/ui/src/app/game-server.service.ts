@@ -1,6 +1,8 @@
 import {Server} from './server'
 import {User} from './user'
 
+import { Socket } from 'ngx-socket-io'
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {Observable, of} from 'rxjs'
@@ -17,6 +19,21 @@ export class GameServerService {
   readonly serverURL = 'http://localhost:8000/api'
 
   user : User;
+
+  constructor(private http : HttpClient, public logger : LoggerService, private socket : Socket) { }
+
+  socketListen<T>(eventName : string) : Observable<T>
+  {
+    return new Observable((subscriber) => {
+      this.socket.on(eventName, (data) => {
+      subscriber.next(data) }
+      )}
+    )} 
+
+  socketEmit(eventName : string, data : string)
+  {
+    this.socket.emit(eventName, data);
+  }
 
   httpOptions = {
     headers : new HttpHeaders({'Content-type' : 'application/json'})
@@ -63,6 +80,4 @@ export class GameServerService {
   {
     return this.http.get<User>(`${this.serverURL}`)
   }
-
-  constructor(private http : HttpClient, public logger : LoggerService) { }
 }
