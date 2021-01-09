@@ -1,9 +1,9 @@
 <div class="container">
 
-{{server | json}}
+{{serverService.server | json}}
 
 <div class="plaques">
-    <div class="plaque" *ngFor="let username of genNames(3)">
+    <div class="plaque" *ngFor="let username of usernames">
         <div class="icon">
             A!
         </div>

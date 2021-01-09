@@ -13,11 +13,21 @@ export class HubComponent implements OnInit {
 
   constructor( public logger : LoggerService,
     private route : ActivatedRoute,
-    private servers : GameServerService ) { }
+    public serverService : GameServerService ) { }
 
-  server = new Server();
+  usernames : string[];
 
-  usernames : string[] = ["jan", "kowal"];
+  ngOnInit(): void 
+  {
+    this.usernames = this.genUsernameList();
+
+    this.serverService.socketListen<Server>('updatePlayers').subscribe(server =>
+    {
+      this.serverService.server = server;
+      this.usernames = this.genUsernameList();
+    });
+
+  }
 
   isHost : boolean = false;
 
@@ -28,14 +38,13 @@ export class HubComponent implements OnInit {
 
   private genUsernameList() : string[]
   {
-    let data : string[] = [
-      this.server.host,
-      this.server.player1,
-      this.server.player2,
-      this.server.player3
+    let server : Server = this.serverService.server;
+    return [
+      server.host,
+      server.player1,
+      server.player2,
+      server.player3
     ];
-    
-    return data;
   }
 
   genNames(N : number) : string[]
@@ -52,10 +61,6 @@ export class HubComponent implements OnInit {
     return tab;
   }
 
-  ngOnInit(): void {
-    const id : string = this.route.snapshot.paramMap.get('id');
-    this.servers.getServer(id).subscribe(serv => {this.server = serv;});
-    this.usernames = this.genUsernameList();
-  }
+
 
 }

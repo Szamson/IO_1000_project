@@ -17,7 +17,7 @@ import {FormData} from '../form-data'
 export class CreateUserComponent implements OnInit {
 
   constructor(private logger : LoggerService, 
-    private serverService : GameServerService,
+    public serverService : GameServerService,
     public router : Router) { }
 
   formdata : FormData = new FormData();
@@ -27,22 +27,21 @@ export class CreateUserComponent implements OnInit {
   chooseOption : boolean = false;
   exists : boolean = false;
 
-  public users : User[];
-  public user : User;
-
-  server : Server;
-
   ngOnInit() : void
   {
     this.serverService.socketListen<User>('userCreated').subscribe(user => 
-      {this.user = user;
+    {
+      this.serverService.user = user;
       this.enterUsername = false;
-      this.chooseOption = true;});
+      this.chooseOption = true;
+    });
 
-    this.serverService.socketListen<Server>('serverCreated').subscribe(server =>
-      {
-        console.log(server);
-      })
+    this.serverService.socketListen<Server>('joinedServer').subscribe(server =>
+    {
+      console.log(server);
+      this.serverService.server = server;
+      this.router.navigate([`hub/${this.serverService.server.code}`]);
+    });
 
   }
 

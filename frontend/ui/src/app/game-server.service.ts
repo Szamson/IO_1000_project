@@ -19,6 +19,7 @@ export class GameServerService {
   readonly serverURL = 'http://localhost:8000/api'
 
   user : User;
+  server : Server;
 
   constructor(private http : HttpClient, public logger : LoggerService, private socket : Socket) { }
 

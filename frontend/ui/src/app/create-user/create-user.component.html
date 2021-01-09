@@ -2,7 +2,7 @@
 <div class="container">
 
     {{formdata | json}}
-    {{user | json}}
+    {{serverService.user | json}}
 
     <form *ngIf="enterUsername" #userForm="ngForm" >
         <div class="form-group">
@@ -25,7 +25,7 @@
     </form>
     
     <form *ngIf="chooseOption" #chooseForm="ngForm">
-        <label>Your username is <div *ngIf="user">{{user.name}}</div></label>
+        <label>Your username is <div *ngIf="serverService.user">{{serverService.user.name}}</div></label>
         <div class="buttons col2">
             <button type="submit" (click)="onJoin()" class="button">Dołącz do pokoju</button>
             <button type="submit" (click)="onCreate()" class="button">Stwórz pokój</button>
@@ -45,9 +45,5 @@
         </div>
     
     </form> 
-
-    <div *ngFor="let user of users">
-        {{user | json}}
-    </div>
     
     </div>
