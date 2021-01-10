@@ -1,13 +1,12 @@
 import {Server} from './server'
 import {User} from './user'
+import {GameState} from './gameState'
 
 import { Socket } from 'ngx-socket-io'
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {Observable, of} from 'rxjs'
-import {map} from 'rxjs/operators'
-import {catchError} from 'rxjs/operators'
 
 import { LoggerService } from './logger.service';
 
@@ -20,6 +19,7 @@ export class GameServerService {
 
   user : User;
   server : Server;
+  gameState : GameState;
 
   constructor(private http : HttpClient, public logger : LoggerService, private socket : Socket) { }
 

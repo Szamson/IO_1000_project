@@ -39,3 +39,4 @@ function appendPlayer(username, server)
     }
     return server;
 }
+

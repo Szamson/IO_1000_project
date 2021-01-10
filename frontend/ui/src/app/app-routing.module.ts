@@ -6,7 +6,7 @@ import {NotFoundComponent} from './not-found/not-found.component';
 import { HubComponent } from './hub/hub.component';
 
 const routes : Routes = [
-  {path:"game", component:GameComponent},
+  {path:"game/:id", component:GameComponent},
   {path:"user", component:CreateUserComponent},
   {path:"hub/:id", component:HubComponent},
   {path:"pageNotFound", component:NotFoundComponent},

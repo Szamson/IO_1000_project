@@ -1,12 +1,16 @@
 const { server } = require('karma');
 
+
+
 const io = require('socket.io')();
 
 const {createRoom, makeid, appendPlayer} = require('./utils');
 
 
+let gameServers = {};
 let gameStates = {};
 let clientRooms = {};
+let users = {};
 
 io.sockets.on('connect', (client) => { 
     count = 0;
@@ -15,15 +19,16 @@ io.sockets.on('connect', (client) => {
     client.on('createServer', handleCreateServer)
     client.on('createUser', handleCreateUser)
     client.on('joinServer', handleJoinServer)
+    client.on('startGame', handleStartGame)
 
-    client.on('disconnect', _ => {console.log("BBBBBBBBB")});
+    client.on('disconnect', handleDisconnect);
 
 
     function handleCreateServer(username)
     {
         let server = createRoom(username);
 
-        gameStates[server.code] = server;
+        gameServers[server.code] = server;
         console.log("Created server by user " + username);
         clientRooms[client.id] = server.code;
 
@@ -39,12 +44,12 @@ io.sockets.on('connect', (client) => {
             code : makeid(5),
             name : username,
         }
+        users[client.id] = user;
         client.emit('userCreated', user);
     }
 
     function handleJoinServer(formData)
     {
-        console.log(clientRooms);
         formData = JSON.parse(formData);
         const room = io.sockets.adapter.rooms[formData.serverCode];
         console.log(formData);
@@ -52,6 +57,7 @@ io.sockets.on('connect', (client) => {
         if(room)
         {
             allUsers = room.sockets;
+            console.log(room.sockets);
         }
         let numClients = 0;
         if(allUsers)
@@ -64,7 +70,7 @@ io.sockets.on('connect', (client) => {
             client.emit('unknownServer');
             return;
         }
-        else if(numClients > 4)
+        else if(numClients > 3)
         {
             console.log("Too many players in a server " + formData.serverCode)
             client.emit('tooManyPlayers');
@@ -73,15 +79,111 @@ io.sockets.on('connect', (client) => {
 
         clientRooms[client.id] = formData.serverCode;
         client.join(formData.serverCode);
-        gameStates[formData.serverCode] = appendPlayer(formData.username, gameStates[formData.serverCode])
+        gameServers[formData.serverCode] = appendPlayer(formData.username, gameServers[formData.serverCode])
 
-        client.emit('joinedServer', gameStates[formData.serverCode]);
-        client.to(formData.serverCode).emit('updatePlayers', gameStates[formData.serverCode]);
-        console.log(gameStates);
+        client.emit('joinedServer', gameServers[formData.serverCode]);
+        client.to(formData.serverCode).emit('updatePlayers', gameServers[formData.serverCode]);
+        console.log(gameServers);
     }
+
+    function handleStartGame(serverCode)
+    {
+        room = io.sockets.adapter.rooms[serverCode];
+        count = Object.keys(room.sockets).length;
+        if(count > 2)
+        {
+            state = createNewGameState(room);
+            gameStates[serverCode] = state;
+            io.in(serverCode).emit('gameStarted', state);
+            console.log(state);
+            console.log(serverCode);
+        }
+        else
+        {
+            console.log("Not enough players");
+            client.emit('notEnoughPlayers');
+        }
+    }
+
+    function handleDisconnect()
+{
+    if(users[client.id])
+    {
+        if(clientRooms[client.id])
+        {
+            room = clientRooms[client.id];
+            if(gameStates[room])
+            {
+                //Emit winning or something idc.
+            }
+            player = users[client.id].name;
+            gameRoom = gameServers[room];
+            gameRoom = removeFromServer(gameRoom, player)
+            
+            gameServers[room] = gameRoom;
+
+            client.to(room).emit('playerDisconnected', gameRoom);
+        }
+
+    }
+    console.log("Player disconnected");
+}
 
 });
 
+function createNewGameState(room)
+{
+    sockets = room.sockets;
+    let names = []
+    for(let socket of Object.keys(sockets))
+    {
+        names.push(users[socket].name);
+    }
+    let hands = {}
 
+    names.forEach(username =>
+    {
+        hands[username] = [
+            {figure : 9, color : 1},
+            {figure : 10, color : 1},
+            {figure : 11, color : 1},
+            {figure : 12, color : 1},
+            {figure : 13, color : 1},
+            {figure : 14, color : 1},
+        ]
+    });
+
+    return {
+        table: [],
+        hands : hands
+    }
+}
+
+function removeFromServer(gameRoom, player)
+{
+    if(player == gameRoom.host)
+    {
+        gameRoom.host = gameRoom.player1;
+        gameRoom.player1 = gameRoom.player2;
+        gameRoom.player2 = gameRoom.player3;
+        gameRoom.player3 = null;
+    }
+    else if(player == gameRoom.player1)
+    {
+        gameRoom.player1 = gameRoom.player2;
+        gameRoom.player2 = gameRoom.player3;
+        gameRoom.player3 = null;
+    }
+    else if(player == gameRoom.player2)
+    {
+        gameRoom.player2 = gameRoom.player3;
+        gameRoom.player3 = null;
+    }
+    else if(player == gameRoom.player3)
+    {
+        gameRoom.player3 = null;
+    }
+    return gameRoom;
+}
 
 io.listen(8000);

@@ -8,14 +8,12 @@
             A!
         </div>
         {{username}}
-        <div *ngIf="isHost && (username=='empty')">
-            <button (click)="addBot()" >Add bot</button>
-        </div>
     </div>
 </div>
 
-<div class="bottom-line">
-    Czekanie na graczy
+<div *ngIf="usernames[0] == serverService.user.name" class="bottom-line">
+    <button (click)="startGame()">Start game</button>
+    <button (click)="addBot()">Add bot</button>
 </div>
 
 </div>

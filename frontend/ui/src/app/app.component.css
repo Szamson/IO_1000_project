@@ -1,6 +1,8 @@
 .container
 {
     background-color: lightblue;
+    margin: 0;
+    padding: 0;
 }
 
 .contents
@@ -14,7 +16,6 @@
 
 .logo-container
 {
-    width: 100%;
     padding: 10px;
 }
 

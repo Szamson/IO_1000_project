@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { LoggerService } from '../logger.service';
-import {ActivatedRoute} from '@angular/router'
+import {Router} from '@angular/router'
 import { Server } from '../server';
+import { GameState } from '../gameState'
 import {GameServerService} from '../game-server.service'
 
 @Component({
@@ -12,14 +13,18 @@ import {GameServerService} from '../game-server.service'
 export class HubComponent implements OnInit {
 
   constructor( public logger : LoggerService,
-    private route : ActivatedRoute,
+    public router : Router,
     public serverService : GameServerService ) { }
 
   usernames : string[];
-
+  isHost = false;
   ngOnInit(): void 
   {
     this.usernames = this.genUsernameList();
+    if(this.usernames[0] == this.serverService.user.name)
+    {
+      this.isHost = true;
+    }
 
     this.serverService.socketListen<Server>('updatePlayers').subscribe(server =>
     {
@@ -27,13 +32,33 @@ export class HubComponent implements OnInit {
       this.usernames = this.genUsernameList();
     });
 
-  }
+    this.serverService.socketListen<GameState>('gameStarted').subscribe(state =>
+    {
+      this.serverService.gameState = state;
+      this.router.navigate([`game/${this.serverService.server.code}`])
+    });
 
-  isHost : boolean = false;
+    this.serverService.socketListen<void>('notEnoughPlayers').subscribe(_ =>
+    {
+      alert("Not enough players to start game");
+    });
+
+    this.serverService.socketListen<Server>('playerDisconnected').subscribe(server =>
+    {
+      this.serverService.server = server;
+      this.usernames = this.genUsernameList();
+    });
+
+  }
 
   addBot() : void
   {
     this.logger.log("added bot");
+  }
+
+  startGame() : void
+  {
+    this.serverService.socketEmit('startGame', this.serverService.server.code);
   }
 
   private genUsernameList() : string[]
@@ -46,21 +71,5 @@ export class HubComponent implements OnInit {
       server.player3
     ];
   }
-
-  genNames(N : number) : string[]
-  {
-    let tab = new Array<string>(N);
-    for(var i = 0; i < this.usernames.length; i++)
-    {
-      tab[i] = this.usernames[i];
-    }
-    for(var i = this.usernames.length; i < N; i++)
-    {
-      tab[i] = "empty";
-    }
-    return tab;
-  }
-
-
 
 }

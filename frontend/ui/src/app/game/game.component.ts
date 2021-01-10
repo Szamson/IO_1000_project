@@ -11,10 +11,10 @@ export class GameComponent implements OnInit {
 
   constructor(public logger : LoggerService) { }
 
-  cards : string[] = ["as", "król", "jopek lol"];
-  table : string[] = ["aaa"];
+  cards : Number[] = [1, 2, 3];
+  table : Number[] = [4];
 
-  drop(event: CdkDragDrop<string[]> ) : void
+  drop(event: CdkDragDrop<Number[]> ) : void
   {
     this.logger.log("aaa");
     if(event.previousContainer === event.container)
