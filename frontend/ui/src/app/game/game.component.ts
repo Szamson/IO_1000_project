@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { LoggerService } from '../logger.service';
+//import { PlayingCard } from '../gameState';
 
 @Component({
   selector: 'app-game',
@@ -13,6 +14,26 @@ export class GameComponent implements OnInit {
 
   cards : Number[] = [1, 2, 3];
   table : Number[] = [4];
+
+  // export class GameState
+  // {
+  //     hands : {string : Card[]};
+  //     table : Card[];
+  // };
+
+  // export class PlayingCard
+  // {
+  //     card : Card;
+  //     suit : Suit;
+  // };
+
+  examplePlayer = "Tom";
+
+  exampleState = {
+    hands : {"Tom" : [ {card : 9, suit : "spades"}, {card : 10, suit : "spades"}, {card : 11, suit : "spades"}, {card : 12, suit : "spades"} ],
+    "Ada" : [ {card : 9, suit : "spades"}, {card : 10, suit : "spades"}, {card : 11, suit : "spades"}, {card : 12, suit : "spades"} ],
+    "Marian" : [ {card : 9, suit : "spades"}, {card : 10, suit : "spades"}, {card : 11, suit : "spades"}, {card : 12, suit : "spades"} ]}
+  }
 
   drop(event: CdkDragDrop<Number[]> ) : void
   {
@@ -27,6 +48,11 @@ export class GameComponent implements OnInit {
       this.logger.log("ccc");
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
     }
+  }
+
+  cardToFilename()
+  {
+
   }
 
   ngOnInit(): void {

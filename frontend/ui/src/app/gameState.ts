@@ -1,25 +1,25 @@
-export enum CardFigure
+export enum Card
 {
     Nine = 9,
     Ten = 10,
-    Jopek = 11,
+    Jack = 11,
     Queen = 12,
     King = 13,
     Ace = 14
 };
 
-export enum CardColor
+export enum Suit
 {
-    Czerwo = 0,
-    Wino = 1,
-    Dzwonki = 2,
-    Zoladz = 3
+    Spades = "spades",
+    Clubs = "clubs",
+    Hearts = "hearts",
+    Diamonds = "diamonds"
 };
 
-export class Card
+export class PlayingCard
 {
-    figure : CardFigure;
-    color : CardColor;
+    card : Card;
+    suit : Suit;
 };
 
 export class GameState
