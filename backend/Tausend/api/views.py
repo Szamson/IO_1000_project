@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Player, Room, Game
 from .serializers import *
+from ..websocket.connection import WebSocket
 
 
 class RoomView(generics.ListAPIView):
@@ -327,3 +328,10 @@ class GamePopView(APIView):
                 return Response(status=status.HTTP_200_OK)
             return Response({'Bad Request': 'Invalid Game Code...'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+async def websocket_view(socket: WebSocket):
+    await socket.accept()
+    while True:
+        message = await socket.receive_text()
+        await socket.send_text(message)

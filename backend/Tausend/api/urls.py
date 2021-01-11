@@ -1,5 +1,6 @@
 from django.urls import path, include
 from .views import *
+from ..websocket.urls import websocket
 
 """
 File used to communicate with frontend.
@@ -19,4 +20,5 @@ urlpatterns = [
     path('game-delete', GamePopView.as_view()),
     path('game-create', GamePostView.as_view()),
     path('room-join', RoomJoinView.as_view()),
+    websocket('ws/', websocket_view),
 ]
