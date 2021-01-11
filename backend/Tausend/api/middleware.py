@@ -1,5 +1,5 @@
 from django.urls import resolve
-from .connection import WebSocket
+from backend.Tausend.api.connection import WebSocket
 
 
 def websockets(app):

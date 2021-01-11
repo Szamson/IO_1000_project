@@ -1,6 +1,7 @@
 from django.urls import path, include
 from .views import *
-from ..websocket.urls import websocket
+
+websocket = path
 
 """
 File used to communicate with frontend.

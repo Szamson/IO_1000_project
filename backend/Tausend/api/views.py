@@ -1,11 +1,8 @@
-from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Player, Room, Game
 from .serializers import *
-from ..websocket.connection import WebSocket
+from .connection import WebSocket
 
 
 class RoomView(generics.ListAPIView):
