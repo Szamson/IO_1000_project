@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { LoggerService } from '../logger.service';
-//import { PlayingCard } from '../gameState';
+import { nameAssign, PlayingCard, Suit } from '../gameState';
 
 @Component({
   selector: 'app-game',
@@ -12,28 +12,22 @@ export class GameComponent implements OnInit {
 
   constructor(public logger : LoggerService) { }
 
-  cards : Number[] = [1, 2, 3];
-  table : Number[] = [4];
-
-  // export class GameState
-  // {
-  //     hands : {string : Card[]};
-  //     table : Card[];
-  // };
-
-  // export class PlayingCard
-  // {
-  //     card : Card;
-  //     suit : Suit;
-  // };
+  ngOnInit(): void {
+    this.exampleState.hands["Tom"].forEach(element => {
+      this.cards.push({card:element.card, suit:Suit[element.suit]})
+    });
+  }
 
   examplePlayer = "Tom";
 
   exampleState = {
-    hands : {"Tom" : [ {card : 9, suit : "spades"}, {card : 10, suit : "spades"}, {card : 11, suit : "spades"}, {card : 12, suit : "spades"} ],
+    hands : {"Tom" : [ {card : 9, suit : "spades"}, {card : 10, suit : "hearts"}, {card : 11, suit : "diamonds"}, {card : 12, suit : "clubs"} ],
     "Ada" : [ {card : 9, suit : "spades"}, {card : 10, suit : "spades"}, {card : 11, suit : "spades"}, {card : 12, suit : "spades"} ],
     "Marian" : [ {card : 9, suit : "spades"}, {card : 10, suit : "spades"}, {card : 11, suit : "spades"}, {card : 12, suit : "spades"} ]}
   }
+
+  cards : PlayingCard[] = [];// = this.exampleState.hands[this.examplePlayer];
+  table : PlayingCard[] = [];// = this.exampleState.hands["Marian"];
 
   drop(event: CdkDragDrop<Number[]> ) : void
   {
@@ -50,12 +44,12 @@ export class GameComponent implements OnInit {
     }
   }
 
-  cardToFilename()
+  cardToFilename(card : PlayingCard)
   {
-
+    console.log("AAA");
+    return "/assets/png/" + nameAssign[card.card] + "_of_" + card.suit.toString().toLowerCase() + ".png";
   }
 
-  ngOnInit(): void {
-  }
+
 
 }

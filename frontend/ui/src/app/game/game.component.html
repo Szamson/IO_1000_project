@@ -1,12 +1,14 @@
 <div class="container">
 
+{{exampleState | json}}
+
 <div cdkDropListGroup>
 
 <div>
     <h2> Stół </h2>
     <div class="card-holder" [cdkDropListData]="table" (cdkDropListDropped)="drop($event)" cdkDropList>
         <div class="card" *ngFor="let card of table" cdkDrag>
-            <p>{{card}}</p>
+            <img [src]="cardToFilename(card)">
         </div>
     </div>
 </div>
@@ -15,7 +17,7 @@
     <h2>Ręka</h2>
     <div class="card-holder" [cdkDropListData]="cards" (cdkDropListDropped)="drop($event)" cdkDropList>
         <div class="card" *ngFor="let card of cards" cdkDrag>
-            <p>{{card}}</p>
+            <img [src]="cardToFilename(card)">
         </div>
     </div>
 </div>

@@ -8,12 +8,21 @@ export enum Card
     Ace = 14
 };
 
+export const nameAssign = {
+    9 : "9",
+    10 : "10",
+    11 : "jack",
+    12 : "queen",
+    13 : "king",
+    14 : "ace"
+}
+
 export enum Suit
 {
-    Spades = "spades",
-    Clubs = "clubs",
-    Hearts = "hearts",
-    Diamonds = "diamonds"
+    Spades = <any>"spades",
+    Clubs = <any>"clubs",
+    Hearts = <any>"hearts",
+    Diamonds = <any>"diamonds"
 };
 
 export class PlayingCard
