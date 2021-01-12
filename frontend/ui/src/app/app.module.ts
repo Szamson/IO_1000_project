@@ -16,6 +16,8 @@ import { CreateUserComponent } from './create-user/create-user.component';
 import { HubComponent } from './hub/hub.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ChatComponent } from './chat/chat.component';
+import { LicitationOverlayComponent } from './licitation-overlay/licitation-overlay.component';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { ChatComponent } from './chat/chat.component';
     HubComponent,
     NotFoundComponent,
     ChatComponent,
+    LicitationOverlayComponent,
   ],
   imports: [
     BrowserModule,
@@ -33,9 +36,10 @@ import { ChatComponent } from './chat/chat.component';
     FormsModule,
     DragDropModule,
     HttpClientModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    OverlayModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }

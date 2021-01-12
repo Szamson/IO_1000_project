@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { LoggerService } from '../logger.service';
-import { nameAssign, PlayingCard, Suit } from '../gameState';
+import { Card, nameAssign, PlayingCard, Suit } from '../gameState';
+import { JsonPipe } from '@angular/common';
+import { OverlaysService } from '../overlays.service';
 
 @Component({
   selector: 'app-game',
@@ -10,7 +12,8 @@ import { nameAssign, PlayingCard, Suit } from '../gameState';
 })
 export class GameComponent implements OnInit {
 
-  constructor(public logger : LoggerService) { }
+  constructor(public logger : LoggerService,
+    private overlayService : OverlaysService) { }
 
   ngOnInit(): void {
     this.exampleState.hands["Tom"].forEach(element => {
@@ -21,7 +24,7 @@ export class GameComponent implements OnInit {
   examplePlayer = "Tom";
 
   exampleState = {
-    hands : {"Tom" : [ {card : 9, suit : "spades"}, {card : 10, suit : "hearts"}, {card : 11, suit : "diamonds"}, {card : 12, suit : "clubs"} ],
+    hands : {"Tom" : [ {card : 9, suit : "spades"}, {card : 10, suit : "hearts"}, {card : 11, suit : "diamonds"}, {card : 12, suit : "clubs"}, {card : Card.Ace, suit : "spades"} ],
     "Ada" : [ {card : 9, suit : "spades"}, {card : 10, suit : "spades"}, {card : 11, suit : "spades"}, {card : 12, suit : "spades"} ],
     "Marian" : [ {card : 9, suit : "spades"}, {card : 10, suit : "spades"}, {card : 11, suit : "spades"}, {card : 12, suit : "spades"} ]}
   }
@@ -31,22 +34,23 @@ export class GameComponent implements OnInit {
 
   drop(event: CdkDragDrop<Number[]> ) : void
   {
-    this.logger.log("aaa");
+    let overlay = this.overlayService.open();
+
+    setTimeout(_ => overlay.close(), 2000);
     if(event.previousContainer === event.container)
     {
-      this.logger.log("bbb");
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
     else
     {
-      this.logger.log("ccc");
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      this.logger.log(JSON.stringify(event.container.data[event.currentIndex]))
+      console.log(event.container.data[event.currentIndex]);
     }
   }
 
   cardToFilename(card : PlayingCard)
   {
-    console.log("AAA");
     return "/assets/png/" + nameAssign[card.card] + "_of_" + card.suit.toString().toLowerCase() + ".png";
   }
 
