@@ -1,8 +1,39 @@
-const { server } = require('karma');
+var http = require('http');
+var server = http.createServer().listen(8000);
+var io = requre('socket.io').listen(server);
+var querystring = require('querystring');
 
 
+io.on('connection',function (socket) {
+  console.log("Connected to client");
+  socket.on('createUser',function (data) {
+    console.log('Web-->Node');
+    var values = querystring.stringify(data);
+    console.log(values);
 
-const io = require('socket.io')();
+    var options = {
+      hostname:'localhost',
+      port:'8000',
+      path:'/player-create',
+      method:'POST',
+      headers:{
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Content-Length':values.length
+      }
+    };
+    var request = http.request(options, function(response) {
+      response.setEncoding('utf8');
+      response.on('data',function(data){
+        //Here return django
+        console.log('Django-->Node');
+        io.emit('createUser',data);
+      });
+    });
+
+    request.write(values);
+    request.end();
+  });
+});
 
 const {createRoom, makeid, appendPlayer} = require('./utils');
 
@@ -12,15 +43,14 @@ let gameStates = {};
 let clientRooms = {};
 let users = {};
 
-io.sockets.on('connect', (client) => { 
+io.sockets.on('connect', (client) => {
     count = 0;
     console.log("AAAAAAA");
 
-    client.on('createServer', handleCreateServer)
-    client.on('createUser', handleCreateUser)
-    client.on('joinServer', handleJoinServer)
-    client.on('startGame', handleStartGame)
-
+    client.on('createServer', handleCreateServer);
+    client.on('createUser', handleCreateUser);
+    client.on('joinServer', handleJoinServer);
+    client.on('startGame', handleStartGame);
     client.on('disconnect', handleDisconnect);
 
 
@@ -43,7 +73,7 @@ io.sockets.on('connect', (client) => {
             id : makeid(5),
             code : makeid(5),
             name : username,
-        }
+        };
         users[client.id] = user;
         client.emit('userCreated', user);
     }
@@ -66,20 +96,20 @@ io.sockets.on('connect', (client) => {
         }
         if(numClients === 0)
         {
-            console.log("Unknown code " + formData.serverCode)
+            console.log("Unknown code " + formData.serverCode);
             client.emit('unknownServer');
             return;
         }
         else if(numClients > 3)
         {
-            console.log("Too many players in a server " + formData.serverCode)
+            console.log("Too many players in a server " + formData.serverCode);
             client.emit('tooManyPlayers');
             return;
         }
 
         clientRooms[client.id] = formData.serverCode;
         client.join(formData.serverCode);
-        gameServers[formData.serverCode] = appendPlayer(formData.username, gameServers[formData.serverCode])
+        gameServers[formData.serverCode] = appendPlayer(formData.username, gameServers[formData.serverCode]);
 
         client.emit('joinedServer', gameServers[formData.serverCode]);
         client.to(formData.serverCode).emit('updatePlayers', gameServers[formData.serverCode]);
@@ -118,8 +148,8 @@ io.sockets.on('connect', (client) => {
             }
             player = users[client.id].name;
             gameRoom = gameServers[room];
-            gameRoom = removeFromServer(gameRoom, player)
-            
+            gameRoom = removeFromServer(gameRoom, player);
+
             gameServers[room] = gameRoom;
 
             client.to(room).emit('playerDisconnected', gameRoom);
@@ -134,12 +164,12 @@ io.sockets.on('connect', (client) => {
 function createNewGameState(room)
 {
     sockets = room.sockets;
-    let names = []
+    let names = [];
     for(let socket of Object.keys(sockets))
     {
         names.push(users[socket].name);
     }
-    let hands = {}
+    let hands = {};
 
     names.forEach(username =>
     {
@@ -185,5 +215,3 @@ function removeFromServer(gameRoom, player)
     }
     return gameRoom;
 }
-
-io.listen(8000);

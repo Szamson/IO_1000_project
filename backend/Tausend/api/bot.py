@@ -115,6 +115,37 @@ class Bot:
         else:
             return False
 
+    def play_card(self, middle):
+        """
+        Vary simple chose card function so bot can do smf will be changed in the future
+        :param middle: cards that r currently on middle of the board
+        :return: returns id of chosen card
+        """
+
+        first_value = Card(0)
+        first_siut = Siut('clubs')
+        chosen = 0
+
+        if middle.length() == 0:
+            chosen = max(self.hand)
+            self.hand.remove(chosen)
+            return chosen
+        else:
+            first_value = self.dictionary[middle[0]].value
+            first_siut = self.dictionary[middle[0]].siut
+
+            for card in self.hand:
+                if self.dictionary[card].siut == first_siut and self.dictionary[card].value > first_value:
+                    chosen = card
+            if chosen is not 0:
+                self.hand.remove(chosen)
+                return chosen
+            else:
+                chosen = self.hand[0]
+                self.hand.remove(chosen)
+                return chosen
+
+
 if __name__ == '__main__':
     bot = Bot()
     bot.make_dict()
@@ -122,5 +153,3 @@ if __name__ == '__main__':
     bot.give_random_hand()
     bot.count_hand_value()
     print(bot.hand_value)
-
-

@@ -2,7 +2,6 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import *
-from .connection import WebSocket
 
 
 class RoomView(generics.ListAPIView):
@@ -180,7 +179,7 @@ class PlayerPostView(APIView):
         :return: Error message or player data and HTTP status
         """
         serializer = self.serializer_class(data=request.data)
-
+        print ('Django<--Node')
         if serializer.is_valid():
             name = serializer.data.get('name')
             queryset = Player.objects.filter(name=name)
@@ -327,8 +326,3 @@ class GamePopView(APIView):
         return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-async def websocket_view(socket: WebSocket):
-    await socket.accept()
-    while True:
-        message = await socket.receive_text()
-        await socket.send_text(message)
