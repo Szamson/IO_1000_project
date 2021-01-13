@@ -55,4 +55,8 @@ class Game(models.Model):
     player_2_hand = []
     player_3_hand = []
     middle = []
+    player_1_points = models.IntegerField(null=True,default=0)
+    player_2_points = models.IntegerField(null=True,default=0)
+    player_3_points = models.IntegerField(null=True,default=0)
+    player_4_points = models.IntegerField(null=True,default=0)
     inactive_player = models.CharField(max_length=50, null=True)
