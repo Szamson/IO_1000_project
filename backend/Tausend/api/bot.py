@@ -140,7 +140,7 @@ class Bot:
             for card in self.hand:
                 if self.dictionary[card].siut == first_siut and self.dictionary[card].value > first_value:
                     chosen = card
-            if chosen is not 0:
+            if chosen != 0:
                 self.hand.remove(chosen)
                 return chosen
             else:

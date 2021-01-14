@@ -370,14 +370,20 @@ class GamePostView(APIView):
                 game.player_1_hand = serializer.data.get('player_1_hand')
                 game.player_2_hand = serializer.data.get('player_2_hand')
                 game.player_3_hand = serializer.data.get('player_3_hand')
+                game.player_1_points = serializer.data.get('player_1_points')
+                game.player_2_points = serializer.data.get('player_2_points')
+                game.player_3_points = serializer.data.get('player_3_points')
+                game.player_4_points = serializer.data.get('player_4_points')
                 game.middle = serializer.data.get('middle')
                 game.inactive_player = serializer.data.get('inactive_player')
                 game.save(update_fields=['deck', 'player_1_hand', 'player_2_hand', 'player_3_hand', 'middle',
-                                         'inactive_player'])
+                                         'inactive_player', 'player_1_points', 'player_2_points',
+                                         'player_3_points', 'player_4_points'])
+                return Response(GameSerializer(game).data, status=status.HTTP_200_OK)
             else:
                 game = Game(code=code)
                 game.save()
-                return Response(PlayerSerializer(game).data, status=status.HTTP_201_CREATED)
+                return Response(GameSerializer(game).data, status=status.HTTP_201_CREATED)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 

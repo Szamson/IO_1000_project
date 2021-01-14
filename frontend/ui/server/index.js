@@ -76,6 +76,7 @@ io.on('connection', (socket) => {
   socket.on('createUser',handleCreateUser);
   socket.on('createServer',handleCreateServer);
   socket.on('joinServer',handleJoinServer);
+  socket.on('startGame', handleStartGame);
 
 
   function handleCreateUser(username) {
@@ -188,7 +189,8 @@ io.on('connection', (socket) => {
             console.log(data);
             socket.join(JSON.parse(data).code);
             self_code = JSON.parse(data).code;
-            socket.in(self_code).emit('joinedServer',JSON.parse(data));
+            socket.to(self_code).emit('joinedServer',JSON.parse(data));
+            socket.emit('joinedServer',JSON.parse(data));
           });
           break;
         case 400:
@@ -216,6 +218,39 @@ io.on('connection', (socket) => {
     request.end();
   }
 
+  function handleStartGame(code){
+    //TODO POST the server to get number of players if that and make 2 emits
+    var value = querystring.stringify({
+      "code":code
+    });
+    var options = {
+      hostname:'localhost',
+      port:'8000',
+      path:'/api/game-create',
+      method:'POST',
+      headers:{
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Content-Length':value.length
+      }
+    };
+
+    var request = http.request(options,(res)=>{
+      res.setEncoding('utf8');
+      switch (res.statusCode) {
+        case 201:
+          res.on('data',(data)=>{
+            console.log(data);
+            socket.to(self_code).emit('gameStarted',JSON.parse(data));
+            socket.emit('gameStarted',JSON.parse(data));
+          });
+          break;
+        case 400:
+          console.log(`STATUS: ${res.statusCode}`);
+          console.log(`MESSAGE: ${res.statusMessage}`);
+      }
+    });
+
+  }
 
   socket.on('disconnect',()=>{
 
@@ -234,6 +269,7 @@ io.on('connection', (socket) => {
       }
     };
     var request = http.request(options, (res)=>{
+      res.setEncoding('utf8');
       switch (res.statusCode) {
         case 200:
           res.on('data',(data)=>{
@@ -263,15 +299,12 @@ io.on('connection', (socket) => {
 
 
 
-let gameServers = {};
+
 let gameStates = {};
-let clientRooms = {};
-let users = {};
 
 io.sockets.on('connect', (client) => {
 
-    client.on('startGame', handleStartGame);
-    //client.on('disconnect', handleDisconnect);
+    client.on();
 
     function handleStartGame(serverCode)
     {
@@ -292,83 +325,4 @@ io.sockets.on('connect', (client) => {
         }
     }
 
-    function handleDisconnect()
-{
-    if(users[client.id])
-    {
-        if(clientRooms[client.id])
-        {
-            room = clientRooms[client.id];
-            if(gameStates[room])
-            {
-                //Emit winning or something idc.
-            }
-            player = users[client.id].name;
-            gameRoom = gameServers[room];
-            gameRoom = removeFromServer(gameRoom, player)
-
-            gameServers[room] = gameRoom;
-
-            client.to(room).emit('playerDisconnected', gameRoom);
-        }
-
-    }
-    console.log("Player disconnected");
-}
-
 });
-
-function createNewGameState(room)
-{
-    sockets = room.sockets;
-    let names = []
-    for(let socket of Object.keys(sockets))
-    {
-        names.push(users[socket].name);
-    }
-    let hands = {}
-
-    names.forEach(username =>
-    {
-        hands[username] = [
-            {figure : 9, color : 1},
-            {figure : 10, color : 1},
-            {figure : 11, color : 1},
-            {figure : 12, color : 1},
-            {figure : 13, color : 1},
-            {figure : 14, color : 1},
-        ]
-    });
-
-    return {
-        table: [],
-        hands : hands
-    }
-}
-
-function removeFromServer(gameRoom, player)
-{
-    if(player == gameRoom.host)
-    {
-        gameRoom.host = gameRoom.player1;
-        gameRoom.player1 = gameRoom.player2;
-        gameRoom.player2 = gameRoom.player3;
-        gameRoom.player3 = null;
-    }
-    else if(player == gameRoom.player1)
-    {
-        gameRoom.player1 = gameRoom.player2;
-        gameRoom.player2 = gameRoom.player3;
-        gameRoom.player3 = null;
-    }
-    else if(player == gameRoom.player2)
-    {
-        gameRoom.player2 = gameRoom.player3;
-        gameRoom.player3 = null;
-    }
-    else if(player == gameRoom.player3)
-    {
-        gameRoom.player3 = null;
-    }
-    return gameRoom;
-}
