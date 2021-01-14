@@ -1,0 +1,44 @@
+<div class="container">
+
+<h1 class="centered">Przekaż karty z musiku graczom</h1>
+
+<div cdkDropListGroup>
+
+<div class="slots centered">
+
+    <div class="slot" id="left"
+    [cdkDropListData]="leftSlot"
+    (cdkDropListDropped)="drop($event)"
+    cdkDropList>
+        <div class="card" *ngFor="let item of leftSlot" cdkDrag>
+            <img [src]="this.serverService.cardToFilename(this.serverService.cardNumberToCard(item))">
+        </div>
+    </div>
+
+    <div class="slot" id="right" 
+    [cdkDropListData]="rightSlot"
+    (cdkDropListDropped)="drop($event)"
+    cdkDropList>
+    <div class="card" *ngFor="let item of rightSlot" cdkDrag>
+        <img [src]="this.serverService.cardToFilename(this.serverService.cardNumberToCard(item))">
+    </div>
+    </div>
+
+</div>
+    
+    <div 
+    class="hand centered" id="hand"
+    [cdkDropListData]="handSlot"
+    (cdkDropListDropped)="drop($event)"
+    cdkDropListOrientation="horizontal"
+    cdkDropList>
+    <div class="card" *ngFor="let item of handSlot" cdkDrag>
+        <img [src]="this.serverService.cardToFilename(this.serverService.cardNumberToCard(item))">
+    </div>
+    </div>
+
+</div>
+
+<button (click)="acceptChoice()" class="bar">Zaakceptuj</button>
+
+</div>
