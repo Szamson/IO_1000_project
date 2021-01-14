@@ -36,6 +36,11 @@ export class CreateUserComponent implements OnInit {
       this.chooseOption = true;
     });
 
+    this.serverService.socketListen('usernameTaken').subscribe(_ =>
+    {
+      alert("Użytkownik o tej nazwie już istnieje")
+    })
+
     this.serverService.socketListen('roomIsFull').subscribe(_ =>
     {
       alert("Pokój jest pełny!");

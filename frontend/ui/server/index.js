@@ -75,7 +75,7 @@ io.on('connection', (socket) => {
         res.on('data',(data)=>{
         console.log(data);
         socket.join(data.code);
-        socket.emit('joinedServer',data);
+        socket.emit('joinedServer', JSON.parse(data));
       });
       }else{
         console.log(`STATUS: ${res.statusCode}`);
