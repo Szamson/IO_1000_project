@@ -179,7 +179,7 @@ class PlayerPostView(APIView):
         :return: Error message or player data and HTTP status
         """
         serializer = self.serializer_class(data=request.data)
-        print ('Django<--Node')
+
         if serializer.is_valid():
             name = serializer.data.get('name')
             queryset = Player.objects.filter(name=name)
@@ -324,5 +324,4 @@ class GamePopView(APIView):
                 return Response(status=status.HTTP_200_OK)
             return Response({'Bad Request': 'Invalid Game Code...'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
-
 

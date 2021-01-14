@@ -15,7 +15,7 @@ import { LoggerService } from './logger.service';
 })
 export class GameServerService {
 
-  readonly serverURL = 'http://localhost:8000/api'
+  readonly serverURL = 'http://localhost:8000/api';
 
   user : User;
   server : Server;
@@ -29,7 +29,7 @@ export class GameServerService {
       this.socket.on(eventName, (data) => {
       subscriber.next(data) }
       )}
-    )} 
+    )}
 
   socketEmit(eventName : string, data : string)
   {
