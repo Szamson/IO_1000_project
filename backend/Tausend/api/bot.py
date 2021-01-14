@@ -14,6 +14,7 @@ class Card(IntEnum):
     TEN = 10
     ACE = 11
 
+
 class Siut(Enum):
     """
     Enum to track card siuts easy
@@ -28,6 +29,7 @@ class PlayingCard:
     """
     Class that contains card information
     """
+
     def __init__(self, card_value, card_siut):
         self.value = card_value
         self.siut = card_siut
@@ -42,6 +44,7 @@ class Bot:
     hand_value = 0
     dictionary = {}
     marriages = []
+
     def __init__(self):
         pass
 
@@ -53,11 +56,11 @@ class Bot:
         count = 0
         for siut in Siut:
             for card in Card:
-                current_card = PlayingCard(Card(card),Siut(siut))
-                temporary_dict = {count:current_card}
+                current_card = PlayingCard(Card(card), Siut(siut))
+                temporary_dict = {count: current_card}
                 self.dictionary.update(temporary_dict)
                 self.deck.append(count)
-                count+=1
+                count += 1
 
     def give_random_hand(self):
         """
@@ -75,12 +78,12 @@ class Bot:
         """
         for key, value in bot.dictionary.items():
             if value.value == Card.QUEEN and value.siut == Siut.HEARTHS:
-                self.marriages.append((key,key+1))
-            if value.value == Card.QUEEN and value.siut == Siut.SPADES:
-                self.marriages.append((key,key+1))
-            if value.value == Card.QUEEN and value.siut == Siut.CLUBS:
                 self.marriages.append((key, key + 1))
-            if value.value == Card.QUEEN and value.siut == Siut.DIAMONDS:
+            elif value.value == Card.QUEEN and value.siut == Siut.SPADES:
+                self.marriages.append((key, key + 1))
+            elif value.value == Card.QUEEN and value.siut == Siut.CLUBS:
+                self.marriages.append((key, key + 1))
+            elif value.value == Card.QUEEN and value.siut == Siut.DIAMONDS:
                 self.marriages.append((key, key + 1))
 
     def count_hand_value(self):
@@ -95,25 +98,56 @@ class Bot:
         for pair in self.marriages:
             if pair[0] in self.hand and pair[1] in self.hand:
                 if self.dictionary[pair[0]].siut == Siut.HEARTHS:
-                    value+=100
+                    value += 100
                 elif self.dictionary[pair[0]].siut == Siut.DIAMONDS:
-                    value+=80
+                    value += 80
                 elif self.dictionary[pair[0]].siut == Siut.CLUBS:
-                    value+=60
+                    value += 60
                 elif self.dictionary[pair[0]].siut == Siut.SPADES:
-                    value+=40
+                    value += 40
         self.hand_value = value
 
-    def bidding(self,current_bid):
+    def bidding(self, current_bid):
         """
         Simple bidding function might be changed in the future if needed
         :param current_bid: value of current bid
         :return: Boolean if the bot should play
         """
-        if self.hand_value>=current_bid:
+        if self.hand_value >= current_bid:
             return True
         else:
             return False
+
+    def play_card(self, middle):
+        """
+        Vary simple chose card function so bot can do smf will be changed in the future
+        :param middle: cards that r currently on middle of the board
+        :return: returns id of chosen card
+        """
+
+        first_value = Card(0)
+        first_siut = Siut('clubs')
+        chosen = 0
+
+        if middle.length() == 0:
+            chosen = max(self.hand)
+            self.hand.remove(chosen)
+            return chosen
+        else:
+            first_value = self.dictionary[middle[0]].value
+            first_siut = self.dictionary[middle[0]].siut
+
+            for card in self.hand:
+                if self.dictionary[card].siut == first_siut and self.dictionary[card].value > first_value:
+                    chosen = card
+            if chosen is not 0:
+                self.hand.remove(chosen)
+                return chosen
+            else:
+                chosen = self.hand[0]
+                self.hand.remove(chosen)
+                return chosen
+
 
 if __name__ == '__main__':
     bot = Bot()
@@ -122,5 +156,3 @@ if __name__ == '__main__':
     bot.give_random_hand()
     bot.count_hand_value()
     print(bot.hand_value)
-
-

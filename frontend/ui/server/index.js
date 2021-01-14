@@ -1,8 +1,153 @@
-const { server } = require('karma');
+var http = require('http');
+var server = http.createServer().listen(3000);
+var io = require('socket.io').listen(server);
+var querystring = require('querystring');
 
 
+io.on('connection', (socket) => {
+  console.log("Connected to client");
 
-const io = require('socket.io')();
+  socket.on('createUser',handleCreateUser);
+  socket.on('createServer',handleCreateServer);
+  socket.on('joinServer',handleJoinServer);
+
+
+  function handleCreateUser(username) {
+    var values = querystring.stringify({
+      'name': username
+    });
+    console.log(values);
+
+    var options = {
+      hostname:'localhost',
+      port:'8000',
+      path:'/api/player-create',
+      method:'POST',
+      headers:{
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Content-Length':values.length
+      }
+    };
+
+    var req = http.request(options, (res) => {
+      res.setEncoding('utf8');
+      if (res.statusCode === 201){
+        res.on('data', (chunk) => {
+          socket.emit('userCreated',chunk);
+        });
+      }else{
+        console.log(`STATUS: ${res.statusCode}`);
+        console.log(`MESSAGE: ${res.statusMessage}`);
+        socket.emit('usernameTaken');
+      }
+      res.on('end', () => {
+        console.log('No more data in response.');
+      });
+    });
+    req.on('error',(e)=>{
+      console.error(`Problem with request: ${e.message}`)
+    });
+    req.write(values);
+    req.end();
+  }
+
+  function handleCreateServer(username) {
+    var values = querystring.stringify({
+        'host': username
+    });
+    console.log(values);
+
+    var options = {
+      hostname:'localhost',
+      port:'8000',
+      path:'/api/room-create',
+      method:'POST',
+      headers:{
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Content-Length':values.length
+      }
+    };
+
+    var request = http.request(options,(res)=> {
+      res.setEncoding('utf8');
+
+      if (res.statusCode === 201){
+        res.on('data',(data)=>{
+        console.log(data);
+        socket.join(data.code);
+        socket.emit('joinedServer',data);
+      });
+      }else{
+        console.log(`STATUS: ${res.statusCode}`);
+        console.log(`MESSAGE: ${res.statusMessage}`);
+        socket.emit('invalidRoomData');
+      }
+
+      res.on('end',()=>{
+        console.log('No more data in response.');
+      });
+    });
+    request.write(values);
+    request.end();
+  }
+
+  function handleJoinServer(data) {
+    data = JSON.parse(data);
+    var values = querystring.stringify({
+      "name":data.username,
+      "code":data.serverCode
+    });
+
+    console.log(values);
+
+    var options = {
+      hostname:'localhost',
+      port:'8000',
+      path:'/api/room-join',
+      method:'POST',
+      headers:{
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Content-Length':values.length
+      }
+    };
+
+    var request = http.request(options,(res)=>{
+      res.setEncoding('utf8');
+
+      switch (res.statusCode) {
+        case 200:
+          res.on('data',(data)=>{
+            console.log(data);
+            socket.join(data.code);
+            socket.emit('joinedServer',data);
+          });
+          break;
+        case 400:
+          console.log(`STATUS: ${res.statusCode}`);
+          console.log(`MESSAGE: ${res.statusMessage}`);
+          socket.emit('invalidRoomData');
+          break;
+        case 404:
+          if (res.statusMessage === 'Bad Request Full'){
+            console.log(`STATUS: ${res.statusCode}`);
+            console.log(`MESSAGE: ${res.statusMessage}`);
+            socket.emit('roomIsFull');
+          }else{
+            console.log(`STATUS: ${res.statusCode}`);
+            console.log(`MESSAGE: ${res.statusMessage}`);
+            socket.emit('invalidRoomCode');
+          }
+      }
+
+      res.on('end',()=>{
+        console.log('No more data in response.');
+      })
+    });
+    request.write(values);
+    request.end();
+  }
+
+});
 
 const {createRoom, makeid, appendPlayer} = require('./utils');
 
@@ -12,14 +157,13 @@ let gameStates = {};
 let clientRooms = {};
 let users = {};
 
-io.sockets.on('connect', (client) => { 
-    count = 0;
-    console.log("AAAAAAA");
+io.sockets.on('connect', (client) => {
+    //console.log("AAAAAAA");
 
-    client.on('createServer', handleCreateServer)
-    client.on('createUser', handleCreateUser)
-    client.on('joinServer', handleJoinServer)
-    client.on('startGame', handleStartGame)
+    //client.on('createServer', handleCreateServer);
+    //client.on('createUser', handleCreateUser);
+    //client.on('joinServer', handleJoinServer);
+    client.on('startGame', handleStartGame);
 
     client.on('disconnect', handleDisconnect);
 
@@ -43,7 +187,7 @@ io.sockets.on('connect', (client) => {
             id : makeid(5),
             code : makeid(5),
             name : username,
-        }
+        };
         users[client.id] = user;
         client.emit('userCreated', user);
     }
@@ -119,7 +263,7 @@ io.sockets.on('connect', (client) => {
             player = users[client.id].name;
             gameRoom = gameServers[room];
             gameRoom = removeFromServer(gameRoom, player)
-            
+
             gameServers[room] = gameRoom;
 
             client.to(room).emit('playerDisconnected', gameRoom);
@@ -185,5 +329,3 @@ function removeFromServer(gameRoom, player)
     }
     return gameRoom;
 }
-
-io.listen(8000);
