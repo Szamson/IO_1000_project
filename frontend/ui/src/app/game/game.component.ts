@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { LoggerService } from '../logger.service';
-import { Card, nameAssign, PlayingCard, Suit } from '../gameState';
-import { JsonPipe } from '@angular/common';
-import { OverlaysService } from '../overlays.service';
+import { nameAssign, PlayingCard, suitAssign } from '../gameState';
+import { DialogOverlayRef, OverlaysService } from '../overlays.service';
+import { GameServerService } from '../game-server.service';
+import { LicitationService } from '../licitation.service';
 
 @Component({
   selector: 'app-game',
@@ -13,37 +14,64 @@ import { OverlaysService } from '../overlays.service';
 export class GameComponent implements OnInit {
 
   constructor(public logger : LoggerService,
-    private overlayService : OverlaysService) { }
+    private overlayService : OverlaysService,
+    private licitationService : LicitationService,
+    private serverService : GameServerService) { }
 
   ngOnInit(): void {
     this.exampleState.hands["Tom"].forEach(element => {
-      this.cards.push({card:element.card, suit:Suit[element.suit]})
+      this.cards.push(element)
     });
+
+    this.serverService.socketListen('startLicitation').subscribe(_ =>{
+      this.overlay = this.overlayService.open();
+    });
+
+    this.serverService.socketListen('acceptLicitation').subscribe(_ =>{
+      this.overlay.close();
+    })
+
   }
+
+  overlay : DialogOverlayRef;
 
   examplePlayer = "Tom";
 
   exampleState = {
-    hands : {"Tom" : [ {card : 9, suit : "spades"}, {card : 10, suit : "hearts"}, {card : 11, suit : "diamonds"}, {card : 12, suit : "clubs"}, {card : Card.Ace, suit : "spades"} ],
-    "Ada" : [ {card : 9, suit : "spades"}, {card : 10, suit : "spades"}, {card : 11, suit : "spades"}, {card : 12, suit : "spades"} ],
-    "Marian" : [ {card : 9, suit : "spades"}, {card : 10, suit : "spades"}, {card : 11, suit : "spades"}, {card : 12, suit : "spades"} ]}
+    hands : {"Tom" : [ 0,1,2,3,4,5,6 ],
+    "Ada" : [ 7,21,8,2,6,9,2 ],
+    "Marian" : [ 5,3,2,6,8,0,5,1 ]}
   }
 
-  cards : PlayingCard[] = [];// = this.exampleState.hands[this.examplePlayer];
-  table : PlayingCard[] = [];// = this.exampleState.hands["Marian"];
+  cards : Number[] = [];
+  table : Number[] = [];
+
+  leftPlayerCards = 7;
+  rightPlayerCards = 7;
+
+  arrLen(len : Number)
+  {
+    return Array(len);
+  }
 
   drop(event: CdkDragDrop<Number[]> ) : void
   {
-    let overlay = this.overlayService.open();
-
-    setTimeout(_ => overlay.close(), 2000);
     if(event.previousContainer === event.container)
     {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
     else
     {
+      this.overlay = this.overlayService.open();
+      this.licitationService.currentValue.subscribe( val => {
+        if(val != 0)
+        {
+          this.overlay.close();
+        }
+      })
+
       transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+      this.serverService.socketEmit('playedCard', JSON.stringify(event.container.data[event.currentIndex]))
       this.logger.log(JSON.stringify(event.container.data[event.currentIndex]))
       console.log(event.container.data[event.currentIndex]);
     }
@@ -54,6 +82,24 @@ export class GameComponent implements OnInit {
     return "/assets/png/" + nameAssign[card.card] + "_of_" + card.suit.toString().toLowerCase() + ".png";
   }
 
+  cardNumberToCard(cardNumber : number) : PlayingCard
+  {
+    if(cardNumber > 24)
+    {
+      cardNumber = 23;
+    }
 
+    let suit = Math.floor(cardNumber / 6);
+    let card = cardNumber % 6;
+
+    return {suit : suitAssign[suit], card : card};
+  }
+
+  cardToCardNumber(card : PlayingCard) : Number
+  {
+    let suit = card.suit;
+    let card_num = card.card;
+    return suit * 6 + card_num;
+  }
 
 }

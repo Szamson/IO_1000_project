@@ -1,27 +1,34 @@
 <div class="container">
 
-{{exampleState | json}}
+<div class="column narrow">
+    <div class="vertical">
+        <div class="dummy-card" *ngFor="element of arrLen(leftPlayerCards)"></div>
+    </div>
+</div>
 
+<div class="column wide">
 <div cdkDropListGroup>
-
 <div>
-    <h2> Stół </h2>
-    <div class="card-holder" [cdkDropListData]="table" (cdkDropListDropped)="drop($event)" cdkDropList>
-        <div class="card" *ngFor="let card of table" cdkDrag>
-            <img [src]="cardToFilename(card)">
+    <div class="card-holder" [cdkDropListData]="table" cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" cdkDropList>
+        <div class="card" *ngFor="let card of table" cdkDragDisabled>
+            <img [src]="cardToFilename(cardNumberToCard(card))">
         </div>
     </div>
 </div>
-
 <div>
-    <h2>Ręka</h2>
-    <div class="card-holder" [cdkDropListData]="cards" (cdkDropListDropped)="drop($event)" cdkDropList>
+    <div class="card-holder" [cdkDropListData]="cards" cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" cdkDropList>
         <div class="card" *ngFor="let card of cards" cdkDrag>
-            <img [src]="cardToFilename(card)">
+            <img [src]="cardToFilename(cardNumberToCard(card))">
         </div>
     </div>
 </div>
+</div>
+</div>
 
+<div class="column narrow">
+    <div class="vertical">
+        <div class="dummy-card" *ngFor="element of arrLen(rightPlayerCards)"></div>
+    </div>
 </div>
 
 </div>

@@ -1,34 +1,66 @@
 
+.container
+{
+    display: flex;
+    flex-direction: row;
+}
+
 .board
 {
     height: 200px;
 }
 
+.vertical
+{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dummy-card
+{
+    margin-bottom: -50px;
+    background-color: rgb(37, 37, 216);
+    width: 120px;
+    height: 90px;
+    border-radius: 10px;
+    border: 2px solid black;
+}
+
+.narrow
+{
+    width: 10%;
+}
+
+.wide
+{
+    width: 80%;
+}
+
 .card-holder
 {
-    width: 50%;
+    width: 90%;
+    height: 170px;
     margin-left: auto;
     margin-right:auto;
+    margin-bottom: 50px;
     padding: 20px;
     background-color: indianred;
     display: flex;
     flex-direction: row;
+    vertical-align:middle;
+    align-items: center;
 }
 
 
 .card 
 {
-    width: 150px;
-    height: 200px;
+    width: 100px;
+    height: 140px;
     padding: 5px;
     background-color: white;
     border-radius: 10px;
     border: solid 1px black;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    vertical-align: center;
-    text-align: center;
 }
 
 img

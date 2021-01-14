@@ -2,10 +2,55 @@
 {
     display: block;
     background: white;
+    padding: 20px;
 }
 
 h1 
 {
-    margin: 0;
-    padding: 1em;
+    margin: 10px;
+    padding: 5px;
+    border-bottom: black 1px solid;
+    text-align: center;
+}
+
+.center
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.numbox
+{
+    vertical-align: middle;
+    font-size: 36px;
+    padding: 10px;
+}
+
+.round
+{
+    border-radius: 9999px;
+}
+
+.more
+{
+    background-color: greenyellow;
+}
+
+.less
+{
+    background-color: red;
+}
+
+.forward
+{
+    background-color: lightskyblue;
+}
+
+.hbar
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    vertical-align: middle;
+    padding: 15px;
 }

@@ -36,6 +36,21 @@ export class CreateUserComponent implements OnInit {
       this.chooseOption = true;
     });
 
+    this.serverService.socketListen('roomIsFull').subscribe(_ =>
+    {
+      alert("Pokój jest pełny!");
+    });
+
+    this.serverService.socketListen('invalidRoomCode').subscribe(_ =>
+    {
+      alert("Kod pokoju jest niepoprawny!");
+    });
+
+    this.serverService.socketListen('invalidRoomData').subscribe(_ =>
+    {
+      alert("Coś poszło nie tak i to nie moja wina");
+    });
+
     this.serverService.socketListen<Server>('joinedServer').subscribe(server =>
     {
       console.log(server);

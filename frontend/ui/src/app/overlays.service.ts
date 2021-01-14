@@ -25,6 +25,7 @@ export class DialogOverlayRef
   {
     this.overlayRef.dispose();
   }
+
 }
 
 @Injectable({

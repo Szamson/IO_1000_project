@@ -21,7 +21,11 @@ export class GameServerService {
   server : Server;
   gameState : GameState;
 
-  constructor(private http : HttpClient, public logger : LoggerService, private socket : Socket) { }
+  licitationAmount : Number;
+
+  constructor(private http : HttpClient, 
+    public logger : LoggerService, 
+    private socket : Socket) { }
 
   socketListen<T>(eventName : string) : Observable<T>
   {
