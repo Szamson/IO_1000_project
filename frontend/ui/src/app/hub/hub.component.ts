@@ -26,7 +26,7 @@ export class HubComponent implements OnInit {
       this.isHost = true;
     }
 
-    this.serverService.socketListen<Server>('updatePlayers').subscribe(server =>
+    this.serverService.socketListen<Server>('joinedServer').subscribe(server =>
     {
       this.serverService.server = server;
       this.usernames = this.genUsernameList();

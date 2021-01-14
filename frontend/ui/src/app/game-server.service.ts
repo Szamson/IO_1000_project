@@ -1,6 +1,7 @@
 import {Server} from './server'
 import {User} from './user'
 import {GameState} from './gameState'
+import { nameAssign, PlayingCard, suitAssign } from './gameState';
 
 import { Socket } from 'ngx-socket-io'
 
@@ -44,45 +45,29 @@ export class GameServerService {
     headers : new HttpHeaders({'Content-type' : 'application/json'})
   };
 
-  getServer(code : string) : Observable<Server>
+  cardToFilename(card : PlayingCard)
   {
-    this.logger.log(`Getting server of code ${code}`)
-    let params = new HttpParams().set('code', code);
-    return this.http.get<Server>(`${this.serverURL}/room-get`, {params});
+    return "/assets/png/" + nameAssign[card.card] + "_of_" + card.suit.toString().toLowerCase() + ".png";
   }
 
-  joinServer(code : string, name : string) : Observable<Server>
+  cardNumberToCard(cardNumber : number) : PlayingCard
   {
-    this.logger.log(`Joining server of code ${code}`)
-    let params = new HttpParams().set('code', code);
-    return this.http.get<Server>(`${this.serverURL}/room-join`, {params});
+    if(cardNumber > 24)
+    {
+      cardNumber = 23;
+    }
+
+    let suit = Math.floor(cardNumber / 6);
+    let card = cardNumber % 6;
+
+    return {suit : suitAssign[suit], card : card};
   }
 
-  createServer(host : User) : Observable<Server>
+  cardToCardNumber(card : PlayingCard) : Number
   {
-    let data = new Server;
-    data.code = null;
-    data.host = host.name;
-    data.player1 = host.name;
-    data.player2 = null;
-    data.player3 = null;
-
-    return this.http.post<Server>(`${this.serverURL}/room-create`, data, this.httpOptions);
+    let suit = card.suit;
+    let card_num = card.card;
+    return suit * 6 + card_num;
   }
 
-  createUser(username : string) : Observable<User>
-  {
-    let params : User = {name:username, id:null, code:null};
-    return this.http.post<User>(`${this.serverURL}/player-create`, params);
-  }
-
-  getUsers() : Observable<User[]>
-  {
-    return this.http.get<User[]>(`${this.serverURL}/players`);
-  }
-
-  getUser() : Observable<User>
-  {
-    return this.http.get<User>(`${this.serverURL}`)
-  }
 }

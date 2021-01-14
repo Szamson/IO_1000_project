@@ -11,14 +11,14 @@
 <div>
     <div class="card-holder" [cdkDropListData]="table" cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" cdkDropList>
         <div class="card" *ngFor="let card of table" cdkDragDisabled>
-            <img [src]="cardToFilename(cardNumberToCard(card))">
+            <img [src]="this.serverService.cardToFilename(this.serverService.cardNumberToCard(card))">
         </div>
     </div>
 </div>
 <div>
     <div class="card-holder" [cdkDropListData]="cards" cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" cdkDropList>
         <div class="card" *ngFor="let card of cards" cdkDrag>
-            <img [src]="cardToFilename(cardNumberToCard(card))">
+            <img [src]="this.serverService.cardToFilename(this.serverService.cardNumberToCard(card))">
         </div>
     </div>
 </div>

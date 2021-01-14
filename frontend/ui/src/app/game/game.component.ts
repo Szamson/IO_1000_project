@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { LoggerService } from '../logger.service';
-import { nameAssign, PlayingCard, suitAssign } from '../gameState';
+
 import { DialogOverlayRef, OverlaysService } from '../overlays.service';
 import { GameServerService } from '../game-server.service';
 import { LicitationService } from '../licitation.service';
@@ -75,31 +75,6 @@ export class GameComponent implements OnInit {
       this.logger.log(JSON.stringify(event.container.data[event.currentIndex]))
       console.log(event.container.data[event.currentIndex]);
     }
-  }
-
-  cardToFilename(card : PlayingCard)
-  {
-    return "/assets/png/" + nameAssign[card.card] + "_of_" + card.suit.toString().toLowerCase() + ".png";
-  }
-
-  cardNumberToCard(cardNumber : number) : PlayingCard
-  {
-    if(cardNumber > 24)
-    {
-      cardNumber = 23;
-    }
-
-    let suit = Math.floor(cardNumber / 6);
-    let card = cardNumber % 6;
-
-    return {suit : suitAssign[suit], card : card};
-  }
-
-  cardToCardNumber(card : PlayingCard) : Number
-  {
-    let suit = card.suit;
-    let card_num = card.card;
-    return suit * 6 + card_num;
   }
 
 }

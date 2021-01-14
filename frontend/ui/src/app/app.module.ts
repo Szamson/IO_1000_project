@@ -18,6 +18,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { ChatComponent } from './chat/chat.component';
 import { LicitationOverlayComponent } from './licitation-overlay/licitation-overlay.component';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { MusikExchangeComponent } from './musik-exchange/musik-exchange.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
     NotFoundComponent,
     ChatComponent,
     LicitationOverlayComponent,
+    MusikExchangeComponent,
   ],
   imports: [
     BrowserModule,
