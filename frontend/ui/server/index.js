@@ -3,6 +3,69 @@ var server = http.createServer().listen(3000);
 var io = require('socket.io').listen(server);
 var querystring = require('querystring');
 
+function remove_room(room_data) {
+      if(room_data.host === null){
+      var value = querystring.stringify({
+        "code":room_data.code
+      });
+      var option ={
+        hostname:'localhost',
+        port:'8000',
+        path:'/api/room-delete',
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': value.length
+        }
+      };
+      var request1 = http.request(option,()=>{
+        switch (request1.statusCode) {
+          case 200:
+            console.log(`room ${room_data.code} deleted`);
+            break;
+          case 400:
+            console.log('Just not found');
+            break;
+          case 404:
+            console.log('Room not found');
+            break;
+        }
+      });
+      request1.write(value);
+      request1.end();
+      }
+    }
+
+function remove_player(name) {
+      var value = querystring.stringify({
+        "name":name
+      });
+      var option ={
+        hostname:'localhost',
+        port:'8000',
+        path:'/api/player-delete',
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Length': value.length
+        }
+      };
+      var request = http.request(option,()=>{
+        switch (request.statusCode) {
+          case 200:
+            console.log(`player ${name} deleted`);
+            break;
+          case 400:
+            console.log('Just not found');
+            break;
+          case 404:
+            console.log('Room not found');
+            break;
+        }
+      });
+      request.write(value);
+      request.end();
+    }
 
 io.on('connection', (socket) => {
 
@@ -124,8 +187,8 @@ io.on('connection', (socket) => {
           res.on('data',(data)=>{
             console.log(data);
             socket.join(JSON.parse(data).code);
-            socket.to(self_code).emit('joinedServer',JSON.parse(data));
-            socket.emit('joinedServer',JSON.parse(data));
+            self_code = JSON.parse(data).code;
+            socket.in(self_code).emit('joinedServer',JSON.parse(data));
           });
           break;
         case 400:
@@ -161,6 +224,7 @@ io.on('connection', (socket) => {
       "name":self_name
     });
     var options = {
+      hostname:'localhost',
       port:'8000',
       path:'/api/remove-player',
       method:'POST',
@@ -173,8 +237,10 @@ io.on('connection', (socket) => {
       switch (res.statusCode) {
         case 200:
           res.on('data',(data)=>{
-            socket.to(self_code).emit('playerDisconnected',JSON.parse(data));
-            console.log(`${self_name} disconnected from room ${self_code}`)
+            socket.in(self_code).emit('playerDisconnected',JSON.parse(data));
+            remove_room(JSON.parse(data));
+            console.log(`${self_name} disconnected from room ${self_code}`);
+            remove_player(self_name);
           });
           break;
         case 400:
@@ -195,7 +261,6 @@ io.on('connection', (socket) => {
   });
 });
 
-const {createRoom, makeid, appendPlayer} = require('./utils');
 
 
 let gameServers = {};
