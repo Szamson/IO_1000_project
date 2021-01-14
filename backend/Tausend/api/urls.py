@@ -21,4 +21,5 @@ urlpatterns = [
     path('game-delete', GamePopView.as_view()),
     path('game-create', GamePostView.as_view()),
     path('room-join', RoomJoinView.as_view()),
+    path('remove-player', RoomRemovePlayerView.as_view()),
 ]

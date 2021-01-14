@@ -127,6 +127,78 @@ class RoomJoinView(APIView):
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class RoomRemovePlayerView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
+
+    serializer_class = CreatePlayerSerializer
+
+    def post(self, request):
+        """
+        Removes given player from room
+
+        :param request: data send by a client
+        :return: Error message or filled room data and HTTP status
+        """
+
+        serializer = self.serializer_class(data=request.data)
+
+        if not serializer.is_valid():
+            query = Player.objects.filter(name=serializer.data.get('name'))
+            if len(query) > 0:
+                validate = True
+            else:
+                validate = False
+        else:
+            validate = True
+
+        if validate:
+            code = serializer.data.get('code')
+            name = serializer.data.get('name')
+            queryset = Room.objects.filter(code=code)
+
+            if len(queryset) > 0:
+                room = queryset[0]
+                if room.host is name:
+                    room.host = room.player_1
+                    room.player_1 = room.player_2
+                    room.player_2 = room.player_3
+                    room.player_3 = None
+                    room.save(update_fields=['host'])
+                    room.save(update_fields=['player_1'])
+                    room.save(update_fields=['player_2'])
+                    room.save(update_fields=['player_3'])
+                    return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+                elif room.player_1 is name:
+                    room.player_1 = room.player_2
+                    room.player_2 = room.player_3
+                    room.player_3 = None
+                    room.save(update_fields=['player_1'])
+                    room.save(update_fields=['player_2'])
+                    room.save(update_fields=['player_3'])
+                    return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+                elif room.player_2 is name:
+                    room.player_2 = room.player_3
+                    room.player_3 = None
+                    room.save(update_fields=['player_2'])
+                    room.save(update_fields=['player_3'])
+                    return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+                elif room.player_3 is name:
+                    room.player_3 = None
+                    room.save(update_fields=['player_3'])
+                    return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
+                else:
+                    return Response(
+                        {'Bad Request Not Found': 'Given Player In Not In This Room...'},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
+
+            else:
+                return Response({'Bad Request Code': 'Invalid Code...'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 class RoomGetView(APIView):
     """
     Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
@@ -135,7 +207,7 @@ class RoomGetView(APIView):
 
     def get(self, request):
         """
-        Searches through database of players
+        Searches through database of rooms
 
         :param request: data send by a client
         :return: Error message or player data and HTTP status
@@ -334,4 +406,3 @@ class GamePopView(APIView):
                 return Response(status=status.HTTP_200_OK)
             return Response({'Bad Request': 'Invalid Game Code...'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
-

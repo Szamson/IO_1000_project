@@ -5,6 +5,9 @@ var querystring = require('querystring');
 
 
 io.on('connection', (socket) => {
+
+  var self_name = '';
+  var self_code = '';
   console.log("Connected to client");
 
   socket.on('createUser',handleCreateUser);
@@ -17,6 +20,7 @@ io.on('connection', (socket) => {
       'name': username
     });
     console.log(values);
+    self_name = username;
 
     var options = {
       hostname:'localhost',
@@ -33,7 +37,7 @@ io.on('connection', (socket) => {
       res.setEncoding('utf8');
       if (res.statusCode === 201){
         res.on('data', (chunk) => {
-          socket.emit('userCreated',chunk);
+          socket.emit('userCreated', JSON.parse(chunk));
         });
       }else{
         console.log(`STATUS: ${res.statusCode}`);
@@ -74,8 +78,9 @@ io.on('connection', (socket) => {
       if (res.statusCode === 201){
         res.on('data',(data)=>{
         console.log(data);
-        socket.join(data.code);
-        socket.emit('joinedServer', JSON.parse(data));
+        socket.join(JSON.parse(data).code);
+        self_code = JSON.parse(data).code;
+        socket.emit('joinedServer',JSON.parse(data));
       });
       }else{
         console.log(`STATUS: ${res.statusCode}`);
@@ -118,8 +123,9 @@ io.on('connection', (socket) => {
         case 200:
           res.on('data',(data)=>{
             console.log(data);
-            socket.join(data.code);
-            socket.emit('joinedServer',data);
+            socket.join(JSON.parse(data).code);
+            socket.to(self_code).emit('joinedServer',JSON.parse(data));
+            socket.emit('joinedServer',JSON.parse(data));
           });
           break;
         case 400:
@@ -147,6 +153,46 @@ io.on('connection', (socket) => {
     request.end();
   }
 
+
+  socket.on('disconnect',()=>{
+
+    var values = querystring.stringify({
+      "code":self_code,
+      "name":self_name
+    });
+    var options = {
+      port:'8000',
+      path:'/api/remove-player',
+      method:'POST',
+      headers:{
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Content-Length':values.length
+      }
+    };
+    var request = http.request(options, (res)=>{
+      switch (res.statusCode) {
+        case 200:
+          res.on('data',(data)=>{
+            socket.to(self_code).emit('playerDisconnected',JSON.parse(data));
+            console.log(`${self_name} disconnected from room ${self_code}`)
+          });
+          break;
+        case 400:
+          socket.emit('invalidRoomData');
+          break;
+        case 404:
+          if (res.statusMessage === 'Bad Request Not Found'){
+            console.log('Player not found')
+          }else{
+            console.log('invalidRoomCode');
+          }
+          break;
+      }
+    });
+    request.write(values);
+    request.end();
+    console.log('Player disconnected');
+  });
 });
 
 const {createRoom, makeid, appendPlayer} = require('./utils');
@@ -158,77 +204,9 @@ let clientRooms = {};
 let users = {};
 
 io.sockets.on('connect', (client) => {
-    //console.log("AAAAAAA");
 
-    //client.on('createServer', handleCreateServer);
-    //client.on('createUser', handleCreateUser);
-    //client.on('joinServer', handleJoinServer);
     client.on('startGame', handleStartGame);
-
-    client.on('disconnect', handleDisconnect);
-
-
-    function handleCreateServer(username)
-    {
-        let server = createRoom(username);
-
-        gameServers[server.code] = server;
-        console.log("Created server by user " + username);
-        clientRooms[client.id] = server.code;
-
-        client.join(server.code);
-        client.number = 1;
-        client.emit("joinedServer", server);
-    }
-
-    function handleCreateUser(username)
-    {
-        user = {
-            id : makeid(5),
-            code : makeid(5),
-            name : username,
-        };
-        users[client.id] = user;
-        client.emit('userCreated', user);
-    }
-
-    function handleJoinServer(formData)
-    {
-        formData = JSON.parse(formData);
-        const room = io.sockets.adapter.rooms[formData.serverCode];
-        console.log(formData);
-        let allUsers;
-        if(room)
-        {
-            allUsers = room.sockets;
-            console.log(room.sockets);
-        }
-        let numClients = 0;
-        if(allUsers)
-        {
-            numClients = Object.keys(allUsers).length;
-        }
-        if(numClients === 0)
-        {
-            console.log("Unknown code " + formData.serverCode)
-            client.emit('unknownServer');
-            return;
-        }
-        else if(numClients > 3)
-        {
-            console.log("Too many players in a server " + formData.serverCode)
-            client.emit('tooManyPlayers');
-            return;
-        }
-
-        clientRooms[client.id] = formData.serverCode;
-        client.join(formData.serverCode);
-        gameServers[formData.serverCode] = appendPlayer(formData.username, gameServers[formData.serverCode])
-
-        client.emit('joinedServer', gameServers[formData.serverCode]);
-        client.to(formData.serverCode).emit('updatePlayers', gameServers[formData.serverCode]);
-        console.log(gameServers);
-    }
+    //client.on('disconnect', handleDisconnect);
 
     function handleStartGame(serverCode)
     {

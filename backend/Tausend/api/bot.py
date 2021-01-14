@@ -8,10 +8,10 @@ class Card(IntEnum):
     Enum to track card values easy
     """
     NINE = 0
+    TEN = 10
     JACK = 2
     QUEEN = 3
     KING = 4
-    TEN = 10
     ACE = 11
 
 
