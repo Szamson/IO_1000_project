@@ -160,7 +160,7 @@ class RoomRemovePlayerView(APIView):
 
             if len(queryset) > 0:
                 room = queryset[0]
-                if room.host is name:
+                if room.host == name:
                     room.host = room.player_1
                     room.player_1 = room.player_2
                     room.player_2 = room.player_3
@@ -170,7 +170,7 @@ class RoomRemovePlayerView(APIView):
                     room.save(update_fields=['player_2'])
                     room.save(update_fields=['player_3'])
                     return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
-                elif room.player_1 is name:
+                elif room.player_1 == name:
                     room.player_1 = room.player_2
                     room.player_2 = room.player_3
                     room.player_3 = None
@@ -178,13 +178,13 @@ class RoomRemovePlayerView(APIView):
                     room.save(update_fields=['player_2'])
                     room.save(update_fields=['player_3'])
                     return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
-                elif room.player_2 is name:
+                elif room.player_2 == name:
                     room.player_2 = room.player_3
                     room.player_3 = None
                     room.save(update_fields=['player_2'])
                     room.save(update_fields=['player_3'])
                     return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
-                elif room.player_3 is name:
+                elif room.player_3 == name:
                     room.player_3 = None
                     room.save(update_fields=['player_3'])
                     return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
@@ -193,7 +193,6 @@ class RoomRemovePlayerView(APIView):
                         {'Bad Request Not Found': 'Given Player In Not In This Room...'},
                         status=status.HTTP_404_NOT_FOUND
                     )
-
             else:
                 return Response({'Bad Request Code': 'Invalid Code...'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
@@ -227,21 +226,33 @@ class RoomPopView(APIView):
     """
     Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
     """
-    lookup_url_kwarg = 'code'
+    serializer_class = DeleteRoomSerializer
 
-    def delete(self, request):
+    def post(self, request):
         """
         Deletes Room model from database
 
         :param request: data send by a client
         :return: Error message or Success message and HTTP status
         """
-        code = request.GET.get(self.lookup_url_kwarg)
+        serializer = self.serializer_class(data=request.data)
 
-        if code is not None:
-            room = Room.objects.filter(code=code)
-            if len(room) > 0:
-                room[0].delete()
+        if not serializer.is_valid():
+            query = Room.objects.filter(code=serializer.data.get('code'))
+            if len(query) > 0:
+                validate = True
+            else:
+                validate = False
+        else:
+            validate = True
+
+        if validate:
+            code = serializer.data.get('code')
+            queryset = Room.objects.filter(code=code)
+
+            if len(queryset) > 0:
+                room = queryset[0]
+                room.delete()
                 return Response({'Success': 'Room Successfully Deleted...'}, status=status.HTTP_200_OK)
             return Response({'Bad Request': 'Invalid Room Code...'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
@@ -305,18 +316,28 @@ class PlayerPopView(APIView):
     """
     Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
     """
-    lookup_url_kwarg = 'name'
+    serializer_class = CreatePlayerSerializer
 
-    def get(self, request):
+    def post(self, request):
         """
         Deletes Player model from database
 
         :param request: data send by a client
         :return: Error message or Success message and HTTP status
         """
-        name = request.GET.get(self.lookup_url_kwarg)
+        serializer = self.serializer_class(data=request.data)
 
-        if name is not None:
+        if not serializer.is_valid():
+            query = Player.objects.filter(name=serializer.data.get('name'))
+            if len(query) > 0:
+                validate = True
+            else:
+                validate = False
+        else:
+            validate = True
+
+        if validate:
+            name = serializer.data.get('name')
             player = Player.objects.filter(name=name)
             if len(player) > 0:
                 player.delete()

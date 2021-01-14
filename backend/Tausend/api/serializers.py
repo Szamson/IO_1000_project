@@ -75,18 +75,6 @@ class CreatePlayerSerializer(serializers.ModelSerializer):
                   )
 
 
-class JoinPlayerSerializer(serializers.ModelSerializer):
-    """
-    Class used to decrypt Player data while joining to room
-    """
-
-    class Meta:
-        model = Player
-        fields = (
-            'code'
-        )
-
-
 class CreateGameSerializer(serializers.ModelSerializer):
     """
     Class used to decrypt Game data
@@ -102,3 +90,15 @@ class CreateGameSerializer(serializers.ModelSerializer):
                   'middle',
                   'inactive_player',
                   )
+
+
+class DeleteRoomSerializer(serializers.ModelSerializer):
+    """
+    Class used to decrypt data while deleting room
+    """
+
+    class Meta:
+        model = Room
+        fields = (
+            'code',
+        )

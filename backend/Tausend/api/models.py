@@ -20,7 +20,7 @@ class Room(models.Model):
     The game has 2 variants (3 but our app has only 2 implemented :P) for 3 and 4 players
     """
     code = models.CharField(max_length=12, default='', unique=True)
-    host = models.CharField(max_length=50, null=False)
+    host = models.CharField(max_length=50, null=True)
     player_1 = models.CharField(max_length=50, null=True)
     player_2 = models.CharField(max_length=50, null=True)
     player_3 = models.CharField(max_length=50, null=True)
