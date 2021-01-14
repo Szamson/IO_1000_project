@@ -88,9 +88,19 @@ class RoomJoinView(APIView):
         :param request: data send by a client
         :return: Error message or filled room data and HTTP status
         """
+
         serializer = self.serializer_class(data=request.data)
 
-        if serializer.is_valid():
+        if not serializer.is_valid():
+            query = Player.objects.filter(name=serializer.data.get('name'))
+            if len(query) > 0:
+                validate = True
+            else:
+                validate = False
+        else:
+            validate = True
+
+        if validate:
             code = serializer.data.get('code')
             name = serializer.data.get('name')
             queryset = Room.objects.filter(code=code)
@@ -110,10 +120,10 @@ class RoomJoinView(APIView):
                     room.save(update_fields=['player_3'])
                     return Response(RoomSerializer(room).data, status=status.HTTP_200_OK)
                 else:
-                    return Response({'Bad Request': 'Room is Full...'}, status=status.HTTP_404_NOT_FOUND)
+                    return Response({'Bad Request Full': 'Room is Full...'}, status=status.HTTP_404_NOT_FOUND)
 
             else:
-                return Response({'Bad Request': 'Invalid Code...'}, status=status.HTTP_404_NOT_FOUND)
+                return Response({'Bad Request Code': 'Invalid Code...'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 

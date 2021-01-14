@@ -6,6 +6,7 @@ class RoomSerializer(serializers.ModelSerializer):
     """
     Class used to serialize Room data
     """
+
     class Meta:
         model = Room
         fields = ('id',
@@ -21,6 +22,7 @@ class PlayerSerializer(serializers.ModelSerializer):
     """
     Class used to serialize Player data
     """
+
     class Meta:
         model = Player
         fields = ('id',
@@ -33,6 +35,7 @@ class GameSerializer(serializers.ModelSerializer):
     """
     Class used to serialize Game data
     """
+
     class Meta:
         model = Game
         fields = ('id',
@@ -50,6 +53,7 @@ class CreateRoomSerializer(serializers.ModelSerializer):
     """
     Class used to decrypt data while creating room a or joining one
     """
+
     class Meta:
         model = Room
         fields = ('host',
@@ -63,6 +67,7 @@ class CreatePlayerSerializer(serializers.ModelSerializer):
     """
     Class used to decrypt Player data
     """
+
     class Meta:
         model = Player
         fields = ('name',
@@ -70,10 +75,23 @@ class CreatePlayerSerializer(serializers.ModelSerializer):
                   )
 
 
+class JoinPlayerSerializer(serializers.ModelSerializer):
+    """
+    Class used to decrypt Player data while joining to room
+    """
+
+    class Meta:
+        model = Player
+        fields = (
+            'code'
+        )
+
+
 class CreateGameSerializer(serializers.ModelSerializer):
     """
     Class used to decrypt Game data
     """
+
     class Meta:
         model = Game
         fields = ('code',
