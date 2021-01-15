@@ -1,8 +1,9 @@
 <div class="container">
 
 <div class="column narrow">
+    <h3 class="center">{{dealtCards.left_player_name}}</h3>
     <div class="vertical">
-        <div class="dummy-card" *ngFor="element of arrLen(leftPlayerCards)"></div>
+        <div class="dummy-card" *ngFor="element of left"></div>
     </div>
 </div>
 
@@ -17,7 +18,7 @@
 </div>
 <div>
     <div class="card-holder" [cdkDropListData]="cards" cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" cdkDropList>
-        <div class="card" *ngFor="let card of cards" cdkDrag>
+        <div class="card" *ngFor="let card of cards" [cdkDragDisabled]="!cardsEnabled" cdkDrag>
             <img [src]="this.serverService.cardToFilename(this.serverService.cardNumberToCard(card))">
         </div>
     </div>
@@ -26,8 +27,9 @@
 </div>
 
 <div class="column narrow">
+    <h3 class="center">{{dealtCards.right_player_name}}</h3>
     <div class="vertical">
-        <div class="dummy-card" *ngFor="element of arrLen(rightPlayerCards)"></div>
+        <div class="dummy-card" *ngFor="element of right"></div>
     </div>
 </div>
 

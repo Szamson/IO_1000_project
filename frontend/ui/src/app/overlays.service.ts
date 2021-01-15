@@ -35,12 +35,12 @@ export class OverlaysService {
 
   constructor(private overlay : Overlay) { }
 
-  open(config : OverlayConfigInt = {}) 
+  open(component, config : OverlayConfigInt = {}) 
   {
     const dialogConfig = { ...DEFAULT_CONFIG, ...config };
 
     let overlayRef = this.createOverlay(dialogConfig);
-    let licitationPortal = new ComponentPortal(LicitationOverlayComponent);
+    let licitationPortal = new ComponentPortal(component);
     overlayRef.attach(licitationPortal);
     return new DialogOverlayRef(overlayRef);
   }

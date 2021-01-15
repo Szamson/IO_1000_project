@@ -1,3 +1,10 @@
+:host 
+{
+    display: block;
+    background: white;
+    padding: 20px;
+}
+
 .centered
 {
     margin-left: auto;
@@ -9,8 +16,8 @@
 {
     background-color: blanchedalmond;
     padding: 10px;
-    height: 180px;
-    width: 500px;
+    height: 140px;
+    width: 880px;
     display: flex;
     flex-direction: row;
     vertical-align:middle;
@@ -27,8 +34,8 @@
     border: dotted 2px black;
     margin: 10px;
     padding: 10px;
-    width: 140px;
-    height: 180px;
+    width: 110px;
+    height: 140px;
 }
 
 .slots
@@ -45,8 +52,8 @@
 
 .card 
 {
-    width: 100px;
-    height: 140px;
+    width: 80px;
+    height: 100px;
     padding: 5px;
     background-color: white;
     border-radius: 10px;

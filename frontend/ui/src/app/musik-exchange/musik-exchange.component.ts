@@ -17,11 +17,19 @@ export class MusikExchangeComponent implements OnInit {
 
   leftSlot : Number[] = [];
   rightSlot : Number[] = [];
-  handSlot : Number[] = [1,2,3];
+  handSlot : Number[] = [1,2,3,4,5,6,7,8,9,10];
 
   acceptChoice()
   {
-
+    if(this.leftSlot.length != 0 && this.rightSlot.length != 0)
+    {
+      let choice = {
+        pass_left : this.leftSlot[0],
+        pass_right : this.rightSlot[0],
+        hand : this.handSlot
+      };
+      this.serverService.socketEmit("acceptMusik", JSON.stringify(choice))
+    }
   }
 
   drop(event: CdkDragDrop<Number[]>) : void
