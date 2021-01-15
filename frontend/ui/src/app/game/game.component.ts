@@ -4,10 +4,9 @@ import { LoggerService } from '../logger.service';
 
 import { DialogOverlayRef, OverlaysService } from '../overlays.service';
 import { GameServerService } from '../game-server.service';
-import { LicitationService } from '../licitation.service';
 import { LicitationOverlayComponent } from '../licitation-overlay/licitation-overlay.component';
 import { MusikExchangeComponent } from '../musik-exchange/musik-exchange.component';
-import { DealtCards, Musik } from '../gameState';
+import { Cards, DealtCards, Musik, ReadableState } from '../gameState';
 
 @Component({
   selector: 'app-game',
@@ -18,13 +17,14 @@ export class GameComponent implements OnInit {
 
   constructor(public logger : LoggerService,
     private overlayService : OverlaysService,
-    private licitationService : LicitationService,
     private serverService : GameServerService) { }
 
   cardsEnabled : boolean = true;
+  readableState : ReadableState;
+  overlay : DialogOverlayRef;
 
   ngOnInit(): void {
-    this.updateHands();
+    this.readableState = this.serverService.getReadableState();
 
     this.serverService.socketListen<number>('enableLicitation').subscribe(value =>{
       this.serverService.licitationAmount = value;
@@ -36,7 +36,7 @@ export class GameComponent implements OnInit {
     })
 
     this.serverService.socketListen<Musik>('showMusik').subscribe(musik =>{
-      if(this.examplePlayer == musik.player_name)
+      if(this.readableState.myPlayer.name == musik.player_name)
       {
         this.overlayService.open(MusikExchangeComponent);
       }
@@ -46,49 +46,30 @@ export class GameComponent implements OnInit {
       }
     });
 
-    this.serverService.socketListen<DealtCards>('acceptMusik').subscribe(newCards =>{
-      this.serverService.dealtCards = newCards;
-      this.updateHands();
-    });
+    // this.serverService.socketListen<DealtCards>('acceptMusik').subscribe(newCards =>{
+    //   this.serverService.dealtCards = newCards;
+    //   this.updateHands();
+    // });
 
     this.serverService.socketListen('enableCardPlay').subscribe(_ =>{
       this.cardsEnabled = true;
     })
 
-    this.serverService.socketListen<DealtCards>('acceptCardPlay').subscribe(newCards =>{
-      this.cardsEnabled = false;
-      this.serverService.dealtCards = newCards;
-      this.updateHands();
-    })
-
-    this.serverService
-
+    // this.serverService.socketListen<DealtCards>('acceptCardPlay').subscribe(newCards =>{
+    //   this.cardsEnabled = false;
+    //   this.serverService.dealtCards = newCards;
+    //   this.updateHands();
+    // })
   }
-
-  overlay : DialogOverlayRef;
-
-  examplePlayer = "Tom";
-
-  dealtCards = this.serverService.getDealtCards();
-
-  cards : Number[] = [];
-  left : Number[] = [];
-  right : Number[] = [];
-  table : Number[] = [];
-
-  leftPlayerCards = 7;
-  rightPlayerCards = 7;
 
   showMusik()
   {
 
   }
 
-  updateHands()
+  isPlayerCurrent()
   {
-    this.left = this.dealtCards.cards[this.dealtCards.left_player_name];
-    this.right = this.dealtCards.cards[this.dealtCards.right_player_name];
-    this.cards = this.dealtCards.cards[this.examplePlayer];
+    return this.serverService.gameState.current_player == this.serverService.user.name;
   }
 
   drop(event: CdkDragDrop<Number[]> ) : void

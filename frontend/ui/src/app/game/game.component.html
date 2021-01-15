@@ -1,24 +1,24 @@
 <div class="container">
 
 <div class="column narrow">
-    <h3 class="center">{{dealtCards.left_player_name}}</h3>
+    <h3 class="center">{{readableState.leftPlayer.name}}</h3>
     <div class="vertical">
-        <div class="dummy-card" *ngFor="element of left"></div>
+        <div class="dummy-card" *ngFor="element of readableState.leftPlayer.cards"></div>
     </div>
 </div>
 
 <div class="column wide">
 <div cdkDropListGroup>
 <div>
-    <div class="card-holder" [cdkDropListData]="table" cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" cdkDropList>
-        <div class="card" *ngFor="let card of table" cdkDragDisabled>
+    <div class="card-holder" [cdkDropListData]="readableState.table" cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" cdkDropList>
+        <div class="card" *ngFor="let card of readableState.table" cdkDragDisabled>
             <img [src]="this.serverService.cardToFilename(this.serverService.cardNumberToCard(card))">
         </div>
     </div>
 </div>
 <div>
-    <div class="card-holder" [cdkDropListData]="cards" cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" cdkDropList>
-        <div class="card" *ngFor="let card of cards" [cdkDragDisabled]="!cardsEnabled" cdkDrag>
+    <div class="card-holder" [cdkDropListData]="readableState.myPlayer.cards" cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" cdkDropList>
+        <div class="card" *ngFor="let card of readableState.myPlayer.cards" [cdkDragDisabled]="!isPlayerCurrent()" cdkDrag>
             <img [src]="this.serverService.cardToFilename(this.serverService.cardNumberToCard(card))">
         </div>
     </div>
@@ -27,10 +27,12 @@
 </div>
 
 <div class="column narrow">
-    <h3 class="center">{{dealtCards.right_player_name}}</h3>
+    <h3 class="center">{{readableState.rightPlayer.name}}</h3>
     <div class="vertical">
-        <div class="dummy-card" *ngFor="element of right"></div>
+        <div class="dummy-card" *ngFor="element of readableState.rightPlayer.cards"></div>
     </div>
 </div>
+
+
 
 </div>

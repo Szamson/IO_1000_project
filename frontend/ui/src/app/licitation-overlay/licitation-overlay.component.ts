@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { GameServerService } from '../game-server.service';
-import { LicitationService } from '../licitation.service';
 
 @Component({
   selector: 'app-licitation-overlay',
@@ -9,8 +8,7 @@ import { LicitationService } from '../licitation.service';
 })
 export class LicitationOverlayComponent implements OnInit {
 
-  constructor(private licitationService : LicitationService,
-    private serverService : GameServerService) { }
+  constructor(private serverService : GameServerService) { }
 
   number : number;
 

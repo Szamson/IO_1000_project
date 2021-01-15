@@ -28,7 +28,7 @@ export class MusikExchangeComponent implements OnInit {
         pass_right : this.rightSlot[0],
         hand : this.handSlot
       };
-      this.serverService.socketEmit("acceptMusik", JSON.stringify(choice))
+      this.serverService.socketEmit("submitMusik", JSON.stringify(choice))
     }
   }
 

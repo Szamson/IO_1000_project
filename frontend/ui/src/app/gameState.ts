@@ -42,8 +42,34 @@ export class PlayingCard
 
 export class GameState
 {
-    hands : {string : Card[]};
-    table : Card[];
+    code : string;
+    player_1_hand : Number[];
+    player_2_hand : Number[];
+    player_3_hand : Number[];
+    table : Number[];
+
+    player_1_points : Number;
+    player_2_points : Number;
+    player_3_points : Number;
+    player_4_points : Number;
+
+    inactive_player : string;
+    current_player : string;
+};
+
+export class ReadableState
+{
+    leftPlayer : {name : string, cards: Number[]};
+    myPlayer : {name : string, cards: Number[]};
+    rightPlayer : {name : string, cards: Number[]};
+    table : Number[];
+};
+
+export class Cards 
+{
+    hand : Number[];
+    left : Number[];
+    right : Number[];
 };
 
 export class DealtCards
@@ -58,3 +84,9 @@ export class Musik
     player_name : string;
     cards : Number[];
 };
+
+export class LeaderboardEntry
+{
+    name : string;
+    points : Number;
+}

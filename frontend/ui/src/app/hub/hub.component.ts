@@ -32,9 +32,9 @@ export class HubComponent implements OnInit {
       this.usernames = this.genUsernameList();
     });
 
-    this.serverService.socketListen<DealtCards>('gameStarted').subscribe(dealtCards =>
+    this.serverService.socketListen<GameState>('gameStarted').subscribe(gameState =>
     {
-      this.serverService.dealtCards = dealtCards;
+      this.serverService.gameState = gameState;
       this.router.navigate([`game/${this.serverService.server.code}`])
     });
 

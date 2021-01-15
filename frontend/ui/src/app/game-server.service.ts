@@ -1,6 +1,6 @@
 import {Server} from './server'
 import {User} from './user'
-import {DealtCards, GameState} from './gameState'
+import {DealtCards, GameState, LeaderboardEntry, ReadableState} from './gameState'
 import { nameAssign, PlayingCard, suitAssign } from './gameState';
 
 import { Socket } from 'ngx-socket-io'
@@ -34,15 +34,65 @@ export class GameServerService {
     }
   }
 
-  dealtCards : DealtCards;
-
   constructor(private http : HttpClient, 
     public logger : LoggerService, 
     private socket : Socket) { }
 
-  getDealtCards() : DealtCards
+
+
+  getReadableState() : ReadableState
   {
-    return this.exampleDealtCards;
+    const playerList = this.getPlayerList();
+    if(playerList[0] == this.user.name)
+    {
+      return { leftPlayer : {name : playerList[2], cards : this.gameState.player_3_hand},
+                myPlayer : {name : playerList[0], cards : this.gameState.player_1_hand},
+                rightPlayer : {name : playerList[1], cards : this.gameState.player_2_hand},
+                table : this.gameState.table};
+    }
+    else if(playerList[1] == this.user.name)
+    {
+      return { leftPlayer : {name : playerList[0], cards : this.gameState.player_1_hand},
+                myPlayer : {name : playerList[1], cards : this.gameState.player_2_hand},
+                rightPlayer : {name : playerList[2], cards : this.gameState.player_3_hand},
+                table : this.gameState.table};
+    }
+    else if(playerList[2] == this.user.name)
+    {
+      return { leftPlayer : {name : playerList[1], cards : this.gameState.player_2_hand},
+                myPlayer : {name : playerList[2], cards : this.gameState.player_3_hand},
+                rightPlayer : {name : playerList[0], cards : this.gameState.player_1_hand},
+                table : this.gameState.table};
+    }
+  }
+
+  getPlayerList() : string[]
+  {
+    var list : string[];
+    if(this.gameState.inactive_player === undefined)
+    {
+      list = [this.server.host, this.server.player_1, this.server.player_2]
+    }
+    else
+    {
+      if(this.gameState.inactive_player != this.server.host)
+      {
+        list.push(this.server.host)
+      }
+      if(this.gameState.inactive_player != this.server.player_1)
+      {
+        list.push(this.server.player_1)
+      }
+      if(this.gameState.inactive_player != this.server.player_2)
+      {
+        list.push(this.server.player_2)
+      }
+      if(this.gameState.inactive_player != this.server.player_3)
+      {
+        list.push(this.server.player_3)
+      }
+    }
+    return list;
   }
 
   socketListen<T>(eventName : string) : Observable<T>
@@ -85,6 +135,20 @@ export class GameServerService {
     let suit = card.suit;
     let card_num = card.card;
     return suit * 6 + card_num;
+  }
+
+  composePoints() : LeaderboardEntry[]
+  {
+    let array : LeaderboardEntry[];
+
+    array = [ { name : this.server.host, points : this.gameState.player_1_points },
+              { name : this.server.player_1, points : this.gameState.player_2_points },
+              { name : this.server.player_2, points : this.gameState.player_3_points } ]
+    if(this.gameState.inactive_player != undefined)
+    {
+      array.push({ name : this.server.player_3, points : this.gameState.player_4_points })
+    }
+    return array;
   }
 
 }
