@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { LoggerService } from '../logger.service';
 import {Router} from '@angular/router'
 import { Server } from '../server';
-import { GameState } from '../gameState'
+import { DealtCards, GameState } from '../gameState'
 import {GameServerService} from '../game-server.service'
 
 @Component({
@@ -32,9 +32,9 @@ export class HubComponent implements OnInit {
       this.usernames = this.genUsernameList();
     });
 
-    this.serverService.socketListen<GameState>('gameStarted').subscribe(state =>
+    this.serverService.socketListen<DealtCards>('gameStarted').subscribe(dealtCards =>
     {
-      this.serverService.gameState = state;
+      this.serverService.dealtCards = dealtCards;
       this.router.navigate([`game/${this.serverService.server.code}`])
     });
 
@@ -64,11 +64,12 @@ export class HubComponent implements OnInit {
   private genUsernameList() : string[]
   {
     let server : Server = this.serverService.server;
+    console.log(server);
     return [
       server.host,
-      server.player1,
-      server.player2,
-      server.player3
+      server.player_1,
+      server.player_2,
+      server.player_3
     ];
   }
 

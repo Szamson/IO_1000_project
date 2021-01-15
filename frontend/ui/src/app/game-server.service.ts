@@ -1,6 +1,6 @@
 import {Server} from './server'
 import {User} from './user'
-import {GameState} from './gameState'
+import {DealtCards, GameState} from './gameState'
 import { nameAssign, PlayingCard, suitAssign } from './gameState';
 
 import { Socket } from 'ngx-socket-io'
@@ -22,11 +22,28 @@ export class GameServerService {
   server : Server;
   gameState : GameState;
 
-  licitationAmount : Number;
+  licitationAmount : number = 100;
+
+  exampleDealtCards : DealtCards = {
+    left_player_name : "Ada",
+    right_player_name : "Marek",
+    cards : {
+      "Tom" : [1,2,3,4,5,6,7,8],
+      "Ada" : [1,2,3,4,5,6,7,8],
+      "Marek" : [1,2,3,4,5,6,7,8]
+    }
+  }
+
+  dealtCards : DealtCards;
 
   constructor(private http : HttpClient, 
     public logger : LoggerService, 
     private socket : Socket) { }
+
+  getDealtCards() : DealtCards
+  {
+    return this.exampleDealtCards;
+  }
 
   socketListen<T>(eventName : string) : Observable<T>
   {

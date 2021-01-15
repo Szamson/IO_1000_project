@@ -5,6 +5,9 @@ import { LoggerService } from '../logger.service';
 import { DialogOverlayRef, OverlaysService } from '../overlays.service';
 import { GameServerService } from '../game-server.service';
 import { LicitationService } from '../licitation.service';
+import { LicitationOverlayComponent } from '../licitation-overlay/licitation-overlay.component';
+import { MusikExchangeComponent } from '../musik-exchange/musik-exchange.component';
+import { DealtCards, Musik } from '../gameState';
 
 @Component({
   selector: 'app-game',
@@ -18,18 +21,47 @@ export class GameComponent implements OnInit {
     private licitationService : LicitationService,
     private serverService : GameServerService) { }
 
-  ngOnInit(): void {
-    this.exampleState.hands["Tom"].forEach(element => {
-      this.cards.push(element)
-    });
+  cardsEnabled : boolean = true;
 
-    this.serverService.socketListen('startLicitation').subscribe(_ =>{
-      this.overlay = this.overlayService.open();
+  ngOnInit(): void {
+    this.updateHands();
+
+    this.serverService.socketListen<number>('enableLicitation').subscribe(value =>{
+      this.serverService.licitationAmount = value;
+      this.overlay = this.overlayService.open(MusikExchangeComponent);
     });
 
     this.serverService.socketListen('acceptLicitation').subscribe(_ =>{
       this.overlay.close();
     })
+
+    this.serverService.socketListen<Musik>('showMusik').subscribe(musik =>{
+      if(this.examplePlayer == musik.player_name)
+      {
+        this.overlayService.open(MusikExchangeComponent);
+      }
+      else
+      {
+        this.showMusik();
+      }
+    });
+
+    this.serverService.socketListen<DealtCards>('acceptMusik').subscribe(newCards =>{
+      this.serverService.dealtCards = newCards;
+      this.updateHands();
+    });
+
+    this.serverService.socketListen('enableCardPlay').subscribe(_ =>{
+      this.cardsEnabled = true;
+    })
+
+    this.serverService.socketListen<DealtCards>('acceptCardPlay').subscribe(newCards =>{
+      this.cardsEnabled = false;
+      this.serverService.dealtCards = newCards;
+      this.updateHands();
+    })
+
+    this.serverService
 
   }
 
@@ -37,21 +69,26 @@ export class GameComponent implements OnInit {
 
   examplePlayer = "Tom";
 
-  exampleState = {
-    hands : {"Tom" : [ 0,1,2,3,4,5,6 ],
-    "Ada" : [ 7,21,8,2,6,9,2 ],
-    "Marian" : [ 5,3,2,6,8,0,5,1 ]}
-  }
+  dealtCards = this.serverService.getDealtCards();
 
   cards : Number[] = [];
+  left : Number[] = [];
+  right : Number[] = [];
   table : Number[] = [];
 
   leftPlayerCards = 7;
   rightPlayerCards = 7;
 
-  arrLen(len : Number)
+  showMusik()
   {
-    return Array(len);
+
+  }
+
+  updateHands()
+  {
+    this.left = this.dealtCards.cards[this.dealtCards.left_player_name];
+    this.right = this.dealtCards.cards[this.dealtCards.right_player_name];
+    this.cards = this.dealtCards.cards[this.examplePlayer];
   }
 
   drop(event: CdkDragDrop<Number[]> ) : void
@@ -62,18 +99,11 @@ export class GameComponent implements OnInit {
     }
     else
     {
-      this.overlay = this.overlayService.open();
-      this.licitationService.currentValue.subscribe( val => {
-        if(val != 0)
-        {
-          this.overlay.close();
-        }
-      })
-
-      transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
       this.serverService.socketEmit('playedCard', JSON.stringify(event.container.data[event.currentIndex]))
-      this.logger.log(JSON.stringify(event.container.data[event.currentIndex]))
-      console.log(event.container.data[event.currentIndex]);
+
+      let element = event.previousContainer.data[event.previousIndex];
+      event.previousContainer.data.splice(event.previousIndex, 1);
+      event.container.data.push(element);
     }
   }
 

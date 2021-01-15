@@ -12,7 +12,7 @@ export class LicitationOverlayComponent implements OnInit {
   constructor(private licitationService : LicitationService,
     private serverService : GameServerService) { }
 
-  number = 100;
+  number : number;
 
   increase()
   {
@@ -21,17 +21,19 @@ export class LicitationOverlayComponent implements OnInit {
 
   decrease()
   {
-    this.number -= 10;
+    if(this.number-10 >= this.serverService.licitationAmount)
+    {
+      this.number -= 10;
+    }
   }
 
   send()
   {
     this.serverService.socketEmit('submitLicitation', JSON.stringify({value : this.number}))
-    this.licitationService.changeValue(this.number);
-    this.licitationService.changeValue(0);
   }
 
   ngOnInit(): void {
+    this.number = this.serverService.licitationAmount;
   }
 
 }

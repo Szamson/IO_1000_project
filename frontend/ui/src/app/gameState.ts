@@ -45,3 +45,16 @@ export class GameState
     hands : {string : Card[]};
     table : Card[];
 };
+
+export class DealtCards
+{
+    left_player_name : string;
+    right_player_name : string;
+    cards : {[name : string] : Number[]};
+};
+
+export class Musik 
+{
+    player_name : string;
+    cards : Number[];
+};

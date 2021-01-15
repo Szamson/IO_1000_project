@@ -4,7 +4,7 @@ export class Server
     id : Number;
     code : string = '';
     host : string;
-    player1 : string;
-    player2 : string;
-    player3 : string;
+    player_1 : string;
+    player_2 : string;
+    player_3 : string;
 }
