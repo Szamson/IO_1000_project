@@ -208,6 +208,7 @@ io.on('connection', (socket) => {
             console.log(`MESSAGE: ${res.statusMessage}`);
             socket.emit('invalidRoomCode');
           }
+          break;
       }
 
       res.on('end',()=>{
@@ -219,10 +220,21 @@ io.on('connection', (socket) => {
   }
 
   function handleStartGame(code){
-    //TODO POST the server to get number of players if that and make 2 emits
     var value = querystring.stringify({
       "code":code
     });
+
+    var server_options ={
+      hostname:'localhost',
+      port:'8000',
+      path:'/api/room-get',
+      method:'POST',
+      headers:{
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Content-Length':value.length
+      }
+    };
+
     var options = {
       hostname:'localhost',
       port:'8000',
@@ -247,8 +259,42 @@ io.on('connection', (socket) => {
         case 400:
           console.log(`STATUS: ${res.statusCode}`);
           console.log(`MESSAGE: ${res.statusMessage}`);
+          break;
       }
     });
+
+    var server_request = http.request(server_options,(res)=>{
+      res.setEncoding('utf8');
+      switch (res.statusCode) {
+        case 200:
+          res.on('data',(data)=>{
+            console.log(data);
+            if(JSON.parse(data).player_1 === null || JSON.parse(data).player_2 === null){
+              socket.emit('notEnoughPlayers');
+              console.log('Not enough players');
+            }else{
+              request.write(value);
+              request.end();
+              console.log(`Game started in room ${code}`);
+            }
+          });
+          break;
+        case 400:
+          console.log(`STATUS: ${res.statusCode}`);
+          console.log(`MESSAGE: ${res.statusMessage}`);
+          socket.emit('invalidRoomData');
+          break;
+        case 404:
+          console.log(`STATUS: ${res.statusCode}`);
+          console.log(`MESSAGE: ${res.statusMessage}`);
+          console.log(code);
+          socket.emit('invalidRoomCode');
+          break;
+      }
+    });
+
+    server_request.write(value);
+    server_request.end();
 
   }
 
@@ -276,7 +322,6 @@ io.on('connection', (socket) => {
             socket.in(self_code).emit('playerDisconnected',JSON.parse(data));
             remove_room(JSON.parse(data));
             console.log(`${self_name} disconnected from room ${self_code}`);
-            remove_player(self_name);
           });
           break;
         case 400:
@@ -294,35 +339,6 @@ io.on('connection', (socket) => {
     request.write(values);
     request.end();
     console.log('Player disconnected');
+    remove_player(self_name);
   });
-});
-
-
-
-
-let gameStates = {};
-
-io.sockets.on('connect', (client) => {
-
-    client.on();
-
-    function handleStartGame(serverCode)
-    {
-        room = io.sockets.adapter.rooms[serverCode];
-        count = Object.keys(room.sockets).length;
-        if(count > 2)
-        {
-            state = createNewGameState(room);
-            gameStates[serverCode] = state;
-            io.in(serverCode).emit('gameStarted', state);
-            console.log(state);
-            console.log(serverCode);
-        }
-        else
-        {
-            console.log("Not enough players");
-            client.emit('notEnoughPlayers');
-        }
-    }
-
 });

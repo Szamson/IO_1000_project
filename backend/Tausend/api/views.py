@@ -202,18 +202,28 @@ class RoomGetView(APIView):
     """
     Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
     """
-    lookup_url_kwarg = 'code'
+    serializer_class = DeleteRoomSerializer
 
-    def get(self, request):
+    def post(self, request):
         """
         Searches through database of rooms
 
         :param request: data send by a client
         :return: Error message or player data and HTTP status
         """
-        code = request.GET.get(self.lookup_url_kwarg)
+        serializer = self.serializer_class(data=request.data)
 
-        if code is not None:
+        if not serializer.is_valid():
+            query = Room.objects.filter(code=serializer.data.get('code'))
+            if len(query) > 0:
+                validate = True
+            else:
+                validate = False
+        else:
+            validate = True
+
+        if validate:
+            code = serializer.data.get('code')
             room = Room.objects.filter(code=code)
             if len(room) > 0:
                 data = RoomSerializer(room[0]).data
