@@ -2,6 +2,39 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import *
+from .bot import Bot
+
+
+def validate_player(s):
+    """
+    Validates data in serializer for player
+    :param s: serializer needed for validation
+    :return: True if validation is succesfull False if not
+    """
+    if not s.is_valid():
+        query = Player.objects.filter(name=s.data.get('name'))
+        if len(query) > 0:
+            return True
+        else:
+            return False
+    else:
+        return True
+
+
+def validate_room(s):
+    """
+    Validates data in serializer for room
+    :param s: serializer needed for validation
+    :return: True if validation is succesfull False if not
+    """
+    if not s.is_valid():
+        query = Room.objects.filter(code=s.data.get('code'))
+        if len(query) > 0:
+            return True
+        else:
+            return False
+    else:
+        return True
 
 
 class RoomView(generics.ListAPIView):
@@ -91,16 +124,8 @@ class RoomJoinView(APIView):
 
         serializer = self.serializer_class(data=request.data)
 
-        if not serializer.is_valid():
-            query = Player.objects.filter(name=serializer.data.get('name'))
-            if len(query) > 0:
-                validate = True
-            else:
-                validate = False
-        else:
-            validate = True
-
-        if validate:
+        v = validate_player(serializer)
+        if v:
             code = serializer.data.get('code')
             name = serializer.data.get('name')
             queryset = Room.objects.filter(code=code)
@@ -144,16 +169,8 @@ class RoomRemovePlayerView(APIView):
 
         serializer = self.serializer_class(data=request.data)
 
-        if not serializer.is_valid():
-            query = Player.objects.filter(name=serializer.data.get('name'))
-            if len(query) > 0:
-                validate = True
-            else:
-                validate = False
-        else:
-            validate = True
-
-        if validate:
+        v = validate_player(serializer)
+        if v:
             code = serializer.data.get('code')
             name = serializer.data.get('name')
             queryset = Room.objects.filter(code=code)
@@ -213,16 +230,8 @@ class RoomGetView(APIView):
         """
         serializer = self.serializer_class(data=request.data)
 
-        if not serializer.is_valid():
-            query = Room.objects.filter(code=serializer.data.get('code'))
-            if len(query) > 0:
-                validate = True
-            else:
-                validate = False
-        else:
-            validate = True
-
-        if validate:
+        v = validate_room(serializer)
+        if v:
             code = serializer.data.get('code')
             room = Room.objects.filter(code=code)
             if len(room) > 0:
@@ -247,16 +256,8 @@ class RoomPopView(APIView):
         """
         serializer = self.serializer_class(data=request.data)
 
-        if not serializer.is_valid():
-            query = Room.objects.filter(code=serializer.data.get('code'))
-            if len(query) > 0:
-                validate = True
-            else:
-                validate = False
-        else:
-            validate = True
-
-        if validate:
+        v = validate_room(serializer)
+        if v:
             code = serializer.data.get('code')
             queryset = Room.objects.filter(code=code)
 
@@ -298,30 +299,6 @@ class PlayerPostView(APIView):
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PlayerGetView(APIView):
-    """
-    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
-    """
-    lookup_url_kwarg = 'name'
-
-    def get(self, request):
-        """
-        Saves Player model into database
-
-        :param request: data send by a client
-        :return: Error message or player data and HTTP status
-        """
-        name = request.GET.get(self.lookup_url_kwarg)
-
-        if name is not None:
-            player = Player.objects.filter(name=name)
-            if len(player) > 0:
-                data = PlayerSerializer(player[0]).data
-                return Response(data, status=status.HTTP_200_OK)
-            return Response({'Bad Request': 'Invalid Player Name...'}, status=status.HTTP_404_NOT_FOUND)
-        return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
-
-
 class PlayerPopView(APIView):
     """
     Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
@@ -337,16 +314,9 @@ class PlayerPopView(APIView):
         """
         serializer = self.serializer_class(data=request.data)
 
-        if not serializer.is_valid():
-            query = Player.objects.filter(name=serializer.data.get('name'))
-            if len(query) > 0:
-                validate = True
-            else:
-                validate = False
-        else:
-            validate = True
+        v = validate_player(serializer)
 
-        if validate:
+        if v:
             name = serializer.data.get('name')
             player = Player.objects.filter(name=name)
             if len(player) > 0:
@@ -397,34 +367,11 @@ class GamePostView(APIView):
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class GameGetView(APIView):
-    """
-    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
-    """
-    lookup_url_kwarg = 'code'
-
-    def get(self, request):
-        """
-        Searches through database of Games
-
-        :param request: data send by a client
-        :return: Error message or Game data and HTTP status
-        """
-        code = request.GET.get(self.lookup_url_kwarg)
-
-        if code is not None:
-            games = Game.objects.filter(code=code)
-            if len(games) > 0:
-                data = RoomSerializer(games[0]).data
-                return Response(data, status=status.HTTP_200_OK)
-            return Response({'Bad Request': 'Invalid Game Code...'}, status=status.HTTP_404_NOT_FOUND)
-        return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
-
-
 class GamePopView(APIView):
     """
     Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
     """
+    # TODO Change that to post after
     lookup_url_kwarg = 'code'
 
     def get(self, request):
@@ -443,3 +390,11 @@ class GamePopView(APIView):
                 return Response(status=status.HTTP_200_OK)
             return Response({'Bad Request': 'Invalid Game Code...'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class BotDecisionView(APIView):
+    # TODO Finish
+    bot = Bot()
+
+    def post(self, request):
+        return None

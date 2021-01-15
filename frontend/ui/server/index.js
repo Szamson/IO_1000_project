@@ -4,6 +4,11 @@ var io = require('socket.io').listen(server);
 var querystring = require('querystring');
 
 function remove_room(room_data) {
+  /*
+  * Function that deletes room after its empty
+  * :param room_data: code to room
+  * */
+
       if(room_data.host === null){
       var value = querystring.stringify({
         "code":room_data.code
@@ -37,6 +42,10 @@ function remove_room(room_data) {
     }
 
 function remove_player(name) {
+  /*
+  * Function that deletes player after he disconnects
+  * :param name: name of the player
+  * */
       var value = querystring.stringify({
         "name":name
       });
@@ -69,6 +78,11 @@ function remove_player(name) {
 
 io.on('connection', (socket) => {
 
+  /*
+  * Socket which communicates with client
+  * :param 'connection': on player connection
+  * :param function socket: tool to emit stuff*/
+
   var self_name = '';
   var self_code = '';
   console.log("Connected to client");
@@ -80,6 +94,9 @@ io.on('connection', (socket) => {
 
 
   function handleCreateUser(username) {
+    /*
+    * Handles user creation, sends requests to server that handles database
+    * :param username: name of player that is currently being created*/
     var values = querystring.stringify({
       'name': username
     });
@@ -120,6 +137,9 @@ io.on('connection', (socket) => {
   }
 
   function handleCreateServer(username) {
+    /*
+    * Handles room creation, sends requests to server that handles database
+    * :param username: name of player who is host of the room*/
     var values = querystring.stringify({
         'host': username
     });
@@ -161,6 +181,9 @@ io.on('connection', (socket) => {
   }
 
   function handleJoinServer(data) {
+    /*
+    * Handles player joining room
+    * :param data: name of player that is joining, and code of room to witch he wishes to join*/
     data = JSON.parse(data);
     var values = querystring.stringify({
       "name":data.username,
@@ -220,6 +243,9 @@ io.on('connection', (socket) => {
   }
 
   function handleStartGame(code){
+    /*
+    * Handles game start(checks if number of player is good etc.)
+    * :param code: code of the room in which game should start*/
     var value = querystring.stringify({
       "code":code
     });
@@ -299,7 +325,9 @@ io.on('connection', (socket) => {
   }
 
   socket.on('disconnect',()=>{
-
+    /*
+    * Handles client disconnect, sends signals to clear database after him
+    * :param 'disconnect': event */
     var values = querystring.stringify({
       "code":self_code,
       "name":self_name

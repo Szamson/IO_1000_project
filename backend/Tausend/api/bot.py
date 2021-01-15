@@ -46,7 +46,9 @@ class Bot:
     marriages = []
 
     def __init__(self):
-        pass
+        self.make_dict()
+        self.make_marriages()
+        self.count_hand_value()
 
     def make_dict(self):
         """
@@ -61,15 +63,6 @@ class Bot:
                 self.dictionary.update(temporary_dict)
                 self.deck.append(count)
                 count += 1
-
-    def give_random_hand(self):
-        """
-        Function just to test count_hand_value
-        #TODO remove it after bot is done
-        :return:
-        """
-        for i in range(6):
-            self.hand.append(randrange(23))
 
     def make_marriages(self):
         """
@@ -140,6 +133,8 @@ class Bot:
             for card in self.hand:
                 if self.dictionary[card].siut == first_siut and self.dictionary[card].value > first_value:
                     chosen = card
+                elif self.dictionary[card].siut == first_siut:
+                    chosen = card
             if chosen != 0:
                 self.hand.remove(chosen)
                 return chosen
@@ -148,11 +143,21 @@ class Bot:
                 self.hand.remove(chosen)
                 return chosen
 
+    def which_cards_to_give(self):
+        """
+        Decides which cards to give
+        :return: Tuple of card id's to give to other players
+        """
+        self.hand.sort()
+        give = (self.hand[0], self.hand[1])
+        self.hand.pop(0)
+        self.hand.pop(1)
+        return give
+
 
 if __name__ == '__main__':
     bot = Bot()
     bot.make_dict()
     bot.make_marriages()
-    bot.give_random_hand()
     bot.count_hand_value()
     print(bot.hand_value)
