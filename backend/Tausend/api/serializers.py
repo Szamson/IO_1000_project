@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import *
+from .models import Room, Player, Game
 
 
 class RoomSerializer(serializers.ModelSerializer):
@@ -38,14 +38,18 @@ class GameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = ('id',
-                  'code',
-                  'deck',
+        fields = ('code',
+                  'mus',
                   'player_1_hand',
                   'player_2_hand',
                   'player_3_hand',
                   'middle',
                   'inactive_player',
+                  'current_player',
+                  'player_1_points',
+                  'player_2_points',
+                  'player_3_points',
+                  'player_4_points',
                   )
 
 
@@ -83,12 +87,17 @@ class CreateGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ('code',
-                  'deck',
+                  'mus',
                   'player_1_hand',
                   'player_2_hand',
                   'player_3_hand',
                   'middle',
                   'inactive_player',
+                  'current_player',
+                  'player_1_points',
+                  'player_2_points',
+                  'player_3_points',
+                  'player_4_points',
                   )
 
 

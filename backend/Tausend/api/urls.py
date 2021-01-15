@@ -1,5 +1,7 @@
 from django.urls import path
-from .views import *
+from .views import GameView, PlayerView, RoomView, RoomPostView, RoomGetView, RoomPopView, PlayerPostView, PlayerPopView,\
+    GamePopView, GamePostView, RoomJoinView, RoomRemovePlayerView ,GameGetView
+
 
 websocket = path
 
@@ -20,4 +22,5 @@ urlpatterns = [
     path('game-create', GamePostView.as_view()),
     path('room-join', RoomJoinView.as_view()),
     path('remove-player', RoomRemovePlayerView.as_view()),
+    path('game-get', GameGetView.as_view())
 ]
