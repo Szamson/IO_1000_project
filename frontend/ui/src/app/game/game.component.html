@@ -18,7 +18,7 @@
 </div>
 <div>
     <div class="card-holder" [cdkDropListData]="readableState.myPlayer.cards" cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" cdkDropList>
-        <div class="card" *ngFor="let card of readableState.myPlayer.cards" [cdkDragDisabled]="!this.serverService.gameState.current_player == this.serverService.user.name && this.gameStarted" cdkDrag>
+        <div class="card" *ngFor="let card of readableState.myPlayer.cards" [cdkDragDisabled]="!(serverService.gameState.current_player == serverService.user.name && gameStarted)" cdkDrag>
             <img [src]="this.serverService.cardToFilename(this.serverService.cardNumberToCard(card))">
         </div>
     </div>
