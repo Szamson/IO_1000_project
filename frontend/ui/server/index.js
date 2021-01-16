@@ -328,14 +328,12 @@ io.on('connection', (socket) => {
                   case 201:
                     res.on('data',(data)=>{
                       console.log(data);
-                      //TODO TEST THAT
                       var current_data = JSON.parse(data);
                       current_data.player_1_hand = JSON.parse("["+current_data.player_1_hand+"]");
                       current_data.player_2_hand = JSON.parse("["+current_data.player_2_hand+"]");
                       current_data.player_3_hand = JSON.parse("["+current_data.player_3_hand+"]");
                       current_data.mus = JSON.parse("["+current_data.mus+"]");
                       current_data.middle = JSON.parse("["+current_data.middle+"]");
-                      console.log(current_data);
                       socket.to(self_code).emit('gameStarted',current_data);
                       socket.emit('gameStarted',current_data);
                       socket.emit('startLicitation');
@@ -377,42 +375,9 @@ io.on('connection', (socket) => {
   }
 
   function handleWonLicitation(){
-    var current_game = null;
-    var current_lobby = null;
     var values = querystring.stringify({
       "code":self_code
     });
-
-    var options = {
-      hostname:'localhost',
-      port:'8000',
-      path:'/api/game-get',
-      method:'POST',
-      headers:{
-        'Content-Type':'application/x-www-form-urlencoded',
-        'Content-Length':values.length
-      }
-
-    };
-    var req = http.request(options, (res) => {
-      res.setEncoding('utf8');
-      if (res.statusCode === 200){
-        res.on('data', (chunk) => {
-          current_game = JSON.parse(chunk);
-          console.log(current_game);
-        });
-      }else{
-        console.log(`STATUS: ${res.statusCode}`);
-        console.log(`MESSAGE: ${res.statusMessage}`);
-        socket.emit('invalidRoomCode');
-      }
-    });
-    req.write(values);
-    req.end();
-    current_game.mus = JSON.parse("["+current_game.mus+"]");
-    io.to(self_code).emit('showMusik',current_game.mus);
-
-    current_game.current_player = self_name;
 
     var options_room = {
       hostname:'localhost',
@@ -429,7 +394,96 @@ io.on('connection', (socket) => {
       res.setEncoding('utf8');
       if (res.statusCode === 200){
         res.on('data', (chunk) => {
-          current_lobby = JSON.parse(chunk);
+          var current_lobby = JSON.parse(chunk);
+
+          var values_game = querystring.stringify({
+            "code":self_code
+          });
+
+          var options = {
+            hostname:'localhost',
+            port:'8000',
+            path:'/api/game-get',
+            method:'POST',
+            headers:{
+              'Content-Type':'application/x-www-form-urlencoded',
+              'Content-Length':values_game.length
+            }
+
+          };
+          var req = http.request(options, (res) => {
+            res.setEncoding('utf8');
+            if (res.statusCode === 200){
+              res.on('data', (chunk) => {
+                var current_game = JSON.parse(chunk);
+
+                current_game.mus = JSON.parse("["+current_game.mus+"]");
+                socket.to(self_code).emit('showMusik',current_game.mus);
+                current_game.current_player = self_name;
+
+                if(current_lobby.host === self_name){
+                  current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
+                  current_game.player_1_hand.push(current_game.mus.pop(),current_game.mus.pop(),current_game.mus.pop());
+                  socket.emit('showMusik',current_game.player_1_hand)
+                }else{if (current_lobby.player1 === self_name){
+                  current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
+                  current_game.player_2_hand.push(current_game.mus.pop(),current_game.mus.pop(),current_game.mus.pop());
+                  socket.emit('showMusik',current_game.player_2_hand)
+                }else{
+                  current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
+                  current_game.player_3_hand.push(current_game.mus.pop(),current_game.mus.pop(),current_game.mus.pop());
+                  socket.emit('showMusik',current_game.player_3_hand)
+                }}
+
+                var game_values = querystring.stringify({
+                  "code":current_game.code,
+                  "mus":current_game.mus.toString(),
+                  "player_1_hand":current_game.player_1_hand.toString(),
+                  "player_2_hand":current_game.player_2_hand.toString(),
+                  "player_3_hand":current_game.player_3_hand.toString(),
+                  "player_1_points":current_game.player_1_points,
+                  "player_2_points":current_game.player_2_points,
+                  "player_3_points":current_game.player_3_points,
+                  "player_4_points":current_game.player_4_points,
+                  "middle":current_game.middle.toString(),
+                  "inactive_player":current_game.inactive_player,
+                  "current_player":current_game.current_player
+                });
+
+                var options_game = {
+                  hostname:'localhost',
+                  port:'8000',
+                  path:'/api/game-update',
+                  method:'POST',
+                  headers:{
+                    'Content-Type':'application/x-www-form-urlencoded',
+                    'Content-Length':game_values.length
+                  }
+                };
+                var update = http.request(options_game,(res)=>{
+                  res.setEncoding('utf8');
+                  if (res.statusCode === 200){
+                    console.log(`room ${self_code} updated`)
+                  }else{
+                    console.log(`STATUS: ${res.statusCode}`);
+                    console.log(`MESSAGE: ${res.statusMessage}`);
+                    socket.emit('invalidRoomCode');
+                  }
+                });
+
+                update.write(game_values);
+                update.end();
+
+              });
+            }else{
+              console.log(`STATUS: ${res.statusCode}`);
+              console.log(`MESSAGE: ${res.statusMessage}`);
+              socket.emit('invalidRoomCode');
+            }
+          });
+          req.write(values_game);
+          req.end();
+
         });
       }else{
         console.log(`STATUS: ${res.statusCode}`);
@@ -440,64 +494,10 @@ io.on('connection', (socket) => {
 
     request.write(values);
     request.end();
-
-    if(current_lobby.host === self_name){
-      current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
-      current_game.player_1_hand.push(current_game.mus.pop(),current_game.mus.pop(),current_game.mus.pop())
-      socket.emit('showMusik',current_game.player_1_hand)
-    }else{if (current_lobby.player1 === self_name){
-      current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
-      current_game.player_2_hand.push(current_game.mus.pop(),current_game.mus.pop(),current_game.mus.pop())
-      socket.emit('showMusik',current_game.player_2_hand)
-    }else{
-      current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
-      current_game.player_3_hand.push(current_game.mus.pop(),current_game.mus.pop(),current_game.mus.pop())
-      socket.emit('showMusik',current_game.player_3_hand)
-    }}
-
-    var game_values = querystring.stringify({
-      "code":self_code,
-      "mus":current_game.mus.toString(),
-      "player_1_hand":current_game.player_1_hand.toString(),
-      "player_2_hand":current_game.player_2_hand.toString(),
-      "player_3_hand":current_game.player_3_hand.toString(),
-      "player_1_points":current_game.player_1_points,
-      "player_2_points":current_game.player_2_points,
-      "player_3_points":current_game.player_3_points,
-      "player_4_points":current_game.player_4_points,
-      "middle":current_game.middle.toString(),
-      "inactive_player":current_game.inactive_player,
-      "current_player":current_game.current_player
-    });
-
-    var options_game = {
-      hostname:'localhost',
-      port:'8000',
-      path:'/api/room-update',
-      method:'POST',
-      headers:{
-        'Content-Type':'application/x-www-form-urlencoded',
-        'Content-Length':game_values.length
-      }
-    };
-    var update = http.request(options_game,(res)=>{
-      res.setEncoding('utf8');
-      if (res.statusCode === 200){
-        console.log(`room ${self_code} updated`)
-      }else{
-        console.log(`STATUS: ${res.statusCode}`);
-        console.log(`MESSAGE: ${res.statusMessage}`);
-        socket.emit('invalidRoomCode');
-      }
-    });
-
-    update.write(game_values);
-    update.end();
   }
 
   function handleSubmitMusik(data){
     let cards = data;
-    var current_game = null;
 
     var values = querystring.stringify({
       "code":self_code
@@ -518,7 +518,77 @@ io.on('connection', (socket) => {
       res.setEncoding('utf8');
       if (res.statusCode === 200){
         res.on('data', (chunk) => {
-          current_game = JSON.parse(chunk);
+          var current_game = JSON.parse(chunk);
+
+          current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
+          current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
+          current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
+
+          if (current_game.player_1_hand.length()===10){
+            let index = current_game.player_1_hand.indexOf(cards[0]);
+            current_game.player_1_hand.splice(index,1);
+            let index2 = current_game.player_1_hand.indexOf(cards[1]);
+            current_game.player_1_hand.splice(index2,1);}
+          if (current_game.player_2_hand.length()===10){
+            let index = current_game.player_2_hand.indexOf(cards[0]);
+            current_game.player_2_hand.splice(index,1);
+            let index2 = current_game.player_2_hand.indexOf(cards[1]);
+            current_game.player_2_hand.splice(index2,1);}
+          if (current_game.player_3_hand.length()===10){
+            let index = current_game.player_3_hand.indexOf(cards[0]);
+            current_game.player_3_hand.splice(index,1);
+            let index2 = current_game.player_3_hand.indexOf(cards[1]);
+            current_game.player_3_hand.splice(index2,1);}
+
+          if (current_game.player_1_hand.length()===7){
+            current_game.player_1_hand.push(cards.pop())}
+          if (current_game.player_2_hand.length()===7){
+            current_game.player_2_hand.push(cards.pop())}
+          if (current_game.player_3_hand.length()===7){
+            current_game.player_3_hand.push(cards.pop())}
+
+          io.in(self_code).emit('accepyMusik',JSON.parse(current_game));
+
+          var game_values = querystring.stringify({
+            "code":current_game.code,
+            "mus":current_game.mus.toString(),
+            "player_1_hand":current_game.player_1_hand.toString(),
+            "player_2_hand":current_game.player_2_hand.toString(),
+            "player_3_hand":current_game.player_3_hand.toString(),
+            "player_1_points":current_game.player_1_points,
+            "player_2_points":current_game.player_2_points,
+            "player_3_points":current_game.player_3_points,
+            "player_4_points":current_game.player_4_points,
+            "middle":current_game.middle.toString(),
+            "inactive_player":current_game.inactive_player,
+            "current_player":current_game.current_player
+          });
+
+          var options_game = {
+            hostname:'localhost',
+            port:'8000',
+            path:'/api/room-update',
+            method:'POST',
+            headers:{
+              'Content-Type':'application/x-www-form-urlencoded',
+              'Content-Length':game_values.length
+            }
+          };
+          var update = http.request(options_game,(res)=>{
+            res.setEncoding('utf8');
+            if (res.statusCode === 200){
+              console.log(`room ${self_code} updated`)
+            }else{
+              console.log(`STATUS: ${res.statusCode}`);
+              console.log(`MESSAGE: ${res.statusMessage}`);
+              socket.emit('invalidRoomCode');
+            }
+          });
+
+          update.write(game_values);
+          update.end();
+
+
         });
       }else{
         console.log(`STATUS: ${res.statusCode}`);
@@ -528,93 +598,13 @@ io.on('connection', (socket) => {
     });
     req.write(values);
     req.end();
-
-    current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
-    current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
-    current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
-
-    if (current_game.player_1_hand.length()===7){
-      current_game.player_1_hand.push(cards.pop())}
-    if (current_game.player_2_hand.length()===7){
-      current_game.player_2_hand.push(cards.pop())}
-    if (current_game.player_3_hand.length()===7){
-      current_game.player_3_hand.push(cards.pop())}
-
-    io.in(self_code).emit('accepyMusik',JSON.parse(current_game))
-
-    var game_values = querystring.stringify({
-      "code":current_game.code,
-      "mus":current_game.mus.toString(),
-      "player_1_hand":current_game.player_1_hand.toString(),
-      "player_2_hand":current_game.player_2_hand.toString(),
-      "player_3_hand":current_game.player_3_hand.toString(),
-      "player_1_points":current_game.player_1_points,
-      "player_2_points":current_game.player_2_points,
-      "player_3_points":current_game.player_3_points,
-      "player_4_points":current_game.player_4_points,
-      "middle":current_game.middle.toString(),
-      "inactive_player":current_game.inactive_player,
-      "current_player":current_game.current_player
-    });
-
-    var options_game = {
-      hostname:'localhost',
-      port:'8000',
-      path:'/api/room-update',
-      method:'POST',
-      headers:{
-        'Content-Type':'application/x-www-form-urlencoded',
-        'Content-Length':game_values.length
-      }
-    };
-    var update = http.request(options_game,(res)=>{
-      res.setEncoding('utf8');
-      if (res.statusCode === 200){
-        console.log(`room ${self_code} updated`)
-      }else{
-        console.log(`STATUS: ${res.statusCode}`);
-        console.log(`MESSAGE: ${res.statusMessage}`);
-        socket.emit('invalidRoomCode');
-      }
-    });
-
-    update.write(game_values);
-    update.end();
   }
 
   function handlePlayedCard(data){
-    var current_game = null;
-    var current_lobby = null;
-
+    console.log(data);
     var values = querystring.stringify({
       "code":self_code
     });
-
-    var options = {
-      hostname:'localhost',
-      port:'8000',
-      path:'/api/game-get',
-      method:'POST',
-      headers:{
-        'Content-Type':'application/x-www-form-urlencoded',
-        'Content-Length':values.length
-      }
-
-    };
-    var req = http.request(options, (res) => {
-      res.setEncoding('utf8');
-      if (res.statusCode === 200){
-        res.on('data', (chunk) => {
-          current_game = JSON.parse(chunk);
-        });
-      }else{
-        console.log(`STATUS: ${res.statusCode}`);
-        console.log(`MESSAGE: ${res.statusMessage}`);
-        socket.emit('invalidRoomCode');
-      }
-    });
-    req.write(values);
-    req.end();
 
     var options_room = {
       hostname:'localhost',
@@ -631,7 +621,98 @@ io.on('connection', (socket) => {
       res.setEncoding('utf8');
       if (res.statusCode === 200){
         res.on('data', (chunk) => {
-          current_lobby = JSON.parse(chunk);
+          var current_lobby = JSON.parse(chunk);
+
+          var values_game = querystring.stringify({
+            "code":self_code
+          });
+
+          var options = {
+            hostname:'localhost',
+            port:'8000',
+            path:'/api/game-get',
+            method:'POST',
+            headers:{
+              'Content-Type':'application/x-www-form-urlencoded',
+              'Content-Length':values_game.length
+            }
+
+          };
+          var req = http.request(options, (res) => {
+            res.setEncoding('utf8');
+            if (res.statusCode === 200){
+              res.on('data', (chunk) => {
+                var current_game = JSON.parse(chunk);
+
+                if(current_lobby.host === self_name){
+                  current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
+                  let index = current_game.player_1_hand.indexOf(data.card);
+                  current_game.player_1_hand.splice(index,1);
+                }else{if (current_lobby.player1 === self_name){
+                  current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
+                  let index = current_game.player_2_hand.indexOf(data.card);
+                  current_game.player_2_hand.splice(index,1);
+                }else{
+                  current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
+                  let index = current_game.player_3_hand.indexOf(data.card);
+                  current_game.player_3_hand.splice(index,1);
+                }}
+
+                current_game.middle.push(data.card);
+                current_game.current_player = data.name;
+                io.in(self_code).emit('gameUpdate',JSON.parse(current_game));
+
+                var game_values = querystring.stringify({
+                  "code":current_game.code,
+                  "mus":current_game.mus.toString(),
+                  "player_1_hand":current_game.player_1_hand.toString(),
+                  "player_2_hand":current_game.player_2_hand.toString(),
+                  "player_3_hand":current_game.player_3_hand.toString(),
+                  "player_1_points":current_game.player_1_points,
+                  "player_2_points":current_game.player_2_points,
+                  "player_3_points":current_game.player_3_points,
+                  "player_4_points":current_game.player_4_points,
+                  "middle":current_game.middle.toString(),
+                  "inactive_player":current_game.inactive_player,
+                  "current_player":current_game.current_player
+                });
+
+                var options_game = {
+                  hostname:'localhost',
+                  port:'8000',
+                  path:'/api/game-update',
+                  method:'POST',
+                  headers:{
+                    'Content-Type':'application/x-www-form-urlencoded',
+                    'Content-Length':game_values.length
+                  }
+                };
+                var update = http.request(options_game,(res)=>{
+                  res.setEncoding('utf8');
+                  if (res.statusCode === 200){
+                    console.log(`room ${self_code} updated`)
+                  }else{
+                    console.log(`STATUS: ${res.statusCode}`);
+                    console.log(`MESSAGE: ${res.statusMessage}`);
+                    socket.emit('invalidRoomCode');
+                  }
+                });
+
+                update.write(game_values);
+                update.end();
+
+              });
+            }else{
+              console.log(`STATUS: ${res.statusCode}`);
+              console.log(`MESSAGE: ${res.statusMessage}`);
+              socket.emit('invalidRoomCode');
+            }
+          });
+          req.write(values_game);
+          req.end();
+
+
+
         });
       }else{
         console.log(`STATUS: ${res.statusCode}`);
@@ -642,64 +723,6 @@ io.on('connection', (socket) => {
 
     request.write(values);
     request.end();
-
-    if(current_lobby.host === self_name){
-      current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
-      let index = current_game.player_1_hand.indexOf(data.card);
-      current_game.player_1_hand.splice(index,1);
-    }else{if (current_lobby.player1 === self_name){
-      current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
-      let index = current_game.player_2_hand.indexOf(data.card);
-      current_game.player_2_hand.splice(index,1);
-    }else{
-      current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
-      let index = current_game.player_3_hand.indexOf(data.card);
-      current_game.player_3_hand.splice(index,1);
-    }}
-
-    current_game.middle.push(data.card);
-    current_game.current_player = data.name;
-
-    io.in(self_code).emit('gameUpdate',JSON.parse(current_game));
-
-    var game_values = querystring.stringify({
-      "code":current_game.code,
-      "mus":current_game.mus.toString(),
-      "player_1_hand":current_game.player_1_hand.toString(),
-      "player_2_hand":current_game.player_2_hand.toString(),
-      "player_3_hand":current_game.player_3_hand.toString(),
-      "player_1_points":current_game.player_1_points,
-      "player_2_points":current_game.player_2_points,
-      "player_3_points":current_game.player_3_points,
-      "player_4_points":current_game.player_4_points,
-      "middle":current_game.middle.toString(),
-      "inactive_player":current_game.inactive_player,
-      "current_player":current_game.current_player
-    });
-
-    var options_game = {
-      hostname:'localhost',
-      port:'8000',
-      path:'/api/room-update',
-      method:'POST',
-      headers:{
-        'Content-Type':'application/x-www-form-urlencoded',
-        'Content-Length':game_values.length
-      }
-    };
-    var update = http.request(options_game,(res)=>{
-      res.setEncoding('utf8');
-      if (res.statusCode === 200){
-        console.log(`room ${self_code} updated`)
-      }else{
-        console.log(`STATUS: ${res.statusCode}`);
-        console.log(`MESSAGE: ${res.statusMessage}`);
-        socket.emit('invalidRoomCode');
-      }
-    });
-
-    update.write(game_values);
-    update.end();
   }
 
   socket.on('disconnect',()=>{
