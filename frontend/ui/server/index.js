@@ -615,7 +615,7 @@ io.on('connection', (socket) => {
   }
 
   function handlePlayedCard(data){
-    console.log(data);
+    data = JSON.parse(data);
     var values = querystring.stringify({
       "code":self_code
     });
@@ -662,12 +662,18 @@ io.on('connection', (socket) => {
                   current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
                   let index = current_game.player_1_hand.indexOf(data.card);
                   current_game.player_1_hand.splice(index,1);
+                  current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
+                  current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
                 }else{if (current_lobby.player1 === self_name){
+                  current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
+                  current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
                   current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
                   let index = current_game.player_2_hand.indexOf(data.card);
                   current_game.player_2_hand.splice(index,1);
                 }else{
                   current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
+                  current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
+                  current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
                   let index = current_game.player_3_hand.indexOf(data.card);
                   current_game.player_3_hand.splice(index,1);
                 }}
