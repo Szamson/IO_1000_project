@@ -1,8 +1,12 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import *
+from .serializers import RoomSerializer, PlayerSerializer, GameSerializer, CreateRoomSerializer, CreatePlayerSerializer, \
+    CreateGameSerializer, DeleteRoomSerializer
+from .models import Player, Room, Game
 from .bot import Bot
+import random
+import string
 
 
 def validate_player(s):
@@ -13,6 +17,22 @@ def validate_player(s):
     """
     if not s.is_valid():
         query = Player.objects.filter(name=s.data.get('name'))
+        if len(query) > 0:
+            return True
+        else:
+            return False
+    else:
+        return True
+
+
+def validate_games(s):
+    """
+    Validates data in serializer for current games
+    :param s: serializer needed for validation
+    :return: True if validation is succesfull False if not
+    """
+    if not s.is_valid():
+        query = Game.objects.filter(code=s.data.get('code'))
         if len(query) > 0:
             return True
         else:
@@ -345,8 +365,10 @@ class GamePostView(APIView):
             code = serializer.data.get('code')
             queryset = Game.objects.filter(code=code)
             if len(queryset) > 0:
-                game = queryset[0]
-                game.deck = serializer.data.get('deck')
+                print('run.')
+            else:
+                game = Game(code=code)
+                game.mus = serializer.data.get('mus')
                 game.player_1_hand = serializer.data.get('player_1_hand')
                 game.player_2_hand = serializer.data.get('player_2_hand')
                 game.player_3_hand = serializer.data.get('player_3_hand')
@@ -356,14 +378,75 @@ class GamePostView(APIView):
                 game.player_4_points = serializer.data.get('player_4_points')
                 game.middle = serializer.data.get('middle')
                 game.inactive_player = serializer.data.get('inactive_player')
-                game.save(update_fields=['deck', 'player_1_hand', 'player_2_hand', 'player_3_hand', 'middle',
-                                         'inactive_player', 'player_1_points', 'player_2_points',
-                                         'player_3_points', 'player_4_points'])
-                return Response(GameSerializer(game).data, status=status.HTTP_200_OK)
-            else:
-                game = Game(code=code)
+                game.current_player = serializer.data.get('current_player')
                 game.save()
                 return Response(GameSerializer(game).data, status=status.HTTP_201_CREATED)
+        return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GameUpdateView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
+    serializer_class = CreateGameSerializer
+
+    def post(self, request):
+        """
+        Changes Game model in database
+
+        :param request: data send by a client
+        :return: Error message or saved Game data and HTTP status
+        """
+        serializer = self.serializer_class(data=request.data)
+        v = validate_games(serializer)
+        if v:
+            code = serializer.data.get('code')
+            queryset = Game.objects.filter(code=code)
+            if len(queryset) > 0:
+                game = queryset[0]
+                game.mus = serializer.data.get('mus')
+                game.player_1_hand = serializer.data.get('player_1_hand')
+                game.player_2_hand = serializer.data.get('player_2_hand')
+                game.player_3_hand = serializer.data.get('player_3_hand')
+                game.player_1_points = serializer.data.get('player_1_points')
+                game.player_2_points = serializer.data.get('player_2_points')
+                game.player_3_points = serializer.data.get('player_3_points')
+                game.player_4_points = serializer.data.get('player_4_points')
+                game.middle = serializer.data.get('middle')
+                game.inactive_player = serializer.data.get('inactive_player')
+                game.current_player = serializer.data.get('current_player')
+                game.save(update_fields=['player_1_hand', 'player_2_hand', 'player_3_hand', 'middle',
+                                         'inactive_player', 'player_1_points', 'player_2_points',
+                                         'player_3_points', 'player_4_points', 'mus', 'current_player'])
+                return Response(GameSerializer(game).data, status=status.HTTP_200_OK)
+            else:
+                return Response({'Not Found': 'Invalid game code...'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GameGetView(APIView):
+    """
+    Class inherits after APIView class, which allows to use as_view() method required in creating endpoints
+    """
+    serializer_class = CreateGameSerializer
+
+    def post(self, request):
+        """
+        Saves Game model into database
+
+        :param request: data send by a client
+        :return: Error message or saved Game data and HTTP status
+        """
+        serializer = self.serializer_class(data=request.data)
+        v = validate_games(serializer)
+        if v:
+            code = serializer.data.get('code')
+            queryset = Game.objects.filter(code=code)
+            if len(queryset) > 0:
+                game = queryset[0]
+                return Response(GameSerializer(game).data, status=status.HTTP_200_OK)
+            else:
+                return Response({'Not Found': 'Invalid game code...'}, status=status.HTTP_404_NOT_FOUND)
         return Response({'Bad Request': 'Invalid data...'}, status=status.HTTP_400_BAD_REQUEST)
 
 

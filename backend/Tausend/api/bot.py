@@ -69,7 +69,7 @@ class Bot:
         Creates list of marriages for the bot to remember
         :return:
         """
-        for key, value in bot.dictionary.items():
+        for key, value in self.dictionary.items():
             if value.value == Card.QUEEN and value.siut == Siut.HEARTHS:
                 self.marriages.append((key, key + 1))
             elif value.value == Card.QUEEN and value.siut == Siut.SPADES:

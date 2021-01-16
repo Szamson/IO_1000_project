@@ -42,7 +42,6 @@ class Game(models.Model):
     Class shows how to store Games in database
 
     1.code: shows to with room game is bounded
-    2.deck: Current state of deck of cards
     3.player_1_hand: Current state of player cards
     4.player_2_hand: Current state of player cards
     5.player_3_hand: Current state of player cards
@@ -50,13 +49,14 @@ class Game(models.Model):
     7.inactive_player: used while playing with 4 players (read rules to learn more)
     """
     code = models.CharField(max_length=12, default="", unique=True, null=True)
-    deck = []
-    player_1_hand = []
-    player_2_hand = []
-    player_3_hand = []
-    middle = []
-    player_1_points = models.IntegerField(null=True,default=0)
-    player_2_points = models.IntegerField(null=True,default=0)
-    player_3_points = models.IntegerField(null=True,default=0)
-    player_4_points = models.IntegerField(null=True,default=0)
+    player_1_hand = models.CharField(max_length=100, default="", null=True)
+    player_2_hand = models.CharField(max_length=100, default="", null=True)
+    player_3_hand = models.CharField(max_length=100, default="", null=True)
+    middle = models.CharField(max_length=100, default="", null=True)
+    mus = models.CharField(max_length=100, default="", null=True)
+    player_1_points = models.IntegerField(null=True, default=0)
+    player_2_points = models.IntegerField(null=True, default=0)
+    player_3_points = models.IntegerField(null=True, default=0)
+    player_4_points = models.IntegerField(null=True, default=0)
     inactive_player = models.CharField(max_length=50, null=True)
+    current_player = models.CharField(max_length=50, null=True)
