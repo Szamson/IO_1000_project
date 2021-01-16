@@ -2,7 +2,7 @@ var http = require('http');
 var server = http.createServer().listen(3000);
 var io = require('socket.io').listen(server);
 var querystring = require('querystring');
-//TODO REMOVE REDUNDANT CODE
+
 function remove_room(room_data) {
   /*
   * Function that deletes room after its empty
@@ -308,7 +308,7 @@ io.on('connection', (socket) => {
                 "player_2_points":0,
                 "player_3_points":0,
                 "player_4_points":0,
-                "middle":[].toString(),
+                "middle":"",
                 "inactive_player":JSON.parse(data).player_3,
                 "current_player":JSON.parse(data).host
               });
@@ -435,6 +435,12 @@ io.on('connection', (socket) => {
                   socket.emit('showMusik',current_game.player_3_hand)
                 }}
 
+                if (current_game.middle === null){
+                  current_game.middle = ""
+                }else{
+                  current_game.middle = current_game.middle.toString()
+                }
+
                 var game_values = querystring.stringify({
                   "code":current_game.code,
                   "mus":current_game.mus.toString(),
@@ -445,7 +451,7 @@ io.on('connection', (socket) => {
                   "player_2_points":current_game.player_2_points,
                   "player_3_points":current_game.player_3_points,
                   "player_4_points":current_game.player_4_points,
-                  "middle":current_game.middle.toString(),
+                  "middle":current_game.middle,
                   "inactive_player":current_game.inactive_player,
                   "current_player":current_game.current_player
                 });
@@ -549,6 +555,12 @@ io.on('connection', (socket) => {
 
           io.in(self_code).emit('accepyMusik',JSON.parse(current_game));
 
+          if (current_game.middle === null){
+            current_game.middle = ""
+          }else{
+            current_game.middle = current_game.middle.toString()
+          }
+
           var game_values = querystring.stringify({
             "code":current_game.code,
             "mus":current_game.mus.toString(),
@@ -559,7 +571,7 @@ io.on('connection', (socket) => {
             "player_2_points":current_game.player_2_points,
             "player_3_points":current_game.player_3_points,
             "player_4_points":current_game.player_4_points,
-            "middle":current_game.middle.toString(),
+            "middle":current_game.middle,
             "inactive_player":current_game.inactive_player,
             "current_player":current_game.current_player
           });
