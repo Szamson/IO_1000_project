@@ -1,1 +1,9 @@
-<p>show-musik works!</p>
+<h2>Karty w musiku</h2>
+
+<div class="card-holder">
+
+    <div class="card" *ngFor="let card of cards">
+        <img [src]="this.serverService.cardToFilename(this.serverService.cardNumberToCard(card))">
+    </div>
+
+</div>

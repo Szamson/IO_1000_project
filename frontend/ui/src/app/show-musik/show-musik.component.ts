@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GameServerService } from '../game-server.service';
 
 @Component({
   selector: 'app-show-musik',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ShowMusikComponent implements OnInit {
 
-  constructor() { }
+  constructor(private serverService : GameServerService) { }
+
+  cards : Number[];
 
   ngOnInit(): void {
+    this.cards = this.serverService.musik;
   }
 
 }

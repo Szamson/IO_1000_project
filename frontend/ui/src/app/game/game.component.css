@@ -60,6 +60,14 @@
     background-color: white;
     border-radius: 10px;
     border: solid 1px black;
+    cursor:grab;
+}
+
+
+.card.cdk-drag-disabled 
+{
+    background: rgb(177, 177, 177);
+    cursor: default;
 }
 
 img

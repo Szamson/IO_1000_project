@@ -90,6 +90,7 @@ export class GameComponent implements OnInit {
 
     this.serverService.socketListen<GameState>('acceptMusik').subscribe(state => {
       this.serverService.gameState = state;
+      this.gameStarted = true;
       this.readableState = this.serverService.getReadableState();
       this.overlay.close();
     });
@@ -100,10 +101,11 @@ export class GameComponent implements OnInit {
       this.serverService.socketEmit('submitLicitation', JSON.stringify({player: leftPlayer, value : 100}));
     });
 
-  }
-
-  showMusik()
-  {
+    this.serverService.socketListen<GameState>('gameUpdate').subscribe(state => {
+      console.log(state);
+      this.serverService.gameState = state;
+      this.readableState = this.serverService.getReadableState();
+    })
 
   }
 
@@ -120,11 +122,11 @@ export class GameComponent implements OnInit {
     }
     else
     {
-      this.serverService.socketEmit('playedCard', JSON.stringify(event.container.data[event.currentIndex]))
-
       let element = event.previousContainer.data[event.previousIndex];
-      event.previousContainer.data.splice(event.previousIndex, 1);
-      event.container.data.push(element);
+      this.serverService.socketEmit('playedCard', {name : this.readableState.leftPlayer.name, card : element})
+
+      // event.previousContainer.data.splice(event.previousIndex, 1);
+      // event.container.data.push(element);
     }
   }
 

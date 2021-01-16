@@ -46,7 +46,7 @@ export class GameState
     player_1_hand : Number[];
     player_2_hand : Number[];
     player_3_hand : Number[];
-    table : Number[];
+    middle : Number[];
 
     player_1_points : Number;
     player_2_points : Number;

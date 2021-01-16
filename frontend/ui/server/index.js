@@ -581,7 +581,7 @@ io.on('connection', (socket) => {
           var options_game = {
             hostname:'localhost',
             port:'8000',
-            path:'/api/room-update',
+            path:'/api/game-update',
             method:'POST',
             headers:{
               'Content-Type':'application/x-www-form-urlencoded',
@@ -672,13 +672,20 @@ io.on('connection', (socket) => {
                   current_game.player_3_hand.splice(index,1);
                 }}
 
-                current_game.middle.push(data.card);
+                if(current_game.middle == null)
+                {
+                  current_game.middle = [data.card];
+                }
+                else
+                {
+                  current_game.middle.push(data.card);
+                }
                 current_game.current_player = data.name;
-                io.in(self_code).emit('gameUpdate',JSON.parse(current_game));
+                io.in(self_code).emit('gameUpdate', current_game);
 
                 var game_values = querystring.stringify({
                   "code":current_game.code,
-                  "mus":current_game.mus.toString(),
+                  "mus":"",
                   "player_1_hand":current_game.player_1_hand.toString(),
                   "player_2_hand":current_game.player_2_hand.toString(),
                   "player_3_hand":current_game.player_3_hand.toString(),
