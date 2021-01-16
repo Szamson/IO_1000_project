@@ -18,6 +18,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { LicitationOverlayComponent } from './licitation-overlay/licitation-overlay.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MusikExchangeComponent } from './musik-exchange/musik-exchange.component';
+import { ShowMusikComponent } from './show-musik/show-musik.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { MusikExchangeComponent } from './musik-exchange/musik-exchange.componen
     NotFoundComponent,
     LicitationOverlayComponent,
     MusikExchangeComponent,
+    ShowMusikComponent,
   ],
   imports: [
     BrowserModule,

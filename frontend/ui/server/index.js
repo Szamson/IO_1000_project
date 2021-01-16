@@ -443,7 +443,7 @@ io.on('connection', (socket) => {
 
                 var game_values = querystring.stringify({
                   "code":current_game.code,
-                  "mus":current_game.mus.toString(),
+                  "mus":"",
                   "player_1_hand":current_game.player_1_hand.toString(),
                   "player_2_hand":current_game.player_2_hand.toString(),
                   "player_3_hand":current_game.player_3_hand.toString(),
@@ -526,34 +526,36 @@ io.on('connection', (socket) => {
         res.on('data', (chunk) => {
           var current_game = JSON.parse(chunk);
 
+          console.log(current_game);
+
           current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
           current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
           current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
 
-          if (current_game.player_1_hand.length()===10){
+          if (current_game.player_1_hand.length===10){
             let index = current_game.player_1_hand.indexOf(cards[0]);
             current_game.player_1_hand.splice(index,1);
             let index2 = current_game.player_1_hand.indexOf(cards[1]);
             current_game.player_1_hand.splice(index2,1);}
-          if (current_game.player_2_hand.length()===10){
+          if (current_game.player_2_hand.length===10){
             let index = current_game.player_2_hand.indexOf(cards[0]);
             current_game.player_2_hand.splice(index,1);
             let index2 = current_game.player_2_hand.indexOf(cards[1]);
             current_game.player_2_hand.splice(index2,1);}
-          if (current_game.player_3_hand.length()===10){
+          if (current_game.player_3_hand.length===10){
             let index = current_game.player_3_hand.indexOf(cards[0]);
             current_game.player_3_hand.splice(index,1);
             let index2 = current_game.player_3_hand.indexOf(cards[1]);
             current_game.player_3_hand.splice(index2,1);}
 
-          if (current_game.player_1_hand.length()===7){
+          if (current_game.player_1_hand.length===7){
             current_game.player_1_hand.push(cards.pop())}
-          if (current_game.player_2_hand.length()===7){
+          if (current_game.player_2_hand.length===7){
             current_game.player_2_hand.push(cards.pop())}
-          if (current_game.player_3_hand.length()===7){
+          if (current_game.player_3_hand.length===7){
             current_game.player_3_hand.push(cards.pop())}
 
-          io.in(self_code).emit('accepyMusik',JSON.parse(current_game));
+          io.in(self_code).emit('acceptMusik', current_game);
 
           if (current_game.middle === null){
             current_game.middle = ""
@@ -563,7 +565,7 @@ io.on('connection', (socket) => {
 
           var game_values = querystring.stringify({
             "code":current_game.code,
-            "mus":current_game.mus.toString(),
+            "mus":"",
             "player_1_hand":current_game.player_1_hand.toString(),
             "player_2_hand":current_game.player_2_hand.toString(),
             "player_3_hand":current_game.player_3_hand.toString(),

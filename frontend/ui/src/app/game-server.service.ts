@@ -25,6 +25,8 @@ export class GameServerService {
   licitationAmount : number = 100;
   leftPlayer : string;
 
+  musik : Number[];
+
   exampleDealtCards : DealtCards = {
     left_player_name : "Ada",
     right_player_name : "Marek",
@@ -49,23 +51,23 @@ export class GameServerService {
     const playerList = this.getPlayerList();
     if(playerList[0] == this.user.name)
     {
-      return { leftPlayer : {name : playerList[2], cards : this.gameState.player_3_hand},
+      return { leftPlayer : {name : playerList[1], cards : this.gameState.player_2_hand},
                 myPlayer : {name : playerList[0], cards : this.gameState.player_1_hand},
-                rightPlayer : {name : playerList[1], cards : this.gameState.player_2_hand},
+                rightPlayer : {name : playerList[2], cards : this.gameState.player_3_hand},
                 table : this.gameState.table};
     }
     else if(playerList[1] == this.user.name)
     {
-      return { leftPlayer : {name : playerList[0], cards : this.gameState.player_1_hand},
+      return { leftPlayer : {name : playerList[2], cards : this.gameState.player_3_hand},
                 myPlayer : {name : playerList[1], cards : this.gameState.player_2_hand},
-                rightPlayer : {name : playerList[2], cards : this.gameState.player_3_hand},
+                rightPlayer : {name : playerList[0], cards : this.gameState.player_1_hand},
                 table : this.gameState.table};
     }
     else if(playerList[2] == this.user.name)
     {
-      return { leftPlayer : {name : playerList[1], cards : this.gameState.player_2_hand},
+      return { leftPlayer : {name : playerList[0], cards : this.gameState.player_1_hand},
                 myPlayer : {name : playerList[2], cards : this.gameState.player_3_hand},
-                rightPlayer : {name : playerList[0], cards : this.gameState.player_1_hand},
+                rightPlayer : {name : playerList[1], cards : this.gameState.player_2_hand},
                 table : this.gameState.table};
     }
   }
@@ -107,7 +109,7 @@ export class GameServerService {
       )}
     )}
 
-  socketEmit(eventName : string, data : string)
+  socketEmit(eventName : string, data : any)
   {
     this.socket.emit(eventName, data);
   }
