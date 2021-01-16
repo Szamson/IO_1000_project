@@ -3,7 +3,7 @@
 <div class="column narrow">
     <h3 class="center">{{readableState.leftPlayer.name}}</h3>
     <div class="vertical">
-        <div class="dummy-card" *ngFor="element of readableState.leftPlayer.cards"></div>
+        <div class="dummy-card" *ngFor="let element of readableState.leftPlayer.cards"></div>
     </div>
 </div>
 
@@ -29,7 +29,7 @@
 <div class="column narrow">
     <h3 class="center">{{readableState.rightPlayer.name}}</h3>
     <div class="vertical">
-        <div class="dummy-card" *ngFor="element of readableState.rightPlayer.cards"></div>
+        <div class="dummy-card" *ngFor="let element of readableState.rightPlayer.cards"></div>
     </div>
 </div>
 

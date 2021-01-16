@@ -7,7 +7,6 @@ import { HubComponent } from './hub/hub.component';
 import { MusikExchangeComponent } from './musik-exchange/musik-exchange.component';
 
 const routes : Routes = [
-  {path:"musik", component:MusikExchangeComponent},
   {path:"game/:id", component:GameComponent},
   {path:"user", component:CreateUserComponent},
   {path:"hub/:id", component:HubComponent},

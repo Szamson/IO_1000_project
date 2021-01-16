@@ -90,3 +90,9 @@ export class LeaderboardEntry
     name : string;
     points : Number;
 }
+
+export class LicitationSubmission
+{
+    player : string;
+    value : number;
+}

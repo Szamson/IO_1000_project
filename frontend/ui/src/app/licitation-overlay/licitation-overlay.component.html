@@ -6,5 +6,8 @@
         <div class="numbox">{{number}}</div>
         <button class="round more" (click)="increase()">Więcej</button>
     </div>
-        <button class="center forward round" (click)="send()">Dalej</button>
+        <button class="center forward round" (click)="send()">
+            <span *ngIf="licitationValue == number">Spasuj</span>
+            <span *ngIf="licitationValue != number">Podbij</span>
+        </button>
 </div>

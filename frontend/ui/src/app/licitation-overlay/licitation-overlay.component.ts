@@ -1,5 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { GameServerService } from '../game-server.service';
+import { LicitationSubmission } from '../gameState';
 
 @Component({
   selector: 'app-licitation-overlay',
@@ -11,6 +12,7 @@ export class LicitationOverlayComponent implements OnInit {
   constructor(private serverService : GameServerService) { }
 
   number : number;
+  licitationValue : number;
 
   increase()
   {
@@ -19,7 +21,7 @@ export class LicitationOverlayComponent implements OnInit {
 
   decrease()
   {
-    if(this.number-10 >= this.serverService.licitationAmount)
+    if(this.number-10 >= this.licitationValue)
     {
       this.number -= 10;
     }
@@ -27,11 +29,14 @@ export class LicitationOverlayComponent implements OnInit {
 
   send()
   {
-    this.serverService.socketEmit('submitLicitation', JSON.stringify({value : this.number}))
+    this.serverService.socketEmit('submitLicitation', JSON.stringify(
+      {player : this.serverService.leftPlayer,
+       value : this.number}));
   }
 
   ngOnInit(): void {
-    this.number = this.serverService.licitationAmount;
+    this.licitationValue = this.serverService.licitationAmount;
+    this.number = this.licitationValue;
   }
 
 }

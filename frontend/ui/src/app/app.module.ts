@@ -15,7 +15,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { CreateUserComponent } from './create-user/create-user.component';
 import { HubComponent } from './hub/hub.component';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { ChatComponent } from './chat/chat.component';
 import { LicitationOverlayComponent } from './licitation-overlay/licitation-overlay.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { MusikExchangeComponent } from './musik-exchange/musik-exchange.component';
@@ -28,7 +27,6 @@ import { MusikExchangeComponent } from './musik-exchange/musik-exchange.componen
     CreateUserComponent,
     HubComponent,
     NotFoundComponent,
-    ChatComponent,
     LicitationOverlayComponent,
     MusikExchangeComponent,
   ],

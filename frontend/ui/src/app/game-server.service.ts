@@ -23,6 +23,7 @@ export class GameServerService {
   gameState : GameState;
 
   licitationAmount : number = 100;
+  leftPlayer : string;
 
   exampleDealtCards : DealtCards = {
     left_player_name : "Ada",
@@ -38,7 +39,10 @@ export class GameServerService {
     public logger : LoggerService, 
     private socket : Socket) { }
 
-
+  getUsername() : string
+  {
+    return this.user.name;
+  }
 
   getReadableState() : ReadableState
   {
@@ -68,7 +72,7 @@ export class GameServerService {
 
   getPlayerList() : string[]
   {
-    var list : string[];
+    var list : string[] = [];
     if(this.gameState.inactive_player === undefined)
     {
       list = [this.server.host, this.server.player_1, this.server.player_2]

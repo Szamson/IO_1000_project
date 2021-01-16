@@ -6,7 +6,7 @@ import { DialogOverlayRef, OverlaysService } from '../overlays.service';
 import { GameServerService } from '../game-server.service';
 import { LicitationOverlayComponent } from '../licitation-overlay/licitation-overlay.component';
 import { MusikExchangeComponent } from '../musik-exchange/musik-exchange.component';
-import { Cards, DealtCards, Musik, ReadableState } from '../gameState';
+import { Cards, DealtCards, LicitationSubmission, Musik, ReadableState } from '../gameState';
 
 @Component({
   selector: 'app-game',
@@ -23,17 +23,55 @@ export class GameComponent implements OnInit {
   readableState : ReadableState;
   overlay : DialogOverlayRef;
 
+  spasowaniGracze = {};
+  previousLicitation : string;
+
   ngOnInit(): void {
     this.readableState = this.serverService.getReadableState();
 
-    this.serverService.socketListen<number>('enableLicitation').subscribe(value =>{
-      this.serverService.licitationAmount = value;
-      this.overlay = this.overlayService.open(MusikExchangeComponent);
-    });
+    this.spasowaniGracze[this.readableState.leftPlayer.name] = false;
+    this.spasowaniGracze[this.readableState.rightPlayer.name] = false;
+    this.spasowaniGracze[this.readableState.myPlayer.name] = false;
 
-    this.serverService.socketListen('acceptLicitation').subscribe(_ =>{
-      this.overlay.close();
-    })
+    this.serverService.licitationAmount = 0;
+
+    this.serverService.socketListen<string>('enableLicitation').subscribe(input =>{
+      let data : LicitationSubmission = new LicitationSubmission;
+      JSON.parse(input, (key, value) => data[key]=value);
+      console.log(data);
+      if(this.previousLicitation == this.serverService.getUsername())
+      {
+        this.overlay.close();
+      }
+      if(this.serverService.licitationAmount == data.value)
+      {
+        this.spasowaniGracze[this.previousLicitation] = true;
+      }
+
+      this.serverService.licitationAmount = data.value;
+      this.previousLicitation = data.player;
+
+      if(this.serverService.getUsername() == data.player)
+      {
+        if(this.spasowaniGracze[this.readableState.rightPlayer.name] &&
+          this.spasowaniGracze[this.readableState.leftPlayer.name])
+        {
+          this.serverService.socketEmit('wonLicitation', null); //wygrano
+        }
+        else
+        {
+          if(this.spasowaniGracze[this.readableState.leftPlayer.name])
+          {
+            this.serverService.leftPlayer = this.readableState.rightPlayer.name;
+          }
+          else
+          {
+            this.serverService.leftPlayer = this.readableState.leftPlayer.name;
+          }
+          this.overlay = this.overlayService.open(LicitationOverlayComponent);
+        }
+      }
+    });
 
     this.serverService.socketListen<Musik>('showMusik').subscribe(musik =>{
       if(this.readableState.myPlayer.name == musik.player_name)
@@ -46,20 +84,15 @@ export class GameComponent implements OnInit {
       }
     });
 
-    // this.serverService.socketListen<DealtCards>('acceptMusik').subscribe(newCards =>{
-    //   this.serverService.dealtCards = newCards;
-    //   this.updateHands();
-    // });
+    this.serverService.socketListen('startLicitation').subscribe(_ =>{
+      let leftPlayer = this.readableState.leftPlayer.name;
+      console.log(leftPlayer);
+      this.serverService.socketEmit('submitLicitation', JSON.stringify({player: leftPlayer, value : 100}));
+    });
 
     this.serverService.socketListen('enableCardPlay').subscribe(_ =>{
       this.cardsEnabled = true;
     })
-
-    // this.serverService.socketListen<DealtCards>('acceptCardPlay').subscribe(newCards =>{
-    //   this.cardsEnabled = false;
-    //   this.serverService.dealtCards = newCards;
-    //   this.updateHands();
-    // })
   }
 
   showMusik()
