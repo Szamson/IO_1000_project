@@ -11,9 +11,9 @@ import string
 
 def validate_player(s):
     """
-    Validates data in serializer for player
-    :param s: serializer needed for validation
-    :return: True if validation is succesfull False if not
+    Validates data in serializer for player model
+    :param s: Serializer needed for validation
+    :return: True if validation is succesfull False if it fails
     """
     if not s.is_valid():
         query = Player.objects.filter(name=s.data.get('name'))
@@ -27,9 +27,9 @@ def validate_player(s):
 
 def validate_games(s):
     """
-    Validates data in serializer for current games
+    Validates data in serializer for current games model
     :param s: serializer needed for validation
-    :return: True if validation is succesfull False if not
+    :return: True if validation is succesfull False if it fails
     """
     if not s.is_valid():
         query = Game.objects.filter(code=s.data.get('code'))
@@ -43,9 +43,9 @@ def validate_games(s):
 
 def validate_room(s):
     """
-    Validates data in serializer for room
+    Validates data in serializer for room model
     :param s: serializer needed for validation
-    :return: True if validation is succesfull False if not
+    :return: True if validation is succesfull False if it fails
     """
     if not s.is_valid():
         query = Room.objects.filter(code=s.data.get('code'))
@@ -60,7 +60,7 @@ def validate_room(s):
 class RoomView(generics.ListAPIView):
     """
     Class inherits after APIView class, which allows to use as_view() method required in creating endpoints.
-    Returns list of Rooms (mainly used in testing, may not survive until end of the project)
+    Returns list of Rooms (mainly used in testing database)
     """
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
@@ -69,7 +69,7 @@ class RoomView(generics.ListAPIView):
 class PlayerView(generics.ListAPIView):
     """
     Class inherits after APIView class, which allows to use as_view() method required in creating endpoints.
-    Returns list of Players (mainly used in testing, may not survive until end of the project)
+    Returns list of Players (mainly used in testing database)
     """
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
@@ -78,7 +78,7 @@ class PlayerView(generics.ListAPIView):
 class GameView(generics.ListAPIView):
     """
     Class inherits after APIView class, which allows to use as_view() method required in creating endpoints.
-    Returns list of Games (mainly used in testing, may not survive until end of the project)
+    Returns list of Games (mainly used in testing database)
     """
     queryset = Game.objects.all()
     serializer_class = GameSerializer
@@ -94,7 +94,7 @@ class RoomPostView(APIView):
     def generate_unique_code(self):
         """
         Generates unique 8 letter code
-        :return: The code
+        :return: The code it created
         """
 
         while True:
@@ -108,8 +108,8 @@ class RoomPostView(APIView):
         """
         Saves Room model into database
 
-        :param request: data send by a client
-        :return: Error message or filled room data and HTTP status
+        :param request: Data send by a request
+        :return: Error message, or filled room data and HTTP status
         """
 
         serializer = self.serializer_class(data=request.data)
@@ -136,10 +136,10 @@ class RoomJoinView(APIView):
 
     def post(self, request):
         """
-        Adds user to first free room slot of given code
+        Adds user to first free room slot of given room code
 
-        :param request: data send by a client
-        :return: Error message or filled room data and HTTP status
+        :param request: Data send by a request
+        :return: Error message, or filled room data and HTTP status
         """
 
         serializer = self.serializer_class(data=request.data)
@@ -183,8 +183,8 @@ class RoomRemovePlayerView(APIView):
         """
         Removes given player from room
 
-        :param request: data send by a client
-        :return: Error message or filled room data and HTTP status
+        :param request: Data send by a request
+        :return: Error message, or filled room data and HTTP status
         """
 
         serializer = self.serializer_class(data=request.data)

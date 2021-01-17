@@ -36,7 +36,7 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/lab08_minimax-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../lab08_minimax-master" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
@@ -47,7 +47,7 @@
       <recent name="C:\Users\szymo\GIT\IO_1000\frontend" />
     </key>
   </component>
-  <component name="RunManager" selected="Django server.backend">
+  <component name="RunManager" selected="Django Server.backend">
     <configuration name="manage" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="IO_1000" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -95,7 +95,7 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Django server.backend" />
+      <item itemvalue="Django Server.backend" />
       <item itemvalue="Python.manage" />
     </list>
   </component>

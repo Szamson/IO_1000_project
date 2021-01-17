@@ -42,11 +42,17 @@ class Game(models.Model):
     Class shows how to store Games in database
 
     1.code: shows to with room game is bounded
-    3.player_1_hand: Current state of player cards
-    4.player_2_hand: Current state of player cards
-    5.player_3_hand: Current state of player cards
-    6.middle: Shows what cards are on the "middle"
-    7.inactive_player: used while playing with 4 players (read rules to learn more)
+    2.player_1_hand: Current state of player cards
+    3.player_2_hand: Current state of player cards
+    4.player_3_hand: Current state of player cards
+    5.middle: Shows what cards are on the "middle"
+    6.mus: 3 cards stored while licitation
+    7.player_1_points: Points of player in game
+    8.player_2_points: Points of player in game
+    9.player_3_points: Points of player in game
+    10.player_4_points: Points of player in game
+    11.inactive_player: used while playing with 4 players (read rules to learn more)
+    12.current_player: Player that currently makes action
     """
     code = models.CharField(max_length=12, default="", unique=True, null=True)
     player_1_hand = models.CharField(max_length=100, default="", null=True)
