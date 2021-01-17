@@ -172,9 +172,10 @@ io.on('connection', (socket) => {
   }
 
   function handleCreateServer(username) {
-    /*
+    /**
     * Handles room creation, sends requests to server that handles database
-    * :param username: name of player who is host of the room*/
+    * @username {String} name of player who is host of the room
+    */
     var values = querystring.stringify({
         'host': username
     });
@@ -216,9 +217,10 @@ io.on('connection', (socket) => {
   }
 
   function handleJoinServer(data) {
-    /*
+    /**
     * Handles player joining room
-    * :param data: name of player that is joining, and code of room to witch he wishes to join*/
+    * @data {JSON} name of player that is joining, and code of room to witch he wishes to join
+    */
     data = JSON.parse(data);
     var values = querystring.stringify({
       "name":data.username,
@@ -278,9 +280,10 @@ io.on('connection', (socket) => {
   }
 
   function handleStartGame(code){
-    /*
+    /**
     * Handles game start(checks if number of player is good etc.)
-    * :param code: code of the room in which game should start*/
+    * @code {String} code of the room in which game should start
+    */
 
     var value = querystring.stringify({
       "code":code
@@ -381,10 +384,17 @@ io.on('connection', (socket) => {
   }
 
   function handleStartLicitation(number){
+    /**
+    * Handles licitation
+    * @number {Number} bid of licitation
+    */
     io.in(self_code).emit('enableLicitation',number)
   }
 
   function handleWonLicitation(){
+    /**
+    * Starts a round after licitation
+    */
     var values = querystring.stringify({
       "code":self_code
     });
@@ -513,6 +523,9 @@ io.on('connection', (socket) => {
   }
 
   function handleSubmitMusik(data){
+    /**
+    * Allows to give other players cards at the start of the game
+    */
     let cards = data;
 
     var values = querystring.stringify({
@@ -623,6 +636,10 @@ io.on('connection', (socket) => {
   }
 
   function handlePlayedCard(data){
+    /**
+    * Updates Game state after played card
+    * @data {String} game code
+    */
     var values = querystring.stringify({
       "code":self_code
     });
@@ -769,7 +786,10 @@ io.on('connection', (socket) => {
   }
 
   function handlewonRozegranie(name){
-
+    /**
+    * Handles end of mini round
+    * @name {String} name of player who won battle
+    */
     var values = querystring.stringify({
       "code":self_code
     });
@@ -853,7 +873,8 @@ io.on('connection', (socket) => {
   socket.on('disconnect',()=>{
     /**
     * Handles client disconnect, sends signals to clear database after him
-    * :param 'disconnect': event */
+    * @disconnect event when player disconnects
+    */
     var values = querystring.stringify({
       "code":self_code,
       "name":self_name
