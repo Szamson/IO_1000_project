@@ -119,20 +119,20 @@ export class GameComponent implements OnInit {
         let card = this.serverService.cardNumberToCard(state.middle[state.middle.length-1].valueOf()).card.valueOf();
         if(pointAssign[card] > this.highestCard)
         {
-          console.log("Przebito " + this.serverService.gameState.current_player);
           this.highestCard = pointAssign[card]
           this.highestPlayer = this.serverService.gameState.current_player;
         }
       }
       if(state.middle.length == 3)
       {
+        console.log(this.lewa);
         if(this.serverService.user.name == this.highestPlayer)
         {
           this.lewa.push(state.middle.forEach(val => {
             let card = this.serverService.cardNumberToCard(val.valueOf()).card;
             return card;
           }))
-          this.serverService.socketEmit('wonRozegranie', this.readableState.leftPlayer.name);
+          this.serverService.socketEmit('wonRozegranie', this.highestPlayer);
         }
       }
 
@@ -152,9 +152,6 @@ export class GameComponent implements OnInit {
     {
       let element = event.previousContainer.data[event.previousIndex];
       this.serverService.socketEmit('playedCard', {name : this.readableState.leftPlayer.name, card : element})
-
-      // event.previousContainer.data.splice(event.previousIndex, 1);
-      // event.container.data.push(element);
     }
   }
 
