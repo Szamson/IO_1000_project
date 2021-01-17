@@ -5,9 +5,9 @@ var querystring = require('querystring');
 const { isNumeric } = require('tslint');
 
 function remove_room(room_data) {
-  /*
+  /**
   * Function that deletes room after its empty
-  * :param room_data: code to room
+  * @param {String} room_data Code to room which is being deleted
   * */
 
       if(room_data.host === null){
@@ -43,9 +43,9 @@ function remove_room(room_data) {
 }
 
 function remove_player(name) {
-  /*
+  /**
   * Function that deletes player after he disconnects
-  * :param name: name of the player
+  * @name {String} name of the player to delete
   * */
       var value = querystring.stringify({
         "name":name
@@ -78,6 +78,12 @@ function remove_player(name) {
 }
 
 function deal_cards() {
+
+  /**
+   * Function sorts deck and deals cards to players
+   * @return {Object} Returns arrays of player cards and mus
+   * */
+
   var player1 = [];
   var player2 = [];
   var player3 = [];
@@ -101,10 +107,11 @@ function deal_cards() {
 
 io.on('connection', (socket) => {
 
-  /*
+  /**
   * Socket which communicates with client
-  * :param 'connection': on player connection
-  * :param function socket: tool to emit stuff*/
+  * @connection event on player connection
+  * @socket function that emits sockets comms
+  */
 
   var self_name = '';
   var self_code = '';
@@ -121,9 +128,10 @@ io.on('connection', (socket) => {
 
 
   function handleCreateUser(username) {
-    /*
+    /**
     * Handles user creation, sends requests to server that handles database
-    * :param username: name of player that is currently being created*/
+    * @username {String} Name of player that is currently being created
+    */
     var values = querystring.stringify({
       'name': username
     });
@@ -843,7 +851,7 @@ io.on('connection', (socket) => {
 
 
   socket.on('disconnect',()=>{
-    /*
+    /**
     * Handles client disconnect, sends signals to clear database after him
     * :param 'disconnect': event */
     var values = querystring.stringify({
