@@ -55,7 +55,7 @@ class GameSerializer(serializers.ModelSerializer):
 
 class CreateRoomSerializer(serializers.ModelSerializer):
     """
-    Class used to decrypt data while creating room a or joining one
+    Class used to decrypt Room data
     """
 
     class Meta:
@@ -103,7 +103,7 @@ class CreateGameSerializer(serializers.ModelSerializer):
 
 class DeleteRoomSerializer(serializers.ModelSerializer):
     """
-    Class used to decrypt data while deleting room
+    Class used to decrypt Room data
     """
 
     class Meta:
