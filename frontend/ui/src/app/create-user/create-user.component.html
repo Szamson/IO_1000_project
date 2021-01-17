@@ -1,9 +1,6 @@
 
 <div class="container">
 
-    {{formdata | json}}
-    {{serverService.user | json}}
-
     <form *ngIf="enterUsername" #userForm="ngForm" >
         <div class="form-group">
         <label for="username">Nazwa użytkownika</label>
@@ -40,8 +37,9 @@
             Nie podano nazwy serwera!
         </div>
         </div>
-        <div class="buttons">
-            <button type="submit" class="button center" (click)="joinServer()" [disabled]="serverCode.invalid">Dołącz</button>
+        <div class="buttons col2">
+            <button type="submit" class="button" (click)="goBack()">Wstecz</button>
+            <button type="submit" class="button" (click)="joinServer()" [disabled]="serverCode.invalid">Dołącz</button>
         </div>
     
     </form> 

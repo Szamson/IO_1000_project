@@ -2,6 +2,7 @@
 {
     display: block;
     background: white;
+    border-radius: 0 0 8px 8px;
     padding: 20px;
 }
 
@@ -14,11 +15,12 @@
 
 .hand
 {
-    background-color: blanchedalmond;
+    background-color: rgb(209, 209, 209);
     padding: 10px;
     height: 140px;
     width: 880px;
     display: flex;
+    border-radius: 5px;;
     flex-direction: row;
     vertical-align:middle;
     align-items: center;

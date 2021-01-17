@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { LoggerService } from '../logger.service';
 import {User} from '../user'
@@ -84,11 +83,16 @@ export class CreateUserComponent implements OnInit {
     this.serverService.socketEmit('createServer', this.formdata.username);
   }
 
-
   joinServer() : void
   {
     this.logger.log("joinServer()");
     this.serverService.socketEmit('joinServer', JSON.stringify(this.formdata));
+  }
+
+  goBack() : void
+  {
+    this.displayJoin = false;
+    this.chooseOption = true;
   }
 
 }

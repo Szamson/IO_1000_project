@@ -37,7 +37,7 @@ export class GameComponent implements OnInit {
   ngOnInit(): void {
     if(!this.serverService.isDefined())
     {
-      this.router.navigate(["notFoundComponent"])
+      this.router.navigate(["pageNotFound"])
     }
     else
     {
@@ -159,8 +159,11 @@ export class GameComponent implements OnInit {
     }
     else
     {
-      let element = event.previousContainer.data[event.previousIndex];
-      this.serverService.socketEmit('playedCard', {name : this.readableState.leftPlayer.name, card : element})
+      if ((this.serverService.gameState.current_player == this.serverService.user.name && this.gameStarted))
+      {
+        let element = event.previousContainer.data[event.previousIndex];
+        this.serverService.socketEmit('playedCard', {name : this.readableState.leftPlayer.name, card : element})
+      }
     }
   }
 

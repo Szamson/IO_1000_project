@@ -155,4 +155,9 @@ export class GameServerService {
     return array;
   }
 
+  getLicitationAmount()
+  {
+    return this.licitationAmount;
+  }
+
 }

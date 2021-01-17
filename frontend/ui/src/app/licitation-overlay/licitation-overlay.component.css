@@ -3,6 +3,7 @@
     display: block;
     background: white;
     padding: 20px;
+    border-radius: 0 0 5px 5px;
 }
 
 h1 
@@ -36,14 +37,29 @@ h1
     background-color: greenyellow;
 }
 
+.more:hover
+{
+    background-color: rgb(111, 160, 38);
+}
+
 .less
 {
     background-color: red;
 }
 
+.less:hover
+{
+    background-color: rgb(161, 1, 1);
+}
+
 .forward
 {
     background-color: lightskyblue;
+}
+
+.forward:hover
+{
+    background-color: rgb(97, 147, 179);
 }
 
 .hbar

@@ -44,7 +44,7 @@ export class LicitationOverlayComponent implements OnInit {
     }
     else
     {
-      this.router.navigate(["notFoundComponent"]);
+      this.router.navigate(["pageNotFound"]);
     }
     
   }

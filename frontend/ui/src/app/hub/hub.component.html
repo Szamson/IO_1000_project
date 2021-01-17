@@ -1,7 +1,5 @@
 <div class="container">
 
-{{serverService.server | json}}
-
 <div *ngIf="usernames">
 
     <h2>Kod serwera: {{serverService.server.code}}</h2>
@@ -9,7 +7,7 @@
     <div class="plaques">
         <div class="plaque" *ngFor="let username of usernames">
             <div class="icon">
-                A!
+                <span *ngIf=username>Obecny</span>
             </div>
             {{username}}
         </div>
@@ -17,7 +15,6 @@
     
     <div *ngIf="usernames[0] == serverService.user.name" class="bottom-line">
         <button (click)="startGame()">Start game</button>
-        <button (click)="addBot()">Add bot</button>
     </div>
 
 </div>

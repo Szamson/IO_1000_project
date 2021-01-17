@@ -21,7 +21,7 @@ export class HubComponent implements OnInit {
 
   ngOnInit(): void 
   {
-    if(this.serverService.user != undefined)
+    if(this.serverService.server != undefined)
     {
       this.usernames = this.genUsernameList();
       if(this.usernames[0] == this.serverService.user.name)
@@ -73,7 +73,6 @@ export class HubComponent implements OnInit {
   {
 
     let server : Server = this.serverService.server;
-    console.log(server);
     return [
       server.host,
       server.player_1,

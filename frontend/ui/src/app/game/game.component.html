@@ -1,6 +1,6 @@
+<div *ngIf="readableState">
 <div class="container">
 
-<div *ngIf="readableState">
 
 <div class="column narrow">
     <h3 class="center">{{readableState.leftPlayer.name}}</h3>
@@ -20,7 +20,7 @@
 </div>
 <div>
     <div class="card-holder" [cdkDropListData]="readableState.myPlayer.cards" cdkDropListOrientation="horizontal" (cdkDropListDropped)="drop($event)" cdkDropList>
-        <div class="card" *ngFor="let card of readableState.myPlayer.cards" [cdkDragDisabled]="!(serverService.gameState.current_player == serverService.user.name && gameStarted)" cdkDrag>
+        <div class="card" *ngFor="let card of readableState.myPlayer.cards" cdkDrag>
             <img [src]="this.serverService.cardToFilename(this.serverService.cardNumberToCard(card))">
         </div>
     </div>

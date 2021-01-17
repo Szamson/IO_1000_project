@@ -8,6 +8,7 @@ import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 const IO_CONFIG:SocketIoConfig = {url:'ws://localhost:3000', options: {}}
 
 import { NotFoundComponent } from '../not-found/not-found.component'
+import { GameServerService } from '../game-server.service';
 const routes = [
   {path:"pageNotFound", component:NotFoundComponent},
   {path:"**", redirectTo:'user'}
@@ -23,6 +24,7 @@ describe('HubComponent', () => {
       declarations: [ HubComponent ]
     })
     .compileComponents();
+
   });
 
   beforeEach(() => {
@@ -34,4 +36,5 @@ describe('HubComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });
