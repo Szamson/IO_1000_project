@@ -793,7 +793,7 @@ io.on('connection', (socket) => {
             "player_2_points":current_game.player_2_points,
             "player_3_points":current_game.player_3_points,
             "player_4_points":current_game.player_4_points,
-            "middle":current_game.middle.toString(),
+            "middle":"",
             "inactive_player":current_game.inactive_player,
             "current_player":name
           });
@@ -821,6 +821,9 @@ io.on('connection', (socket) => {
 
           update.write(game_values);
           update.end();
+          current_game.player_1_hand = JSON.parse("[" + current_game.player_1_hand + "]");
+          current_game.player_2_hand = JSON.parse("[" + current_game.player_2_hand + "]");
+          current_game.player_3_hand = JSON.parse("[" + current_game.player_3_hand + "]");
           io.in(self_code).emit('gameUpdate',current_game);
           if(current_game.player_1_hand.length === 0 && current_game.player_2_hand.length === 0 && current_game.player_3_hand.length === 0){
             io.in(self_code).emit('roundEnd',current_game);
