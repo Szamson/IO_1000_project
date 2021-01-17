@@ -38,6 +38,11 @@ export class GameServerService {
     public logger : LoggerService, 
     private socket : Socket) { }
 
+  isDefined()
+  {
+    return this.gameState != undefined && this.server != undefined && this.user != undefined;
+  }
+
   getUsername() : string
   {
     return this.user.name;

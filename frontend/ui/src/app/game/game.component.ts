@@ -6,8 +6,9 @@ import { DialogOverlayRef, OverlaysService } from '../overlays.service';
 import { GameServerService } from '../game-server.service';
 import { LicitationOverlayComponent } from '../licitation-overlay/licitation-overlay.component';
 import { MusikExchangeComponent } from '../musik-exchange/musik-exchange.component';
-import { Cards, DealtCards, GameState, LicitationSubmission, Musik, pointAssign, ReadableState } from '../gameState';
+import { GameState, LicitationSubmission, Musik, pointAssign, ReadableState } from '../gameState';
 import { ShowMusikComponent } from '../show-musik/show-musik.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -18,7 +19,8 @@ export class GameComponent implements OnInit {
 
   constructor(public logger : LoggerService,
     private overlayService : OverlaysService,
-    private serverService : GameServerService) { }
+    private serverService : GameServerService,
+    private router : Router) { }
 
   gameStarted : boolean = false;
   readableState : ReadableState;
@@ -33,13 +35,20 @@ export class GameComponent implements OnInit {
   lewa = [];
 
   ngOnInit(): void {
-    this.readableState = this.serverService.getReadableState();
-
-    this.spasowaniGracze[this.readableState.leftPlayer.name] = false;
-    this.spasowaniGracze[this.readableState.rightPlayer.name] = false;
-    this.spasowaniGracze[this.readableState.myPlayer.name] = false;
-
-    this.serverService.licitationAmount = 0;
+    if(!this.serverService.isDefined())
+    {
+      this.router.navigate(["notFoundComponent"])
+    }
+    else
+    {
+      this.readableState = this.serverService.getReadableState();
+  
+      this.spasowaniGracze[this.readableState.leftPlayer.name] = false;
+      this.spasowaniGracze[this.readableState.rightPlayer.name] = false;
+      this.spasowaniGracze[this.readableState.myPlayer.name] = false;
+  
+      this.serverService.licitationAmount = 0;
+    }
 
     this.serverService.socketListen<string>('enableLicitation').subscribe(input =>{
       let data : LicitationSubmission = new LicitationSubmission;

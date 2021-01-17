@@ -1,6 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GameServerService } from '../game-server.service';
-import { LicitationSubmission } from '../gameState';
+
+import {Router} from '@angular/router'
 
 @Component({
   selector: 'app-licitation-overlay',
@@ -9,7 +10,8 @@ import { LicitationSubmission } from '../gameState';
 })
 export class LicitationOverlayComponent implements OnInit {
 
-  constructor(private serverService : GameServerService) { }
+  constructor(private serverService : GameServerService,
+              private router : Router) { }
 
   number : number;
   licitationValue : number;
@@ -35,8 +37,16 @@ export class LicitationOverlayComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.licitationValue = this.serverService.licitationAmount;
-    this.number = this.licitationValue;
+    if(this.serverService.licitationAmount != undefined)
+    {
+      this.licitationValue = this.serverService.licitationAmount;
+      this.number = this.licitationValue;
+    }
+    else
+    {
+      this.router.navigate(["notFoundComponent"]);
+    }
+    
   }
 
 }
