@@ -5,9 +5,9 @@ var querystring = require('querystring');
 const { isNumeric } = require('tslint');
 
 function remove_room(room_data) {
-  /*
+  /**
   * Function that deletes room after its empty
-  * :param room_data: code to room
+  * @param {String} room_data Code to room which is being deleted
   * */
 
       if(room_data.host === null){
@@ -43,9 +43,9 @@ function remove_room(room_data) {
 }
 
 function remove_player(name) {
-  /*
+  /**
   * Function that deletes player after he disconnects
-  * :param name: name of the player
+  * @name {String} name of the player to delete
   * */
       var value = querystring.stringify({
         "name":name
@@ -78,6 +78,12 @@ function remove_player(name) {
 }
 
 function deal_cards() {
+
+  /**
+   * Function sorts deck and deals cards to players
+   * @return {Object} Returns arrays of player cards and mus
+   * */
+
   var player1 = [];
   var player2 = [];
   var player3 = [];
@@ -101,10 +107,11 @@ function deal_cards() {
 
 io.on('connection', (socket) => {
 
-  /*
+  /**
   * Socket which communicates with client
-  * :param 'connection': on player connection
-  * :param function socket: tool to emit stuff*/
+  * @connection event on player connection
+  * @socket function that emits sockets comms
+  */
 
   var self_name = '';
   var self_code = '';
@@ -121,13 +128,13 @@ io.on('connection', (socket) => {
 
 
   function handleCreateUser(username) {
-    /*
+    /**
     * Handles user creation, sends requests to server that handles database
-    * :param username: name of player that is currently being created*/
+    * @username {String} Name of player that is currently being created
+    */
     var values = querystring.stringify({
       'name': username
     });
-    console.log(values);
     self_name = username;
 
     var options = {
@@ -164,14 +171,13 @@ io.on('connection', (socket) => {
   }
 
   function handleCreateServer(username) {
-    /*
+    /**
     * Handles room creation, sends requests to server that handles database
-    * :param username: name of player who is host of the room*/
+    * @username {String} name of player who is host of the room
+    */
     var values = querystring.stringify({
         'host': username
     });
-    console.log(values);
-
     var options = {
       hostname:'localhost',
       port:'8000',
@@ -188,7 +194,6 @@ io.on('connection', (socket) => {
 
       if (res.statusCode === 201){
         res.on('data',(data)=>{
-        console.log(data);
         socket.join(JSON.parse(data).code);
         self_code = JSON.parse(data).code;
         socket.emit('joinedServer',JSON.parse(data));
@@ -208,16 +213,15 @@ io.on('connection', (socket) => {
   }
 
   function handleJoinServer(data) {
-    /*
+    /**
     * Handles player joining room
-    * :param data: name of player that is joining, and code of room to witch he wishes to join*/
+    * @data {JSON} name of player that is joining, and code of room to witch he wishes to join
+    */
     data = JSON.parse(data);
     var values = querystring.stringify({
       "name":data.username,
       "code":data.serverCode
     });
-
-    console.log(values);
 
     var options = {
       hostname:'localhost',
@@ -236,7 +240,6 @@ io.on('connection', (socket) => {
       switch (res.statusCode) {
         case 200:
           res.on('data',(data)=>{
-            console.log(data);
             socket.join(JSON.parse(data).code);
             self_code = JSON.parse(data).code;
             socket.to(self_code).emit('joinedServer',JSON.parse(data));
@@ -260,19 +263,16 @@ io.on('connection', (socket) => {
           }
           break;
       }
-
-      res.on('end',()=>{
-        console.log('No more data in response.');
-      })
     });
     request.write(values);
     request.end();
   }
 
   function handleStartGame(code){
-    /*
+    /**
     * Handles game start(checks if number of player is good etc.)
-    * :param code: code of the room in which game should start*/
+    * @code {String} code of the room in which game should start
+    */
 
     var value = querystring.stringify({
       "code":code
@@ -294,7 +294,6 @@ io.on('connection', (socket) => {
       switch (res.statusCode) {
         case 200:
           res.on('data',(data)=>{
-            console.log(data);
             if(JSON.parse(data).player_1 === null || JSON.parse(data).player_2 === null){
               socket.emit('notEnoughPlayers');
               console.log('Not enough players');
@@ -329,7 +328,6 @@ io.on('connection', (socket) => {
                 switch (res.statusCode) {
                   case 201:
                     res.on('data',(data)=>{
-                      console.log(data);
                       var current_data = JSON.parse(data);
                       current_data.player_1_hand = JSON.parse("["+current_data.player_1_hand+"]");
                       current_data.player_2_hand = JSON.parse("["+current_data.player_2_hand+"]");
@@ -361,7 +359,6 @@ io.on('connection', (socket) => {
         case 404:
           console.log(`STATUS: ${res.statusCode}`);
           console.log(`MESSAGE: ${res.statusMessage}`);
-          console.log(code);
           socket.emit('invalidRoomCode');
           break;
       }
@@ -373,10 +370,17 @@ io.on('connection', (socket) => {
   }
 
   function handleStartLicitation(number){
+    /**
+    * Handles licitation
+    * @number {Number} bid of licitation
+    */
     io.in(self_code).emit('enableLicitation',number)
   }
 
   function handleWonLicitation(){
+    /**
+    * Starts a round after licitation
+    */
     var values = querystring.stringify({
       "code":self_code
     });
@@ -505,6 +509,9 @@ io.on('connection', (socket) => {
   }
 
   function handleSubmitMusik(data){
+    /**
+    * Allows to give other players cards at the start of the game
+    */
     let cards = data;
 
     var values = querystring.stringify({
@@ -527,8 +534,6 @@ io.on('connection', (socket) => {
       if (res.statusCode === 200){
         res.on('data', (chunk) => {
           var current_game = JSON.parse(chunk);
-
-          console.log(current_game);
 
           current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
           current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
@@ -615,6 +620,10 @@ io.on('connection', (socket) => {
   }
 
   function handlePlayedCard(data){
+    /**
+    * Updates Game state after played card
+    * @data {String} game code
+    */
     var values = querystring.stringify({
       "code":self_code
     });
@@ -761,7 +770,10 @@ io.on('connection', (socket) => {
   }
 
   function handlewonRozegranie(name){
-
+    /**
+    * Handles end of mini round
+    * @name {String} name of player who won battle
+    */
     var values = querystring.stringify({
       "code":self_code
     });
@@ -797,8 +809,6 @@ io.on('connection', (socket) => {
             "inactive_player":current_game.inactive_player,
             "current_player":name
           });
-
-          console.log(game_values);
 
           var options_game = {
             hostname:'localhost',
@@ -845,9 +855,10 @@ io.on('connection', (socket) => {
 
 
   socket.on('disconnect',()=>{
-    /*
+    /**
     * Handles client disconnect, sends signals to clear database after him
-    * :param 'disconnect': event */
+    * @disconnect event when player disconnects
+    */
     var values = querystring.stringify({
       "code":self_code,
       "name":self_name
