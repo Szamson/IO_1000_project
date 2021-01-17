@@ -117,6 +117,7 @@ io.on('connection', (socket) => {
   socket.on('wonLicitation',handleWonLicitation);
   socket.on('submitMusik', handleSubmitMusik);
   socket.on('playedCard',handlePlayedCard);
+  socket.on('wonRozegranie',handlewonRozegranie);
 
 
   function handleCreateUser(username) {
@@ -602,8 +603,6 @@ io.on('connection', (socket) => {
 
           update.write(game_values);
           update.end();
-
-
         });
       }else{
         console.log(`STATUS: ${res.statusCode}`);
@@ -633,93 +632,106 @@ io.on('connection', (socket) => {
     };
     var request = http.request(options_room, (res) => {
       res.setEncoding('utf8');
-      if (res.statusCode === 200){
+      if (res.statusCode !== 200) {
+        console.log(`STATUS: ${res.statusCode}`);
+        console.log(`MESSAGE: ${res.statusMessage}`);
+        socket.emit('invalidRoomCode');
+      } else {
         res.on('data', (chunk) => {
           var current_lobby = JSON.parse(chunk);
 
           var values_game = querystring.stringify({
-            "code":self_code
+            "code": self_code
           });
 
           var options = {
-            hostname:'localhost',
-            port:'8000',
-            path:'/api/game-get',
-            method:'POST',
-            headers:{
-              'Content-Type':'application/x-www-form-urlencoded',
-              'Content-Length':values_game.length
+            hostname: 'localhost',
+            port: '8000',
+            path: '/api/game-get',
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Content-Length': values_game.length
             }
 
           };
           var req = http.request(options, (res) => {
             res.setEncoding('utf8');
-            if (res.statusCode === 200){
+            if (res.statusCode === 200) {
               res.on('data', (chunk) => {
                 var current_game = JSON.parse(chunk);
 
-                if(current_lobby.host === self_name){
-                  current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
-                  current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
-                  current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
-                  let index = current_game.player_1_hand.indexOf(data.card);
-                  current_game.player_1_hand.splice(index,1);
-                }else{if (current_lobby.player1 === self_name){
-                  current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
-                  current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
-                  current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
-                  let index = current_game.player_2_hand.indexOf(data.card);
-                  current_game.player_2_hand.splice(index,1);
-                }else{
-                  current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
-                  current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
-                  current_game.player_3_hand = JSON.parse("["+current_game.player_3_hand+"]");
-                  let index = current_game.player_3_hand.indexOf(data.card);
-                  current_game.player_3_hand.splice(index,1);
-                }}
-
-                if(current_game.middle == null)
-                {
-                  current_game.middle = [data.card];
+                if (current_game.player_1_hand === null) {
+                  current_game.player_1_hand = "";
                 }
-                else
-                {
-                  current_game.middle = JSON.parse("["+current_game.middle+"]");
+                if (current_game.player_2_hand === null) {
+                  current_game.player_2_hand = "";
+                }
+                if (current_game.player_3_hand === null) {
+                  current_game.player_3_hand = "";
+                }
+
+                if (current_lobby.host === self_name) {
+                  current_game.player_1_hand = JSON.parse("[" + current_game.player_1_hand + "]");
+                  current_game.player_2_hand = JSON.parse("[" + current_game.player_2_hand + "]");
+                  current_game.player_3_hand = JSON.parse("[" + current_game.player_3_hand + "]");
+                  let index = current_game.player_1_hand.indexOf(data.card);
+                  current_game.player_1_hand.splice(index, 1);
+                } else {
+                  if (current_lobby.player1 === self_name) {
+                    current_game.player_1_hand = JSON.parse("[" + current_game.player_1_hand + "]");
+                    current_game.player_2_hand = JSON.parse("[" + current_game.player_2_hand + "]");
+                    current_game.player_3_hand = JSON.parse("[" + current_game.player_3_hand + "]");
+                    let index = current_game.player_2_hand.indexOf(data.card);
+                    current_game.player_2_hand.splice(index, 1);
+                  } else {
+                    current_game.player_1_hand = JSON.parse("[" + current_game.player_1_hand + "]");
+                    current_game.player_2_hand = JSON.parse("[" + current_game.player_2_hand + "]");
+                    current_game.player_3_hand = JSON.parse("[" + current_game.player_3_hand + "]");
+                    let index = current_game.player_3_hand.indexOf(data.card);
+                    current_game.player_3_hand.splice(index, 1);
+                  }
+                }
+
+                if (current_game.middle == null) {
+                  current_game.middle = [data.card];
+                } else {
+                  current_game.middle = JSON.parse("[" + current_game.middle + "]");
                   current_game.middle.push(data.card);
                 }
                 current_game.current_player = data.name;
                 io.in(self_code).emit('gameUpdate', current_game);
 
                 var game_values = querystring.stringify({
-                  "code":current_game.code,
-                  "mus":"",
-                  "player_1_hand":current_game.player_1_hand.toString(),
-                  "player_2_hand":current_game.player_2_hand.toString(),
-                  "player_3_hand":current_game.player_3_hand.toString(),
-                  "player_1_points":current_game.player_1_points,
-                  "player_2_points":current_game.player_2_points,
-                  "player_3_points":current_game.player_3_points,
-                  "player_4_points":current_game.player_4_points,
-                  "middle":current_game.middle.toString(),
-                  "inactive_player":current_game.inactive_player,
-                  "current_player":current_game.current_player
+                  "code": current_game.code,
+                  "mus": "",
+                  "player_1_hand": current_game.player_1_hand.toString(),
+                  "player_2_hand": current_game.player_2_hand.toString(),
+                  "player_3_hand": current_game.player_3_hand.toString(),
+                  "player_1_points": current_game.player_1_points,
+                  "player_2_points": current_game.player_2_points,
+                  "player_3_points": current_game.player_3_points,
+                  "player_4_points": current_game.player_4_points,
+                  "middle": current_game.middle.toString(),
+                  "inactive_player": current_game.inactive_player,
+                  "current_player": current_game.current_player
                 });
 
                 var options_game = {
-                  hostname:'localhost',
-                  port:'8000',
-                  path:'/api/game-update',
-                  method:'POST',
-                  headers:{
-                    'Content-Type':'application/x-www-form-urlencoded',
-                    'Content-Length':game_values.length
+                  hostname: 'localhost',
+                  port: '8000',
+                  path: '/api/game-update',
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Length': game_values.length
                   }
                 };
-                var update = http.request(options_game,(res)=>{
+                var update = http.request(options_game, (res) => {
                   res.setEncoding('utf8');
-                  if (res.statusCode === 200){
+                  if (res.statusCode === 200) {
                     console.log(`room ${self_code} updated`)
-                  }else{
+                  } else {
                     console.log(`STATUS: ${res.statusCode}`);
                     console.log(`MESSAGE: ${res.statusMessage}`);
                     socket.emit('invalidRoomCode');
@@ -730,7 +742,7 @@ io.on('connection', (socket) => {
                 update.end();
 
               });
-            }else{
+            } else {
               console.log(`STATUS: ${res.statusCode}`);
               console.log(`MESSAGE: ${res.statusMessage}`);
               socket.emit('invalidRoomCode');
@@ -740,18 +752,92 @@ io.on('connection', (socket) => {
           req.end();
 
 
-
         });
-      }else{
-        console.log(`STATUS: ${res.statusCode}`);
-        console.log(`MESSAGE: ${res.statusMessage}`);
-        socket.emit('invalidRoomCode');
       }
     });
 
     request.write(values);
     request.end();
   }
+
+  function handlewonRozegranie(name){
+
+    var values = querystring.stringify({
+      "code":self_code
+    });
+
+    var options = {
+      hostname:'localhost',
+      port:'8000',
+      path:'/api/game-get',
+      method:'POST',
+      headers:{
+        'Content-Type':'application/x-www-form-urlencoded',
+        'Content-Length':values.length
+      }
+
+    };
+    var req = http.request(options, (res) => {
+      res.setEncoding('utf8');
+      if (res.statusCode === 200){
+        res.on('data', (chunk) => {
+          var current_game = JSON.parse(chunk);
+
+          var game_values = querystring.stringify({
+            "code":current_game.code,
+            "mus":"",
+            "player_1_hand":current_game.player_1_hand.toString(),
+            "player_2_hand":current_game.player_2_hand.toString(),
+            "player_3_hand":current_game.player_3_hand.toString(),
+            "player_1_points":current_game.player_1_points,
+            "player_2_points":current_game.player_2_points,
+            "player_3_points":current_game.player_3_points,
+            "player_4_points":current_game.player_4_points,
+            "middle":current_game.middle.toString(),
+            "inactive_player":current_game.inactive_player,
+            "current_player":name
+          });
+
+          var options_game = {
+            hostname:'localhost',
+            port:'8000',
+            path:'/api/game-update',
+            method:'POST',
+            headers:{
+              'Content-Type':'application/x-www-form-urlencoded',
+              'Content-Length':game_values.length
+            }
+          };
+          var update = http.request(options_game,(res)=>{
+            res.setEncoding('utf8');
+            if (res.statusCode === 200){
+              console.log(`room ${self_code} updated`)
+            }else{
+              console.log(`STATUS: ${res.statusCode}`);
+              console.log(`MESSAGE: ${res.statusMessage}`);
+              socket.emit('invalidRoomCode');
+            }
+          });
+
+          update.write(game_values);
+          update.end();
+          io.in(self_code).emit('gameUpdate',current_game);
+          if(current_game.player_1_hand.length() === 0 && current_game.player_2_hand.length() === 0 && current_game.player_3_hand.length() === 0){
+            io.in(self_code).emit('roundEnd',current_game);
+          }
+        });
+
+      }else{
+        console.log(`STATUS: ${res.statusCode}`);
+        console.log(`MESSAGE: ${res.statusMessage}`);
+        socket.emit('invalidRoomCode');
+      }
+    });
+    req.write(values);
+    req.end();
+  }
+
+
 
   socket.on('disconnect',()=>{
     /*
