@@ -6,7 +6,7 @@ import { DialogOverlayRef, OverlaysService } from '../overlays.service';
 import { GameServerService } from '../game-server.service';
 import { LicitationOverlayComponent } from '../licitation-overlay/licitation-overlay.component';
 import { MusikExchangeComponent } from '../musik-exchange/musik-exchange.component';
-import { Cards, DealtCards, GameState, LicitationSubmission, Musik, ReadableState } from '../gameState';
+import { Cards, DealtCards, GameState, LicitationSubmission, Musik, pointAssign, ReadableState } from '../gameState';
 import { ShowMusikComponent } from '../show-musik/show-musik.component';
 
 @Component({
@@ -27,7 +27,9 @@ export class GameComponent implements OnInit {
   spasowaniGracze = {};
   previousLicitation : string;
 
-  
+  highestCard : number;
+  highestPlayer : string;
+
   lewa = [];
 
   ngOnInit(): void {
@@ -78,6 +80,7 @@ export class GameComponent implements OnInit {
     });
 
     this.serverService.socketListen<Number[]>('showMusik').subscribe(musik =>{
+      console.log(this.previousLicitation);
       this.serverService.musik = musik;
       if(musik.length == 3)
       {
@@ -92,6 +95,7 @@ export class GameComponent implements OnInit {
     });
 
     this.serverService.socketListen<GameState>('acceptMusik').subscribe(state => {
+      this.highestCard = 0;
       this.serverService.gameState = state;
       this.gameStarted = true;
       this.readableState = this.serverService.getReadableState();
@@ -106,15 +110,36 @@ export class GameComponent implements OnInit {
 
     this.serverService.socketListen<GameState>('gameUpdate').subscribe(state => {
       console.log(state);
+      if(state.middle.length == 0)
+      {
+        this.highestCard = 0;
+      }
+      else
+      {
+        let card = this.serverService.cardNumberToCard(state.middle[state.middle.length-1].valueOf()).card.valueOf();
+        if(pointAssign[card] > this.highestCard)
+        {
+          console.log("Przebito " + this.serverService.gameState.current_player);
+          this.highestCard = pointAssign[card]
+          this.highestPlayer = this.serverService.gameState.current_player;
+        }
+      }
+      if(state.middle.length == 3)
+      {
+        if(this.serverService.user.name == this.highestPlayer)
+        {
+          this.lewa.push(state.middle.forEach(val => {
+            let card = this.serverService.cardNumberToCard(val.valueOf()).card;
+            return card;
+          }))
+          this.serverService.socketEmit('wonRozegranie', this.readableState.leftPlayer.name);
+        }
+      }
+
       this.serverService.gameState = state;
       this.readableState = this.serverService.getReadableState();
     })
 
-  }
-
-  isPlayerCurrent()
-  {
-    return this.serverService.gameState.current_player == this.serverService.user.name && this.gameStarted;
   }
 
   drop(event: CdkDragDrop<Number[]> ) : void

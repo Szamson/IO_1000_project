@@ -678,7 +678,7 @@ io.on('connection', (socket) => {
                   let index = current_game.player_1_hand.indexOf(data.card);
                   current_game.player_1_hand.splice(index, 1);
                 } else {
-                  if (current_lobby.player1 === self_name) {
+                  if (current_lobby.player_1 === self_name) {
                     current_game.player_1_hand = JSON.parse("[" + current_game.player_1_hand + "]");
                     current_game.player_2_hand = JSON.parse("[" + current_game.player_2_hand + "]");
                     current_game.player_3_hand = JSON.parse("[" + current_game.player_3_hand + "]");
@@ -822,7 +822,7 @@ io.on('connection', (socket) => {
           update.write(game_values);
           update.end();
           io.in(self_code).emit('gameUpdate',current_game);
-          if(current_game.player_1_hand.length() === 0 && current_game.player_2_hand.length() === 0 && current_game.player_3_hand.length() === 0){
+          if(current_game.player_1_hand.length === 0 && current_game.player_2_hand.length === 0 && current_game.player_3_hand.length === 0){
             io.in(self_code).emit('roundEnd',current_game);
           }
         });

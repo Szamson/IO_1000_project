@@ -5,6 +5,11 @@
     flex-direction: row;
 }
 
+.center
+{
+    text-align: center;
+}
+
 .board
 {
     height: 200px;
