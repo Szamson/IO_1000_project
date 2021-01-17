@@ -27,6 +27,9 @@ export class GameComponent implements OnInit {
   spasowaniGracze = {};
   previousLicitation : string;
 
+  
+  lewa = [];
+
   ngOnInit(): void {
     this.readableState = this.serverService.getReadableState();
 

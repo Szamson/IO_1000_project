@@ -58,7 +58,7 @@ export class OverlaysService {
       backdropClass: config.backdropClass,
       panelClass: config.panelClass,
       scrollStrategy: this.overlay.scrollStrategies.block(),
-      positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically()
+      positionStrategy: this.overlay.position().global().centerHorizontally().top()
     });
   }
 

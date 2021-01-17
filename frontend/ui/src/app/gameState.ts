@@ -8,7 +8,8 @@ export enum Card
     Ace
 };
 
-export const nameAssign = {
+export const nameAssign = 
+{
     0 : "9",
     1 : "10",
     2 : "jack",
@@ -33,6 +34,17 @@ export const suitAssign =
     3 : Suit.Hearts
 }
 
+// as 11, dziesiątka 10, król 4, dama 3, walet 2, dziewiątka 0. 
+
+export const pointAssign = 
+{
+    0 : 0,
+    1 : 10,
+    2 : 2,
+    3 : 3,
+    4 : 4,
+    5 : 11
+}
 
 export class PlayingCard
 {
