@@ -2,18 +2,25 @@
 
 {{serverService.server | json}}
 
-<div class="plaques">
-    <div class="plaque" *ngFor="let username of usernames">
-        <div class="icon">
-            A!
+<div *ngIf="usernames">
+
+    <h2>Kod serwera: {{serverService.server.code}}</h2>
+
+    <div class="plaques">
+        <div class="plaque" *ngFor="let username of usernames">
+            <div class="icon">
+                A!
+            </div>
+            {{username}}
         </div>
-        {{username}}
     </div>
+    
+    <div *ngIf="usernames[0] == serverService.user.name" class="bottom-line">
+        <button (click)="startGame()">Start game</button>
+        <button (click)="addBot()">Add bot</button>
+    </div>
+
 </div>
 
-<div *ngIf="usernames[0] == serverService.user.name" class="bottom-line">
-    <button (click)="startGame()">Start game</button>
-    <button (click)="addBot()">Add bot</button>
-</div>
 
 </div>

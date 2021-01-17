@@ -826,6 +826,8 @@ io.on('connection', (socket) => {
             "current_player":name
           });
 
+          console.log(game_values);
+
           var options_game = {
             hostname:'localhost',
             port:'8000',

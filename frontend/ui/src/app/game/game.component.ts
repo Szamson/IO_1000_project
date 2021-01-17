@@ -6,8 +6,9 @@ import { DialogOverlayRef, OverlaysService } from '../overlays.service';
 import { GameServerService } from '../game-server.service';
 import { LicitationOverlayComponent } from '../licitation-overlay/licitation-overlay.component';
 import { MusikExchangeComponent } from '../musik-exchange/musik-exchange.component';
-import { Cards, DealtCards, GameState, LicitationSubmission, Musik, pointAssign, ReadableState } from '../gameState';
+import { GameState, LicitationSubmission, Musik, pointAssign, ReadableState } from '../gameState';
 import { ShowMusikComponent } from '../show-musik/show-musik.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-game',
@@ -18,7 +19,8 @@ export class GameComponent implements OnInit {
 
   constructor(public logger : LoggerService,
     private overlayService : OverlaysService,
-    private serverService : GameServerService) { }
+    private serverService : GameServerService,
+    private router : Router) { }
 
   gameStarted : boolean = false;
   readableState : ReadableState;
@@ -33,13 +35,20 @@ export class GameComponent implements OnInit {
   lewa = [];
 
   ngOnInit(): void {
-    this.readableState = this.serverService.getReadableState();
-
-    this.spasowaniGracze[this.readableState.leftPlayer.name] = false;
-    this.spasowaniGracze[this.readableState.rightPlayer.name] = false;
-    this.spasowaniGracze[this.readableState.myPlayer.name] = false;
-
-    this.serverService.licitationAmount = 0;
+    if(!this.serverService.isDefined())
+    {
+      this.router.navigate(["notFoundComponent"])
+    }
+    else
+    {
+      this.readableState = this.serverService.getReadableState();
+  
+      this.spasowaniGracze[this.readableState.leftPlayer.name] = false;
+      this.spasowaniGracze[this.readableState.rightPlayer.name] = false;
+      this.spasowaniGracze[this.readableState.myPlayer.name] = false;
+  
+      this.serverService.licitationAmount = 0;
+    }
 
     this.serverService.socketListen<string>('enableLicitation').subscribe(input =>{
       let data : LicitationSubmission = new LicitationSubmission;
@@ -119,20 +128,20 @@ export class GameComponent implements OnInit {
         let card = this.serverService.cardNumberToCard(state.middle[state.middle.length-1].valueOf()).card.valueOf();
         if(pointAssign[card] > this.highestCard)
         {
-          console.log("Przebito " + this.serverService.gameState.current_player);
           this.highestCard = pointAssign[card]
           this.highestPlayer = this.serverService.gameState.current_player;
         }
       }
       if(state.middle.length == 3)
       {
+        console.log(this.lewa);
         if(this.serverService.user.name == this.highestPlayer)
         {
           this.lewa.push(state.middle.forEach(val => {
             let card = this.serverService.cardNumberToCard(val.valueOf()).card;
             return card;
           }))
-          this.serverService.socketEmit('wonRozegranie', this.readableState.leftPlayer.name);
+          this.serverService.socketEmit('wonRozegranie', this.highestPlayer);
         }
       }
 
@@ -152,9 +161,6 @@ export class GameComponent implements OnInit {
     {
       let element = event.previousContainer.data[event.previousIndex];
       this.serverService.socketEmit('playedCard', {name : this.readableState.leftPlayer.name, card : element})
-
-      // event.previousContainer.data.splice(event.previousIndex, 1);
-      // event.container.data.push(element);
     }
   }
 

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { OverlayModule, Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay'
+import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay'
 import { ComponentPortal } from '@angular/cdk/portal';
-import { LicitationOverlayComponent } from './licitation-overlay/licitation-overlay.component';
 
 interface OverlayConfigInt
 {

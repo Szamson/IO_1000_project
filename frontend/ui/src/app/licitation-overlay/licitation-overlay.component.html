@@ -1,6 +1,8 @@
 <div>
     <h1 class="center">Licytacja</h1>
 
+<div *ngIf="number">
+
     <div class="hbar">
         <button class="round less" (click)="decrease()">Mniej</button>
         <div class="numbox">{{number}}</div>
@@ -10,4 +12,5 @@
             <span *ngIf="licitationValue == number">Spasuj</span>
             <span *ngIf="licitationValue != number">Podbij</span>
         </button>
+    </div>
 </div>

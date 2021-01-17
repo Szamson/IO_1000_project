@@ -18,12 +18,20 @@ export class HubComponent implements OnInit {
 
   usernames : string[];
   isHost = false;
+
   ngOnInit(): void 
   {
-    this.usernames = this.genUsernameList();
-    if(this.usernames[0] == this.serverService.user.name)
+    if(this.serverService.user != undefined)
     {
-      this.isHost = true;
+      this.usernames = this.genUsernameList();
+      if(this.usernames[0] == this.serverService.user.name)
+      {
+        this.isHost = true;
+      }
+    }
+    else
+    {
+      this.router.navigate(["pageNotFound"]);
     }
 
     this.serverService.socketListen<Server>('joinedServer').subscribe(server =>
@@ -63,6 +71,7 @@ export class HubComponent implements OnInit {
 
   private genUsernameList() : string[]
   {
+
     let server : Server = this.serverService.server;
     console.log(server);
     return [

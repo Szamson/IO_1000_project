@@ -6,7 +6,6 @@ import { nameAssign, PlayingCard, suitAssign } from './gameState';
 import { Socket } from 'ngx-socket-io'
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import {Observable, of} from 'rxjs'
 
 import { LoggerService } from './logger.service';
@@ -15,8 +14,6 @@ import { LoggerService } from './logger.service';
   providedIn: 'root'
 })
 export class GameServerService {
-
-  readonly serverURL = 'http://localhost:8000/api';
 
   user : User;
   server : Server;
@@ -37,9 +34,14 @@ export class GameServerService {
     }
   }
 
-  constructor(private http : HttpClient, 
+  constructor(
     public logger : LoggerService, 
     private socket : Socket) { }
+
+  isDefined()
+  {
+    return this.gameState != undefined && this.server != undefined && this.user != undefined;
+  }
 
   getUsername() : string
   {
@@ -113,10 +115,6 @@ export class GameServerService {
   {
     this.socket.emit(eventName, data);
   }
-
-  httpOptions = {
-    headers : new HttpHeaders({'Content-type' : 'application/json'})
-  };
 
   cardToFilename(card : PlayingCard)
   {
