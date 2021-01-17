@@ -135,7 +135,6 @@ io.on('connection', (socket) => {
     var values = querystring.stringify({
       'name': username
     });
-    console.log(values);
     self_name = username;
 
     var options = {
@@ -179,8 +178,6 @@ io.on('connection', (socket) => {
     var values = querystring.stringify({
         'host': username
     });
-    console.log(values);
-
     var options = {
       hostname:'localhost',
       port:'8000',
@@ -197,7 +194,6 @@ io.on('connection', (socket) => {
 
       if (res.statusCode === 201){
         res.on('data',(data)=>{
-        console.log(data);
         socket.join(JSON.parse(data).code);
         self_code = JSON.parse(data).code;
         socket.emit('joinedServer',JSON.parse(data));
@@ -227,8 +223,6 @@ io.on('connection', (socket) => {
       "code":data.serverCode
     });
 
-    console.log(values);
-
     var options = {
       hostname:'localhost',
       port:'8000',
@@ -246,7 +240,6 @@ io.on('connection', (socket) => {
       switch (res.statusCode) {
         case 200:
           res.on('data',(data)=>{
-            console.log(data);
             socket.join(JSON.parse(data).code);
             self_code = JSON.parse(data).code;
             socket.to(self_code).emit('joinedServer',JSON.parse(data));
@@ -270,10 +263,6 @@ io.on('connection', (socket) => {
           }
           break;
       }
-
-      res.on('end',()=>{
-        console.log('No more data in response.');
-      })
     });
     request.write(values);
     request.end();
@@ -305,7 +294,6 @@ io.on('connection', (socket) => {
       switch (res.statusCode) {
         case 200:
           res.on('data',(data)=>{
-            console.log(data);
             if(JSON.parse(data).player_1 === null || JSON.parse(data).player_2 === null){
               socket.emit('notEnoughPlayers');
               console.log('Not enough players');
@@ -340,7 +328,6 @@ io.on('connection', (socket) => {
                 switch (res.statusCode) {
                   case 201:
                     res.on('data',(data)=>{
-                      console.log(data);
                       var current_data = JSON.parse(data);
                       current_data.player_1_hand = JSON.parse("["+current_data.player_1_hand+"]");
                       current_data.player_2_hand = JSON.parse("["+current_data.player_2_hand+"]");
@@ -372,7 +359,6 @@ io.on('connection', (socket) => {
         case 404:
           console.log(`STATUS: ${res.statusCode}`);
           console.log(`MESSAGE: ${res.statusMessage}`);
-          console.log(code);
           socket.emit('invalidRoomCode');
           break;
       }
@@ -548,8 +534,6 @@ io.on('connection', (socket) => {
       if (res.statusCode === 200){
         res.on('data', (chunk) => {
           var current_game = JSON.parse(chunk);
-
-          console.log(current_game);
 
           current_game.player_1_hand = JSON.parse("["+current_game.player_1_hand+"]");
           current_game.player_2_hand = JSON.parse("["+current_game.player_2_hand+"]");
@@ -825,8 +809,6 @@ io.on('connection', (socket) => {
             "inactive_player":current_game.inactive_player,
             "current_player":name
           });
-
-          console.log(game_values);
 
           var options_game = {
             hostname:'localhost',
